@@ -1,0 +1,133 @@
+/* ============================================================
+   L2S theme for reveal.js
+   Stage is 1600 x 900. All sizes are in stage pixels.
+   ============================================================ */
+
+:root{
+  /* brand, same values as main.tex */
+  --navy:#243B54;
+  --sky:#6AC0D6;
+  --sky-light:#97D3E2;
+  --mist:#D7E0E5;
+  --slate:#707F8F;
+  --paper:#FBFCFD;
+
+  /* accent, reserved for tangent objects everywhere */
+  --accent:#B2182B;
+
+  /* figure palette, Okabe-Ito */
+  --c1:#0072B2;
+  --c2:#E69F00;
+  --c3:#009E73;
+
+  --rule:rgba(36,59,84,.14);
+  --sky-tint:rgba(106,192,214,.10);
+
+  --sans:'Inter Variable',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --fs-title:66px;
+  --fs-h2:40px;
+  --fs-body:27px;
+  --fs-small:21px;
+  --fs-label:16px;
+}
+
+.reveal-viewport{ background:var(--paper); }
+
+.reveal{
+  font-family:var(--sans);
+  font-size:var(--fs-body);
+  font-weight:400;
+  color:var(--navy);
+  letter-spacing:-.005em;
+}
+
+.reveal .slides{ text-align:left; }
+.reveal .slides section{ padding:44px 76px 56px; }
+
+/* ---- frame title ---- */
+.reveal h2{
+  margin:0 0 30px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--rule);
+  font-size:var(--fs-h2);
+  font-weight:650;
+  letter-spacing:-.022em;
+  color:var(--navy);
+  text-transform:none;
+}
+.reveal h2 .hint{
+  float:right;
+  font-size:var(--fs-small);
+  font-weight:400;
+  color:var(--slate);
+}
+
+/* ---- text ---- */
+.reveal p{ margin:0 0 .7em; line-height:1.45; }
+.reveal ul{ margin:0 0 0 1.05em; padding:0; }
+.reveal li{ margin:.42em 0; line-height:1.42; }
+.reveal ul > li::marker{ color:var(--sky); }
+.reveal .lede{ font-size:32px; color:var(--navy); line-height:1.35; }
+.reveal .note{ font-size:var(--fs-small); color:var(--slate); }
+.reveal strong{ font-weight:650; }
+.reveal .katex{ font-size:1.02em; }
+
+/* ---- block, replaces the beamer block ---- */
+.block{
+  margin:24px 0;
+  padding:18px 26px;
+  border-left:4px solid var(--sky);
+  border-radius:0 6px 6px 0;
+  background:var(--sky-tint);
+}
+.block-title{ font-weight:650; margin-bottom:4px; }
+
+/* ---- layout helpers ---- */
+.cols{ display:grid; grid-template-columns:1fr 1fr; gap:52px; align-items:center; }
+.cols.w64{ grid-template-columns:6fr 4fr; }
+.cols.w46{ grid-template-columns:4fr 6fr; }
+.fullbleed{ min-height:800px; display:flex; flex-direction:column; justify-content:center; }
+.spacer{ flex:1; }
+
+/* ---- numbered list, the beamer enumerate look ---- */
+.numlist{ list-style:none; margin:0; padding:0; }
+.numlist li{ display:flex; gap:22px; margin:30px 0; }
+.numlist .n{
+  flex:0 0 46px; height:46px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%;
+  background:var(--sky); color:#fff;
+  font-weight:700; font-size:21px;
+}
+.numlist .t{ padding-top:7px; }
+
+/* ---- cards ---- */
+.cards{ display:grid; grid-template-columns:repeat(4,1fr); border-left:1px solid var(--rule); }
+.card{ border-right:1px solid var(--rule); padding:26px 28px; }
+.card .who{ font-size:29px; font-weight:650; letter-spacing:-.02em; }
+.card .where{ margin-top:8px; font-size:var(--fs-small); color:var(--slate); }
+
+/* ---- dark slides, title and dividers ---- */
+.on-navy, .on-navy .reveal, .on-navy h1, .on-navy h2{ color:#fff; }
+.on-navy h1{
+  margin:0; max-width:1280px;
+  font-size:var(--fs-title); font-weight:700;
+  line-height:1.08; letter-spacing:-.032em;
+}
+.kicker{
+  font-family:var(--mono); font-size:var(--fs-label);
+  letter-spacing:.14em; text-transform:uppercase; color:var(--sky);
+}
+.on-navy .meta{ margin-top:44px; font-size:29px; }
+.on-navy .meta .affil{ margin-top:8px; font-size:var(--fs-small); color:var(--mist); }
+.title-logo{ height:64px; margin-top:52px; filter:brightness(0) invert(1); opacity:.9; }
+
+/* ---- chrome ---- */
+.reveal .progress{ color:var(--sky); height:4px; }
+.reveal .slide-number{
+  right:30px; bottom:20px;
+  background:transparent; color:var(--slate);
+  font-family:var(--mono); font-size:15px;
+}
