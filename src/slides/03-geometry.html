@@ -1,0 +1,241 @@
+<!-- ═══════════ S13 · Manifold and charts ═══════════ -->
+<section>
+  <h2>Manifold</h2>
+  <div class="cols w46">
+    <div>
+      <p>A smooth $d$-manifold is a set covered by <strong>charts</strong>:
+         homeomorphisms $\varphi : U \to \mathbb{R}^{d}$ onto open sets.</p>
+
+      <p class="fragment" data-fig-step="1">
+        Two domains $U$ and $V$, overlapping.
+      </p>
+      <p class="fragment" data-fig-step="2">
+        $\varphi$ flattens $U$ into coordinates.
+      </p>
+      <p class="fragment" data-fig-step="3">
+        $\psi$ does the same for $V$, with its own coordinates.
+      </p>
+      <p class="fragment" data-fig-step="4">
+        On the overlap both descriptions hold, and the transition map
+        $\psi\circ\varphi^{-1}$ is smooth. That is the whole definition.
+      </p>
+    </div>
+    <div class="fig" data-figure="manifold-charts"></div>
+  </div>
+  <aside class="notes">
+    Say it plainly: curved globally, flat locally. Drag the point to show that
+    it has two sets of coordinates and neither is the point itself.
+  </aside>
+</section>
+<!-- ═══════════ S14 · Tangent space ═══════════ -->
+<section>
+  <h2>Tangent space</h2>
+  <div class="cols w46">
+    <div>
+      <p>Take every smooth curve on $\mathcal{M}$ passing through $p$,
+         and collect their velocities at $p$.</p>
+
+      <div class="block">
+        $T_p\mathcal{M}=\{\dot\gamma(0)\ :\ \gamma(0)=p\}$, a vector space
+        of dimension $d$.
+      </div>
+
+      <p class="fragment" data-fig-step="1">A first curve through $p$.</p>
+      <p class="fragment" data-fig-step="2">A second one, in another direction.</p>
+      <p class="fragment" data-fig-step="3">
+        All these velocities fill one plane, attached to $p$.
+      </p>
+      <p class="fragment" data-fig-step="4">
+        This is the only linearisation of $\mathcal{M}$ we get, and every
+        algorithm will work in it.
+      </p>
+    </div>
+    <div class="fig" data-figure="tangent-space"></div>
+  </div>
+  <aside class="notes">
+    Insist that the plane is not a subset of M. It is attached to p, and it changes with p.
+    Drag the point to show that.
+  </aside>
+</section>
+
+<!-- ═══════════ S15 · Riemannian metric ═══════════ -->
+<section>
+  <h2>Riemannian metric</h2>
+  <div class="cols w46">
+    <div>
+      <p>A metric is an inner product $\langle\cdot,\cdot\rangle_p$ on each
+         tangent space, varying smoothly with $p$. It gives lengths and angles
+         without ever leaving $\mathcal{M}$.</p>
+
+      <p class="fragment" data-fig-step="1">
+        Here $\mathcal{M}\subset\mathbb{R}^n$ is a submanifold, so the ambient
+        product is inherited.
+      </p>
+      <p class="fragment" data-fig-step="2">
+        Take a function $\bar f$ defined around $\mathcal{M}$, and its ambient
+        gradient at $p$.
+      </p>
+      <p class="fragment" data-fig-step="3">
+        Project it onto the tangent space:
+      </p>
+
+      <div class="block fragment" data-fig-step="3">
+        $\operatorname{grad} f(p)=\Pi_{T_p\mathcal{M}}\bigl(\nabla\bar f(p)\bigr)$
+      </div>
+    </div>
+    <div class="fig" data-figure="metric"></div>
+  </div>
+  <aside class="notes">
+    The projection picture is the one to remember. Every Riemannian gradient
+    in this talk is that projection, on Stiefel or on SPD.
+  </aside>
+</section>
+<!-- ═══════════ S16 · Geodesics ═══════════ -->
+<section>
+  <h2>Geodesics</h2>
+  <div class="cols w46">
+    <div>
+      <p>How do we join two points of $\mathcal{M}$ while staying on
+         $\mathcal{M}$, and as short as possible?</p>
+
+      <p class="fragment" data-fig-step="1">
+        The straight segment of $\mathbb{R}^n$ leaves the manifold at once.
+      </p>
+      <p class="fragment" data-fig-step="2">
+        A <strong>geodesic</strong> is a curve with no tangential acceleration:
+      </p>
+
+      <div class="block fragment" data-fig-step="2">
+        $\nabla_{\dot\gamma}\dot\gamma = 0$, locally length-minimising.
+      </div>
+
+      <p class="fragment" data-fig-step="3">
+        Its speed is constant, and it is longer than the chord. That gap is
+        the curvature of $\mathcal{M}$.
+      </p>
+    </div>
+    <div class="fig" data-figure="geodesic"></div>
+  </div>
+  <aside class="notes">
+    Drag q around to show the two numbers moving. The chord is always shorter
+    and always off the surface.
+  </aside>
+</section>
+<!-- ═══════════ S17 · Exponential map ═══════════ -->
+<section>
+  <h2>Exponential map</h2>
+  <div class="cols w46">
+    <div>
+      <p>At $p$, the map $\exp_p$ turns a tangent vector into a point of $\mathcal{M}$.</p>
+
+      <div class="block">
+        $\exp_p(v)=\gamma(1)$, where $\gamma$ is the geodesic with
+        $\gamma(0)=p$ and $\dot\gamma(0)=v$.
+      </div>
+
+      <p class="fragment" data-fig-step="1">
+        Pick a direction and a length in $T_p\mathcal{M}$.
+      </p>
+      <p class="fragment" data-fig-step="2">
+        The point $\exp_p(tv)$ walks the geodesic. The arc it covers has
+        length $\lVert v\rVert_p$.
+      </p>
+      <p class="fragment" data-fig-step="3">
+        A <strong>retraction</strong> $R_p$ agrees with $\exp_p$ to first order
+        at $t=0$, and costs far less.
+      </p>
+    </div>
+
+    <div class="fig" data-figure="exp-map"></div>
+  </div>
+  <aside class="notes">
+    Say that exp is the manifold version of "move along a direction".
+    On the last step, insist that the two curves leave p together and separate later.
+  </aside>
+</section>
+<!-- ═══════════ S18 · Logarithmic map ═══════════ -->
+<section>
+  <h2>Logarithmic map</h2>
+  <div class="cols w46">
+    <div>
+      <p>The inverse question. Given $q$, which tangent vector reaches it?</p>
+
+      <div class="block">
+        $\log_p = \exp_p^{-1}$ where it is defined, and
+        $d(p,q)=\lVert\log_p(q)\rVert_p$.
+      </div>
+
+      <p class="fragment" data-fig-step="1">
+        The answer lives in $T_p\mathcal{M}$.
+      </p>
+      <p class="fragment" data-fig-step="2">
+        Shooting: start from a guess, see where the geodesic lands, correct.
+      </p>
+      <p class="fragment" data-fig-step="3">
+        The vector obtained reads $q$ as a direction and a distance. This is
+        the operation that makes averaging on $\mathcal{M}$ possible.
+      </p>
+    </div>
+    <div class="fig" data-figure="log-map"></div>
+  </div>
+  <aside class="notes">
+    Say that log has a closed form on the sphere and on SPD, none on Stiefel.
+    That absence is exactly why the aggregation section exists.
+  </aside>
+</section>
+<!-- ═══════════ S19 · Three manifolds ═══════════ -->
+<section>
+  <h2>The three manifolds we need</h2>
+
+  <div class="mtable">
+    <div class="head"></div>
+    <div class="head">Sphere $S^{n-1}$</div>
+    <div class="head">Stiefel $\mathrm{St}(n,p)$</div>
+    <div class="head">SPD $\mathcal{S}_C^{++}$</div>
+
+    <div class="row">Set</div>
+    <div>$\{x:\lVert x\rVert = 1\}$</div>
+    <div>$\{X: X^\top X = I_p\}$</div>
+    <div>$\{\Sigma = \Sigma^\top \succ 0\}$</div>
+
+    <div class="row">Tangent space</div>
+    <div>$\{v : x^\top v = 0\}$</div>
+    <div>$\{\Delta : X^\top\Delta + \Delta^\top X = 0\}$</div>
+    <div>$\mathcal{S}_C$, all symmetric</div>
+
+    <div class="row">Metric</div>
+    <div>induced, $u^\top v$</div>
+    <div>induced or canonical</div>
+    <div>affine-invariant, $\operatorname{tr}(\Sigma^{-1}U\Sigma^{-1}V)$</div>
+
+    <div class="row">$\exp$</div>
+    <div>$\cos\lVert v\rVert\, x + \sin\lVert v\rVert\,\tfrac{v}{\lVert v\rVert}$</div>
+    <div>closed form, two matrix exponentials</div>
+    <div>$\Sigma^{1/2}\exp\!\big(\Sigma^{-1/2}U\Sigma^{-1/2}\big)\Sigma^{1/2}$</div>
+
+    <div class="row">$\log$</div>
+    <div>closed form</div>
+    <div class="miss">no closed form</div>
+    <div>closed form</div>
+
+    <div class="row">Gradient</div>
+    <div>$\nabla f - (x^\top\nabla f)x$</div>
+    <div>$\nabla f - X\operatorname{sym}(X^\top\nabla f)$</div>
+    <div>$\Sigma\operatorname{sym}(\nabla f)\Sigma$</div>
+
+    <div class="row">Retraction</div>
+    <div>normalise</div>
+    <div>polar factor of $X+\Delta$</div>
+    <div>$\Sigma + U$ when it stays positive</div>
+  </div>
+
+  <p class="note fragment" style="margin-top:28px;">
+    Stiefel is the one that carries the SPDNet weights, and it is the one
+    without a logarithm.
+  </p>
+
+  <aside class="notes">
+    Do not read the table. Point at the Stiefel column, then at the red cell.
+    That missing logarithm is the reason the rest of the talk exists.
+  </aside>
+</section>

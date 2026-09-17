@@ -104,10 +104,44 @@
 .numlist .t{ padding-top:7px; }
 
 /* ---- cards ---- */
-.cards{ display:grid; grid-template-columns:repeat(4,1fr); border-left:1px solid var(--rule); }
-.card{ border-right:1px solid var(--rule); padding:26px 28px; }
+.cards{
+  display:grid; grid-template-columns:repeat(4,1fr);
+  border-left:1px solid var(--rule);
+  align-items:stretch;
+}
+.card{
+  display:flex; flex-direction:column;
+  border-right:1px solid var(--rule);
+  padding:26px 28px 24px;
+  min-height:300px;
+}
 .card .who{ font-size:29px; font-weight:650; letter-spacing:-.02em; }
 .card .where{ margin-top:8px; font-size:var(--fs-small); color:var(--slate); }
+
+/* logo row, pinned to the bottom of every card */
+.card-logos{
+  margin-top:auto; padding-top:24px;
+  display:flex; align-items:center; gap:22px;
+  min-height:62px;
+}
+/* one height per logo, tuned so they carry the same visual weight */
+.card-logos img{ width:auto; object-fit:contain; }
+.logo-l2s{ height:34px; }
+.logo-cnrs{ height:40px; }
+.logo-listic{ height:56px; }
+.logo-inria{ height:26px; }
+.logo-cs{ height:22px; }
+
+/* same logos, white silhouettes, for the navy title slide */
+.title-logos{
+  display:flex; align-items:center; gap:56px;
+  margin-top:56px;
+  filter:brightness(0) invert(1); opacity:.92;
+}
+.title-logos img{ width:auto; object-fit:contain; }
+/* the title slide needs them far larger than the collaborator cards */
+.title-logos .logo-l2s{ height:58px; }
+.title-logos .logo-cs { height:40px; }
 
 /* ---- dark slides, title and dividers ---- */
 .on-navy, .on-navy .reveal, .on-navy h1, .on-navy h2{ color:#fff; }
@@ -122,7 +156,7 @@
 }
 .on-navy .meta{ margin-top:44px; font-size:29px; }
 .on-navy .meta .affil{ margin-top:8px; font-size:var(--fs-small); color:var(--mist); }
-.title-logo{ height:64px; margin-top:52px; filter:brightness(0) invert(1); opacity:.9; }
+
 
 /* ---- chrome ---- */
 .reveal .progress{ color:var(--sky); height:4px; }
@@ -131,3 +165,57 @@
   background:transparent; color:var(--slate);
   font-family:var(--mono); font-size:15px;
 }
+/* ---- figures ---- */
+.fig{ position:relative; width:100%; aspect-ratio:var(--fig-ar, 1100/620); }
+.fig-wide{ width:100%; }
+
+.fig-labels{ position:absolute; inset:0; pointer-events:none; }
+.fig-label{
+  position:absolute; transform:translate(-50%,-50%);
+  font-size:19px; color:var(--navy); white-space:nowrap;
+  opacity:0; transition:opacity .25s ease;
+}
+.fig-label.accent{ color:var(--accent); }
+.fig-label.amber { color:#C77D24; }
+.fig-label.muted { color:var(--slate); font-size:17px; }
+
+/* grab handles */
+.fig-handle{ cursor:grab; }
+.fig-handle:active{ cursor:grabbing; }
+.fig-handle circle:nth-child(2){ stroke:rgba(36,59,84,.35); stroke-width:1.2; }
+.fig-handle:hover circle:nth-child(2){ stroke:var(--accent); }
+
+/* reset button, inside the figure box */
+.fig-tools{
+  position:absolute; left:10px; bottom:10px; z-index:3;
+  display:flex; align-items:center; gap:10px;
+}
+.fig-tool{
+  font:inherit; font-size:16px; color:var(--navy);
+  background:#fff; border:1px solid var(--sky);
+  border-radius:5px; padding:5px 16px; cursor:pointer;
+  box-shadow:0 1px 3px rgba(36,59,84,.08);
+}
+.fig-tool:hover{ background:var(--sky-tint); border-color:var(--navy); }
+.fig-svg{ display:block; width:100%; height:100%; overflow:visible; }
+
+/* full slide background figure, behind the text */
+.fig-bg{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+}
+.fig-bg .fig-svg{ position:absolute; inset:0; }
+
+/* darkens the left side so the title always reads */
+.scrim{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:linear-gradient(100deg,
+    var(--navy) 26%, rgba(36,59,84,.86) 46%, rgba(36,59,84,.25) 72%, rgba(36,59,84,0) 100%);
+}
+.on-navy .layer{ position:relative; z-index:1; }
+/* ---- manifold comparison table ---- */
+.mtable{ display:grid; grid-template-columns:150px repeat(3,1fr); gap:0 22px; font-size:20px; }
+.mtable > div{ padding:11px 0; border-bottom:1px solid var(--rule); }
+.mtable .head{ font-weight:650; font-size:23px; border-bottom:2px solid var(--navy); }
+.mtable .row{ color:var(--slate); font-size:18px; }
+.mtable .miss{ color:var(--accent); font-weight:600; }
+.mtable .katex{ font-size:.95em; }

@@ -2,6 +2,18 @@ import Reveal from 'reveal.js';
 import Notes from 'reveal.js/plugin/notes/notes.esm.js';
 import renderMathInElement from 'katex/dist/contrib/auto-render.mjs';
 
+import { register, mountAll, figuresIn } from './figures/registry.js';
+import titleManifold from './figures/title-manifold.js';
+import expMap from './figures/exp-map.js';
+import tangentSpace from './figures/tangent-space.js';
+import metric from './figures/metric.js';
+import geodesicFig from './figures/geodesic-fig.js';
+import logMap from './figures/log-map.js';
+import manifoldCharts from './figures/manifold-charts.js';
+import { eegHead, eegCov } from './figures/eeg-pipeline.js';
+import spdCone from './figures/spd-cone.js';
+import sites from './figures/sites.js';
+
 import '@fontsource-variable/inter';
 import 'reveal.js/dist/reveal.css';
 import 'katex/dist/katex.min.css';
@@ -33,7 +45,45 @@ const deck = new Reveal({
   plugins: [Notes]
 });
 
+register('title-manifold', titleManifold);
+register('exp-map', expMap);
+register('tangent-space', tangentSpace);
+register('metric', metric);
+register('geodesic', geodesicFig);
+register('log-map', logMap);
+register('manifold-charts', manifoldCharts);
+register('eeg-head', eegHead);
+register('eeg-cov', eegCov);
+register('spd-cone', spdCone);
+register('sites', sites);
+
+// a figure step is the largest data-fig-step among the visible fragments
+function stepOf(slide) {
+  let step = 0;
+  slide.querySelectorAll('[data-fig-step]').forEach((f) => {
+    if (f.classList.contains('visible')) step = Math.max(step, +f.dataset.figStep);
+  });
+  return step;
+}
+
+function sync(slide) {
+  if (!slide) return;
+  const step = stepOf(slide);
+  document.querySelectorAll('.reveal section').forEach((s) => {
+    figuresIn(s).forEach((fig) => (s === slide ? fig.activate() : fig.deactivate()));
+  });
+  figuresIn(slide).forEach((fig) => fig.setStep(step));
+}
+
+deck.on('ready', (e) => sync(e.currentSlide));
+deck.on('slidechanged', (e) => sync(e.currentSlide));
+deck.on('fragmentshown', () => sync(deck.getCurrentSlide()));
+deck.on('fragmenthidden', () => sync(deck.getCurrentSlide()));
+
 deck.initialize().then(() => {
+  mountAll();
+  sync(deck.getCurrentSlide());
+
   renderMathInElement(document.querySelector('.reveal .slides'), {
     delimiters: [
       { left: '$$', right: '$$', display: true },
