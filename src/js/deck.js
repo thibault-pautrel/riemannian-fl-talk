@@ -13,6 +13,10 @@ import manifoldCharts from './figures/manifold-charts.js';
 import { eegHead, eegCov } from './figures/eeg-pipeline.js';
 import spdCone from './figures/spd-cone.js';
 import sites from './figures/sites.js';
+import spdnetArch from './figures/spdnet-arch.js';
+import fedRound, { fedRoundStatic } from './figures/fed-round.js';
+import localOpt from './figures/local-opt.js';
+import { aggExisting, aggProposed } from './figures/aggregation.js';
 
 import '@fontsource-variable/inter';
 import 'reveal.js/dist/reveal.css';
@@ -56,6 +60,12 @@ register('eeg-head', eegHead);
 register('eeg-cov', eegCov);
 register('spd-cone', spdCone);
 register('sites', sites);
+register('spdnet-arch', spdnetArch);
+register('fed-round', fedRound);
+register('fed-round-static', fedRoundStatic);
+register('local-opt', localOpt);
+register('agg-existing', aggExisting);
+register('agg-proposed', aggProposed);
 
 // a figure step is the largest data-fig-step among the visible fragments
 function stepOf(slide) {
@@ -79,6 +89,16 @@ deck.on('ready', (e) => sync(e.currentSlide));
 deck.on('slidechanged', (e) => sync(e.currentSlide));
 deck.on('fragmentshown', () => sync(deck.getCurrentSlide()));
 deck.on('fragmenthidden', () => sync(deck.getCurrentSlide()));
+
+// some figures rewrite a label in TeX while they animate
+window.renderFigureMath = (node) => renderMathInElement(node, {
+  delimiters: [
+    { left: '$$', right: '$$', display: true },
+    { left: '\\(', right: '\\)', display: false },
+    { left: '$', right: '$', display: false }
+  ],
+  macros, throwOnError: false
+});
 
 deck.initialize().then(() => {
   mountAll();

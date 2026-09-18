@@ -1,0 +1,59 @@
+<!-- ═══════════ S09 · Federated learning, one round ═══════════ -->
+<section>
+  <h2>Federated learning</h2>
+
+  <div class="block objective" style="margin:0 0 18px;">
+    <div class="objline">
+      <div class="ttl">One shared objective,<br>no shared data</div>
+      <div class="gl">
+        $\displaystyle\arg\min_{\theta}\Bigl\{F(\theta):=\tfrac{1}{N}\sum_{i=1}^{N}
+          F_i(\theta,\mathcal{D}^{(i)})\Bigr\}$
+      </div>
+      <div class="fi">
+        $F_i(\theta,\mathcal{D}^{(i)})=-\dfrac{1}{|\mathcal{D}^{(i)}|}
+        \sum_{\ell=1}^{|\mathcal{D}^{(i)}|}\log\bigl[h_{\theta}(z_{i,\ell})\bigr]_{y_{i,\ell}}$
+      </div>
+    </div>
+  </div>
+
+  <div class="cols" style="gap:44px; align-items:center;">
+    <div class="fig" data-figure="fed-round"></div>
+
+    <div>
+      <p class="note" style="margin-bottom:10px;">
+        Initialise $\theta_0$. Then repeat for $T$ communication rounds.
+      </p>
+      <ol class="steps">
+        <li class="fragment" data-fig-step="1">
+          <span class="tt">Broadcast</span>
+          <div class="dd">The server sends $\theta_t$ to a subset $S_t$ of clients.</div>
+        </li>
+        <li class="fragment key" data-fig-step="2">
+          <span class="tt">Local optimisation</span>
+          <div class="dd">
+            Each selected client runs $E$ epochs on its own data, starting from $\theta_t$.
+            <div class="eqline">
+              $\displaystyle\theta_t^{(i)}\approx\arg\min_{\theta}
+                F_i\bigl(\theta,\mathcal{D}^{(i)}\bigr)$
+            </div>
+          </div>
+        </li>
+        <li class="fragment" data-fig-step="3">
+          <span class="tt">Upload</span>
+          <div class="dd">Each client returns $\theta_t^{(i)}$. The data never moves.</div>
+        </li>
+        <li class="fragment key srv" data-fig-step="4">
+          <span class="tt">Aggregation</span>
+          <div class="dd">
+            The server forms the next model.
+            <div class="eqline">
+              $\displaystyle\theta_{t+1}\leftarrow\operatorname{Agg}
+                \bigl(\theta_t,\theta_t^{(i)}\bigr)$
+            </div>
+          </div>
+        </li>
+      </ol>
+
+    </div>
+  </div>
+</section>

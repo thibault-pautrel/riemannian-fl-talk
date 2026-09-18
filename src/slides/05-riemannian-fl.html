@@ -1,0 +1,155 @@
+<!-- ═══════════ Riemannian federated learning ═══════════ -->
+<section>
+  <h2>Riemannian Federated Learning</h2>
+  <div class="cols w64" style="gap:40px; align-items:center;">
+    <div class="fig" data-figure="fed-round-static"></div>
+    <div>
+      <p>The parameter is now constrained:
+         $\theta\in\mathcal{M}$, a compact submanifold of $\mathbb{R}^{d\times p}$.
+         Broadcast and upload move points of $\mathcal{M}$, so they need no change.</p>
+
+      <div class="block" style="border-left-color:#E69F00;">
+        <div class="block-title">Local optimisation</div>
+        $\displaystyle\theta_t^{(i)}\approx\arg\min_{\theta\in\mathcal{M}}
+          F_i\bigl(\theta,\mathcal{D}^{(i)}\bigr)$
+      </div>
+
+      <div class="block" style="border-left-color:var(--c1);">
+        <div class="block-title">Aggregation</div>
+        $\displaystyle\theta_{t+1}\leftarrow\operatorname{Agg}
+          \bigl(\theta_t,\theta_t^{(i)}\bigr)\in\mathcal{M}$
+      </div>
+
+      <p class="note">Two steps to repair, and nothing else.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Même schéma que la slide précédente, figé. Insister: seules ces deux étapes changent.
+  </aside>
+</section>
+
+<!-- ═══════════ Local optimisation ═══════════ -->
+<section>
+  <h2>Local optimisation <span class="hint">client side</span></h2>
+
+  <div class="twoform">
+    <div class="bx">
+      <div class="hd">Euclidean</div>
+      $x_{\text{next}}\leftarrow x-\eta\,\nabla f_i(x;\mathcal{B}_j)$
+    </div>
+    <div class="bx rie fragment" data-fragment-index="2" data-fig-step="2">
+      <div class="hd">Riemannian</div>
+      $x_{\text{next}}\leftarrow R_x\bigl(-\eta\operatorname{grad}f_i(x;\mathcal{B}_j)\bigr)
+        \in\mathcal{M}$
+    </div>
+  </div>
+
+  <div class="cols w46" style="gap:36px; align-items:center;">
+    <div>
+      <p class="fragment" data-fragment-index="1" data-fig-step="1">
+        The ambient step leaves $\mathcal{M}$.
+      </p>
+      <p class="fragment" data-fragment-index="2" data-fig-step="2">
+        Keep only the part $\mathcal{M}$ can follow, the Riemannian gradient
+        $\xi=-\eta\operatorname{grad}f_i(x)\in T_x\mathcal{M}$.
+      </p>
+      <p class="fragment" data-fragment-index="3" data-fig-step="3">
+        A retraction $R_x$ turns that direction into a point of $\mathcal{M}$.
+      </p>
+      <div class="block fragment" data-fragment-index="4" data-fig-step="4">
+        <div class="block-title">Projection-based retraction</div>
+        $R_x(\xi)=\Pi(x+\xi)$, valid on any compact submanifold.
+      </div>
+    </div>
+    <div class="fig" data-figure="local-opt"></div>
+  </div>
+  <aside class="notes">
+    Déplacer x pour montrer que le plan tangent tourne et que la correction change.
+  </aside>
+</section>
+
+<!-- ═══════════ Aggregation, existing ═══════════ -->
+<section>
+  <h2>Aggregation <span class="hint">existing answers</span></h2>
+  <div class="cols w46" style="gap:36px; align-items:center;">
+    <div>
+      <div class="method fragment" data-fig-step="1">
+        <div class="nm">Fréchet mean</div>
+        <div class="fm">
+          $\theta_{t+1}\leftarrow\arg\min_{\theta\in\mathcal{M}}\tfrac1k\sum_i
+            d(\theta,\theta_t^{(i)})^2$
+        </div>
+        <div class="cm"><span class="tag issue">Issue:</span>
+          no closed form, only an iterative flow.</div>
+      </div>
+
+      <div class="method fragment" data-fig-step="2">
+        <div class="nm">KFAvg</div>
+        <div class="fm">
+          $\theta_{t+1}\leftarrow\exp_{\theta_t}\Bigl(\tfrac1k\sum_i
+            \log_{\theta_t}(\theta_t^{(i)})\Bigr)$
+        </div>
+        <div class="cm"><span class="tag issue">Issue:</span>
+          $\exp$ and $\log$ often unknown or expensive.</div>
+      </div>
+
+      <div class="method fragment" data-fig-step="3">
+        <div class="nm">RetAvg</div>
+        <div class="fm">
+          $\theta_{t+1}\leftarrow R_{\theta_t}\Bigl(\tfrac1k\sum_i
+            R^{-1}_{\theta_t}(\theta_t^{(i)})\Bigr)$
+        </div>
+        <div class="cm"><span class="tag issue">Issue:</span>
+          $R$ and $R^{-1}$ rarely both available.</div>
+      </div>
+    </div>
+    <div class="fig" data-figure="agg-existing"></div>
+  </div>
+  <aside class="notes">
+    Étape 1: l'argmin, montré par le flot de Karcher qui converge. Puis une seule
+    itération de ce flot, c'est KFAvg. Puis RetAvg, exp et log remplacés par R et son inverse.
+  </aside>
+</section>
+
+<!-- ═══════════ Aggregation, proposed ═══════════ -->
+<section>
+  <h2>Aggregation <span class="hint">what we propose</span></h2>
+  <div class="cols w46" style="gap:36px; align-items:center;">
+    <div>
+      <p class="note" style="margin-bottom:12px;">
+        A useful barycentre need not be the Fréchet mean.
+      </p>
+
+      <div class="method fragment" data-fig-step="1">
+        <div class="nm">RLAvg</div>
+        <div class="fm">
+          $\theta_{t+1}\leftarrow R_{\theta_t}\Bigl(\tfrac1k\sum_i
+            L_{\theta_t}(\theta_t^{(i)})\Bigr)
+            =\Pi\Bigl(\theta_t+\tfrac1k\sum_i L_{\theta_t}(\theta_t^{(i)})\Bigr)$
+        </div>
+        <div class="cm"><span class="tag idea">Idea:</span>
+          replace $R^{-1}$ by the lifting
+          $L_{\theta_t}(\theta)=P_{\theta_t}(\theta-\theta_t)$.</div>
+      </div>
+
+      <div class="method fragment" data-fig-step="2">
+        <div class="nm">ProjAvg</div>
+        <div class="fm">
+          $\theta_{t+1}\leftarrow\Pi\Bigl(\tfrac1k\sum_i\theta_t^{(i)}\Bigr)$
+        </div>
+        <div class="cm"><span class="tag idea">Idea:</span>
+          average in the ambient space, then project back.</div>
+      </div>
+
+      <div class="block fragment">
+        A natural choice for $\Pi$ is the nearest-point projection, but any
+        projection works. On Stiefel that is $\mathrm{uf}$, and a QR factor does too.
+      </div>
+    </div>
+    <div class="fig" data-figure="agg-proposed"></div>
+  </div>
+  <aside class="notes">
+    Mentionner les r-barycentres de Bouchard et al. Insister sur le coût: une projection,
+    la même que celle du pas local.
+  </aside>
+</section>

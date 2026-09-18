@@ -219,3 +219,91 @@
 .mtable .row{ color:var(--slate); font-size:18px; }
 .mtable .miss{ color:var(--accent); font-weight:600; }
 .mtable .katex{ font-size:.95em; }
+/* ---- SPDNet architecture, detail cards ---- */
+.arch-card{
+  position:absolute; right:3%; top:9%; width:39%;
+  padding:20px 26px 22px;
+  background:#fff; border:1px solid var(--rule); border-left:5px solid var(--sky);
+  border-radius:0 8px 8px 0; box-shadow:0 8px 26px rgba(36,59,84,.12);
+  opacity:0; transition:opacity .35s ease; pointer-events:none; z-index:2;
+}
+.arch-card.on{ opacity:1; }
+.arch-card .tag{
+  font-family:var(--mono); font-size:13px; letter-spacing:.14em; text-transform:uppercase;
+}
+.arch-card h4{ margin:4px 0 0; font-size:27px; font-weight:650; letter-spacing:-.02em; }
+.arch-card .eq{ margin:12px 0 4px; font-size:21px; }
+.arch-card .art{ margin:6px 0 12px; }
+.arch-card .art svg{ display:block; width:100%; height:auto; max-height:170px; }
+.arch-card p{ margin:0; font-size:18px; line-height:1.45; color:var(--slate); }
+
+/* ---- what is optimised ---- */
+.eyebrow{
+  font-family:var(--mono); font-size:15px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--slate); margin-bottom:14px;
+}
+.layercard{
+  border-left:3px solid var(--rule); background:#F4F7F9;
+  padding:13px 20px; margin-bottom:13px;
+}
+.layercard .nm{ font-family:var(--mono); font-size:23px; font-weight:600; }
+.layercard .ds{ margin-top:5px; font-size:19px; color:var(--slate); line-height:1.4; }
+.layercard.param{ border-left-color:var(--c1); background:rgba(0,114,178,.07); }
+.layercard.param .nm{ color:var(--c1); }
+.layercard.euclid{ border-left-color:#5A6EC8; background:rgba(90,110,200,.07); }
+.layercard.euclid .nm{ color:#5A6EC8; }
+.layercard .eq{ margin:10px 0 8px; font-size:21px; }
+.consequence{
+  margin-top:34px; padding:18px 26px;
+  background:#fff; border:1px solid var(--rule); border-left:4px solid var(--accent);
+}
+.consequence .tag{
+  font-family:var(--mono); font-size:13px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--accent);
+}
+.consequence .bd{ margin-top:6px; font-size:24px; }
+/* ---- numbered workflow, with two steps marked as key ---- */
+.steps{ list-style:none; margin:0; padding:0; counter-reset:s; }
+.steps li{
+  counter-increment:s; position:relative;
+  padding:12px 0 12px 52px; margin:0;
+  border-bottom:1px solid var(--rule);
+}
+.steps li::before{
+  content:counter(s);
+  position:absolute; left:0; top:12px;
+  width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--mist); color:var(--navy);
+  font-size:17px; font-weight:700;
+}
+.steps li.key::before{ background:#E69F00; color:#fff; }
+.steps li.key.srv::before{ background:var(--c1); color:#fff; }
+.steps .tt{ font-weight:650; }
+.steps .dd{ font-size:20px; color:var(--slate); line-height:1.4; margin-top:3px; }
+.objective{ font-size:22px; }
+/* title, global objective and per-client loss, all on one line */
+.objline{ display:flex; align-items:center; gap:46px; flex-wrap:nowrap; }
+.objline .ttl{ flex:0 0 auto; font-weight:650; line-height:1.25; }
+.objline .gl{ flex:0 0 auto; }
+.objline .fi{ flex:0 1 auto; font-size:19px; color:var(--slate); }
+
+/* a formula on its own line inside a list item */
+.eqline{ margin:10px 0 4px; }
+/* ---- aggregation methods, formula left and comment right ---- */
+.method{ padding:12px 0; border-bottom:1px solid var(--rule); }
+.method:last-child{ border-bottom:none; }
+.method .nm{
+  font-family:var(--mono); font-size:16px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--navy);
+}
+.method .fm{ margin:6px 0 4px; font-size:21px; }
+.method .cm{ font-size:19px; color:var(--slate); line-height:1.4; }
+.method .cm .tag{ font-weight:650; }
+.method .cm .issue{ color:var(--accent); }
+.method .cm .idea{ color:var(--c1); }
+.method.dim{ opacity:.42; }
+.twoform{ display:grid; grid-template-columns:1fr 1fr; gap:40px; margin:6px 0 14px; }
+.twoform .hd{ font-weight:650; margin-bottom:6px; }
+.twoform .bx{ padding:12px 18px; background:#F4F7F9; border-left:3px solid var(--rule); }
+.twoform .bx.rie{ border-left-color:var(--accent); background:rgba(178,24,43,.06); }
