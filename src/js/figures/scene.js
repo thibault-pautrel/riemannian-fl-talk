@@ -36,6 +36,7 @@ export function makeScene(el, { width = 1100, height = 620 } = {}) {
     d.className = 'fig-label ' + cls;
     d.innerHTML = html;
     labelBox.appendChild(d);
+    window.renderFigureMath?.(d);
     return {
       node: d,
       moveTo(pt, dx = 0, dy = 0) {

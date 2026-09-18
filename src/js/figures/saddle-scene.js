@@ -37,6 +37,8 @@ export function makeSaddleScene(el, opts = {}) {
   addMarker('accent', '#B2182B');
   addMarker('navy', '#243B54');
   addMarker('amber', '#C77D24');
+  addMarker('slate', '#9AA6B2');
+  addMarker('mean', '#6B3FA0');
   svg.appendChild(defs);
   const arrow = (name) => `url(#${uid}-${name})`;
 
@@ -117,6 +119,7 @@ export function makeSaddleScene(el, opts = {}) {
     d.className = 'fig-label ' + cls;
     d.innerHTML = html;
     labelBox.appendChild(d);
+    window.renderFigureMath?.(d);
     return {
       node: d,
       moveTo(pt, dx = 0, dy = 0) {
@@ -248,8 +251,24 @@ export function makeSaddleScene(el, opts = {}) {
     return d;
   }
 
+  function slider(label, { min = 0, max = 1, step = 0.01, value = 0.5 }, onInput) {
+    const wrap = document.createElement('label');
+    wrap.className = 'fig-slider';
+    const name = document.createElement('span');
+    name.className = 'nm';
+    name.innerHTML = label;
+    const input = document.createElement('input');
+    Object.assign(input, { type: 'range', min, max, step, value });
+    const out = document.createElement('span');
+    out.className = 'vl';
+    input.addEventListener('input', () => onInput(+input.value));
+    wrap.append(name, input, out);
+    toolBox.appendChild(wrap);
+    return { node: wrap, input, set(txt) { out.textContent = txt; } };
+  }
+
   return { svg, cam, saddle, surface: saddle, uid, arrow, layers,
            drawSurface, at, amb, planePoint, planeQuad, pathUV, node, dot, label,
            onRedraw, redraw, enableOrbit, resetView, handle, draggable,
-           pickUV, pickPlane, tool, hint };
+           pickUV, pickPlane, tool, hint, slider };
 }

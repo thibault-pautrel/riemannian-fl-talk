@@ -21,6 +21,9 @@ import reconstruction from './figures/reconstruction.js';
 import threatModel from './figures/threat-model.js';
 import adjacency from './figures/adjacency.js';
 import clipNoise from './figures/clip-noise.js';
+import riemClipNoise from './figures/riem-clip-noise.js';
+import riemProposed from './figures/riem-proposed.js';
+import proximal from './figures/proximal.js';
 import tradeoff from './figures/tradeoff.js';
 
 import '@fontsource-variable/inter';
@@ -37,7 +40,9 @@ const macros = {
   '\\St': '\\mathrm{St}',
   '\\grad': '\\operatorname{grad}',
   '\\Tp': 'T_{p}\\mathcal{M}',
-  '\\ip': '\\langle #1,#2 \\rangle'
+  '\\ip': '\\langle #1,#2 \\rangle',
+  // KaTeX has no \textsc, this is close enough for algorithm names
+  '\\textsc': '\\mathrm{#1}'
 };
 
 const deck = new Reveal({
@@ -75,6 +80,9 @@ register('reconstruction', reconstruction);
 register('threat-model', threatModel);
 register('adjacency', adjacency);
 register('clip-noise', clipNoise);
+register('riem-clip-noise', riemClipNoise);
+register('riem-proposed', riemProposed);
+register('proximal', proximal);
 register('tradeoff', tradeoff);
 
 // a figure step is the largest data-fig-step among the visible fragments
@@ -125,6 +133,3 @@ deck.initialize().then(() => {
   mountAll();
   sync(deck.getCurrentSlide());
 });
-
-// handy while building
-window.deck = deck;

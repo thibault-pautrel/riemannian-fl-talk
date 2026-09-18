@@ -200,3 +200,122 @@
     superpose et delta tombe. C'est tout le compromis, sans autre machinerie.
   </aside>
 </section>
+<!-- ═══════════ The mechanism, on a manifold ═══════════ -->
+<section>
+  <h2>The same mechanism, on a manifold</h2>
+
+  <div class="cols w46" style="gap:32px; align-items:center;">
+    <div>
+      <div class="method fragment" data-fig-step="1">
+        <div class="nm">the gradient is tangent</div>
+        <div class="fm">
+          $\operatorname{grad} f(\theta,z)\in T_\theta\mathcal{M}$
+        </div>
+      </div>
+
+      <div class="method fragment" data-fig-step="2">
+        <div class="nm">clipping, in the metric at θ</div>
+        <div class="fm">
+          $\displaystyle \operatorname{clip}^{\theta}_C(v)
+            =v\,\min\bigl(1,\,C/\lVert v\rVert_\theta\bigr)$
+        </div>
+        <div class="cm">
+          The norm changes with $\theta$, so the ball does too, and so does
+          $$\bigl\lVert\widehat{\operatorname{grad}}^{C} f(\theta,\mathcal{B})
+            -\widehat{\operatorname{grad}}^{C} f(\theta,\mathcal{B}')\bigr\rVert_\theta
+            \le\frac{2C}{B}.$$
+        </div>
+      </div>
+
+      <div class="method fragment" data-fig-step="3">
+        <div class="nm">where does the noise live?</div>
+        <div class="cm">
+          A Gaussian of $\mathbb{R}^{d\times p}$ cannot simply be added: the sum would
+          leave $T_\theta\mathcal{M}$. Pick an orthonormal basis
+          $\bigl(E_1(\theta),\dots,E_d(\theta)\bigr)$ of $T_\theta\mathcal{M}$ for
+          $\langle\cdot,\cdot\rangle_\theta$, and draw
+          $\xi=\sum_{k} w_k\,E_k(\theta)$ with
+          $w_k\overset{\text{iid}}{\sim}\mathcal{N}\bigl(0,\sigma^2(2C/B)^2\bigr)$.
+        </div>
+      </div>
+
+      <div class="method fragment" data-fig-step="4">
+        <div class="nm">privatised Riemannian gradient</div>
+        <div class="fm">
+          $\displaystyle \widetilde{\operatorname{grad}} f(\theta,\mathcal{B})
+            =\widehat{\operatorname{grad}}^{C} f(\theta,\mathcal{B})+\xi
+            \ \in T_\theta\mathcal{M}$
+        </div>
+      </div>
+    </div>
+
+    <div class="fig" data-figure="riem-clip-noise"></div>
+  </div>
+
+  <aside class="notes">
+    Point clé à faire passer en déplaçant theta: la boule de clipping change de forme,
+    parce que la norme dépend du point. La base orthonormée aussi, il faut la
+    recalculer à chaque theta.
+  </aside>
+</section>
+<!-- ═══════════ The proposed mechanism ═══════════ -->
+<section>
+  <h2>What we propose <span class="hint">compact submanifolds</span></h2>
+
+  <p class="note" style="margin:-8px 0 8px;">
+    $\mathcal{M}$ is a <strong>compact submanifold</strong> of $\mathbb{R}^{d\times p}$,
+    carrying the <strong>inherited</strong> metric. Every step below is then an
+    ambient operation followed by the same projection $P_\theta$.
+  </p>
+
+  <div class="cols w46" style="gap:32px; align-items:center;">
+    <div>
+      <div class="method fragment" data-fig-step="1">
+        <div class="nm">gradient</div>
+        <div class="fm">
+          $\operatorname{grad} f(\theta,z)=P_\theta\bigl(\nabla f(\theta,z)\bigr)$
+        </div>
+      </div>
+
+      <div class="method fragment" data-fig-step="2">
+        <div class="nm">clipping</div>
+        <div class="fm">
+          $\lVert v\rVert_\theta=\lVert v\rVert$ for every $v\in T_\theta\mathcal{M}$
+        </div>
+        <div class="cm">
+          The inherited metric is the ambient one, so the clipping ball no longer
+          depends on $\theta$. The Euclidean sensitivity $2C/B$ carries over unchanged.
+        </div>
+      </div>
+
+      <div class="method fragment" data-fig-step="3">
+        <div class="nm">noise</div>
+        <div class="fm">
+          $\xi=P_\theta(Z),\qquad Z\sim\mathcal{N}\bigl(0,\sigma^2(2C/B)^2 I\bigr)$
+        </div>
+        <div class="cm">
+          Projecting an isotropic ambient Gaussian gives an isotropic Gaussian on
+          $T_\theta\mathcal{M}$. No frame to build, and it coincides with the intrinsic
+          definition of the previous slide.
+        </div>
+      </div>
+
+      <div class="method fragment" data-fig-step="4">
+        <div class="nm">then any optimiser</div>
+        <div class="cm">
+          The updates are computed from
+          $\widetilde{\operatorname{grad}} f(\theta,\mathcal{B})$ alone, so the choice of
+          optimiser and of retraction is left free.
+        </div>
+      </div>
+    </div>
+
+    <div class="fig" data-figure="riem-proposed"></div>
+  </div>
+
+  <aside class="notes">
+    Déplacer theta: la boule verte garde la même taille, contrairement à la slide
+    précédente. Compacité: elle garantit que la projection est bien définie et que
+    les quantités restent bornées.
+  </aside>
+</section>

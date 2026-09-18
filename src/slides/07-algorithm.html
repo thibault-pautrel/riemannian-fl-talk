@@ -1,0 +1,110 @@
+<!-- ═══════════ The algorithm ═══════════ -->
+<section>
+  <h2>DP-RFedProj <span class="hint">record-level DP Riemannian federated learning</span></h2>
+
+  <div class="cols w46" style="gap:34px; align-items:start;">
+
+    <div class="algo">
+      <div class="hd">
+        input: $n$ clients, $k$ per round, $\tau$ local steps, batch $B$, $T$ rounds,
+        client optimisers $\textsc{Opt}^{(i)}$, clip $C$, noise $\sigma$
+      </div>
+      <ol>
+        <li>Initialise $\theta_0\in\mathcal{M}$</li>
+        <li><span class="kw">for</span> $t=0,\dots,T-1$ <span class="cmt">round</span></li>
+        <li class="ind">Draw $S_t\subset[n]$, $|S_t|=k$, and broadcast $\theta_t$</li>
+        <li class="ind"><span class="kw">for each</span> $i\in S_t$ <span class="kw">in parallel</span></li>
+        <li class="ind2">$\theta_{t,0}^{(i)}\gets\theta_t$</li>
+        <li class="ind2"><span class="kw">for</span> $j=0,\dots,\tau-1$</li>
+        <li class="ind2 own" style="margin-left:22px;">
+          $\tilde g_{t,j}^{(i)}\gets\frac1B\sum_{\ell}
+            \operatorname{clip}_C\bigl(P\,\nabla f(\theta_{t,j}^{(i)};z_{i,\ell})\bigr)
+            +P\,\xi,\quad \xi\sim\mathcal{N}(0,\sigma^2 I)$
+        </li>
+        <li class="ind2" style="margin-left:22px;">
+          $\bigl(u_{t,j}^{(i)},s\bigr)\gets\textsc{Opt}^{(i)}\bigl(\tilde g_{t,j}^{(i)},s\bigr)$
+          <span class="cmt">any optimiser</span>
+        </li>
+        <li class="ind2" style="margin-left:22px;">
+          $\theta_{t,j+1}^{(i)}\gets\Pi\bigl(\theta_{t,j}^{(i)}-u_{t,j}^{(i)}\bigr)$
+        </li>
+        <li class="ind2 own">
+          $\Delta^{(i)}\gets\textsc{Agg.Sub}\bigl(\theta_t,\theta_{t,\tau}^{(i)}\bigr)$,
+          send it <span class="cmt">see table</span>
+        </li>
+        <li class="ind">$\Delta_t\gets\frac1k\sum_{i\in S_t}\Delta^{(i)}$</li>
+        <li class="ind own">
+          $\theta_{t+1}\gets\textsc{Agg.Out}\bigl(\theta_t,\Delta_t\bigr)$
+        </li>
+        <li><span class="kw">return</span> $\theta_T$</li>
+      </ol>
+    </div>
+
+    <div>
+      <table class="tbl" style="margin-bottom:26px;">
+        <caption>aggregation primitives</caption>
+        <tr>
+          <th>Scheme</th>
+          <th>$\textsc{Agg.Sub}(\theta_t,\theta_{t,\tau}^{(i)})$</th>
+          <th>$\textsc{Agg.Out}(\theta_t,\Delta_t)$</th>
+        </tr>
+        <tr>
+          <td class="nm">KFAvg</td>
+          <td>$\mathrm{Log}_{\theta_t}\bigl(\theta_{t,\tau}^{(i)}\bigr)$</td>
+          <td>$\mathrm{Exp}_{\theta_t}(\Delta_t)$</td>
+        </tr>
+        <tr>
+          <td class="nm">RetAvg</td>
+          <td>$\mathrm{R}^{-1}_{\theta_t}\bigl(\theta_{t,\tau}^{(i)}\bigr)$</td>
+          <td>$\mathrm{R}_{\theta_t}(\Delta_t)$</td>
+        </tr>
+        <tr class="own">
+          <td class="nm">ProjAvg<span class="ourtag">ours</span></td>
+          <td>$\theta_{t,\tau}^{(i)}$</td>
+          <td>$\Pi(\Delta_t)$</td>
+        </tr>
+        <tr class="own">
+          <td class="nm">RLAvg<span class="ourtag">ours</span></td>
+          <td>$P_{\theta_t}\bigl(\theta_{t,\tau}^{(i)}-\theta_t\bigr)$</td>
+          <td>$\Pi(\theta_t+\Delta_t)$</td>
+        </tr>
+      </table>
+
+      <table class="tbl">
+        <caption>where it applies</caption>
+        <tr>
+          <th>Parameter space</th>
+          <th>Metric</th>
+          <th>Privacy</th>
+          <th>Conv. rate</th>
+        </tr>
+        <tr>
+          <td>sphere, Stiefel, Grassmann</td>
+          <td>induced</td>
+          <td class="yes">✓</td>
+          <td class="yes">✓</td>
+        </tr>
+        <tr>
+          <td>flat, including $\log\mathcal{S}_n^{++}$</td>
+          <td>Euclidean</td>
+          <td class="yes">✓</td>
+          <td class="no">✗</td>
+        </tr>
+        <tr>
+          <td>$\mathcal{S}_n^{++}$</td>
+          <td>affine-invariant</td>
+          <td colspan="2" class="no" style="text-align:center;">not runnable</td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+
+  <aside class="notes">
+    Les quatre lignes violettes sont la contribution. Le reste est le squelette
+    fédéré habituel. Dire que l'agrégateur n'entre qu'aux lignes 10 et 12, ce qui
+    donne le template unifié: les deux premières lignes de la table redonnent KFAvg
+    et RetAvg. La privacy couvre les quatre schémas, la vitesse seulement les deux
+    nôtres, parce que leurs primitives sont linéaires en les soumissions.
+  </aside>
+</section>

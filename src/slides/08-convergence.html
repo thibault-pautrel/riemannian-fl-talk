@@ -1,0 +1,173 @@
+<!-- ═══════════ Assumptions ═══════════ -->
+<section>
+  <h2>Convergence <span class="hint">assumptions</span></h2>
+
+  <div class="twoform" style="grid-template-columns:1fr 1fr 1fr; gap:22px; margin:-4px 0 14px;">
+    <div class="bx">
+      <div class="hd">Projection</div>
+      $\Pi(y)=\arg\min_{\theta\in\mathcal{M}}\lVert y-\theta\rVert$
+    </div>
+    <div class="bx">
+      <div class="hd">Local solver, RSGD</div>
+      $\theta_{j+1}=\Pi\bigl(\theta_j-\alpha\,\tilde{\operatorname{grad}}f(\theta_j,\mathcal{B}_j)\bigr)$
+    </div>
+    <div class="bx">
+      <div class="hd">Aggregation</div>
+      $\Pi\bigl(\Delta_t\bigr)$ or $\Pi\bigl(\theta_t+\Delta_t\bigr)$
+      <div class="note" style="margin-top:4px;">ProjAvg and RLAvg, same rate</div>
+    </div>
+  </div>
+
+  <div class="cols w46" style="gap:34px; align-items:center;">
+    <div>
+      <div class="asum fragment" data-fig-step="1">
+        <div class="nm">Proximal smoothness</div>
+        <div class="ds">
+          Both stages evaluate $\Pi$ off the manifold, so $\Pi$ must be a map there.
+          A compact submanifold has a tube of radius $\gamma$ around it on which the
+          nearest point is unique.
+        </div>
+      </div>
+      <div class="asum fragment" data-fig-step="2">
+        <div class="nm">Smoothness, per sample</div>
+        <div class="ds">
+          Every individual loss has Lipschitz ambient gradient. Per sample, not per
+          client, because clipping acts before averaging.
+        </div>
+      </div>
+      <div class="asum fragment" data-fig-step="3">
+        <div class="nm">Bounded minibatch dispersion</div>
+        <div class="ds">
+          Within a client, the per-sample gradients do not spread arbitrarily far
+          from the client's own gradient.
+        </div>
+      </div>
+      <div class="asum fragment">
+        <div class="nm">Bounded heterogeneity</div>
+        <div class="ds">
+          Across clients, the local gradients do not spread arbitrarily far from the
+          global one.
+        </div>
+      </div>
+      <p class="note fragment" style="margin-top:12px;">
+        Compactness also gives a finite objective range and a uniform gradient bound $G$.
+      </p>
+    </div>
+
+    <div class="fig" data-figure="proximal"></div>
+  </div>
+
+  <aside class="notes">
+    Faire glisser y. Dans le tube, une seule projection. Au centre, deux, et Pi cesse
+    d'être une application. C'est tout ce que la régularité proximale demande.
+  </aside>
+</section>
+
+<!-- ═══════════ The rate ═══════════ -->
+<section>
+  <h2>Convergence <span class="hint">the rate</span></h2>
+
+  <div class="rate">
+    $\displaystyle \frac1T\sum_{t=0}^{T-1}\mathbb{E}\bigl\lVert\operatorname{grad}F(\theta_t)\bigr\rVert^2
+      = O\!\left(\frac{1}{\sqrt{T}}\Bigl[\,1
+      + \tfrac1k\tfrac{n-k}{n-1}\,\bigl(\text{heterogeneity}+\text{clipping spread}\bigr)^2
+      + \tfrac{1}{k\tau}\bigl(\text{minibatch noise}+d_{\mathcal{M}}\cdot\text{DP noise}\bigr)\Bigr]
+      + \ \text{clipping bias}^2\right)$
+  </div>
+
+  <div class="terms">
+    <div class="term fragment">
+      <div class="nm">Optimisation, $O(1/\sqrt{T})$</div>
+      <div class="ds">The usual nonconvex stationarity rate. Free of $k$, $\tau$ and
+        of the privacy parameters.</div>
+    </div>
+    <div class="term fragment">
+      <div class="nm">Heterogeneity</div>
+      <div class="ds">The price of partial participation. Vanishes at full
+        participation, largest with a single client per round. Clipping adds its own
+        spread to it.</div>
+    </div>
+    <div class="term fragment">
+      <div class="nm">Minibatch noise</div>
+      <div class="ds">Damped by the cohort and by the local trajectory, and removed
+        entirely at full local batches.</div>
+    </div>
+    <div class="term fragment">
+      <div class="nm">DP noise</div>
+      <div class="ds">The dominant privacy cost, damped the same way but only
+        removable by weaker privacy. It scales with the <strong>intrinsic</strong>
+        dimension $d_{\mathcal{M}}$, which is what the projection design buys.</div>
+    </div>
+    <div class="term floor fragment">
+      <div class="nm">Clipping bias, a floor</div>
+      <div class="ds">The only term that does not decay. The iterates reach a
+        neighbourhood of stationarity, not a stationary point, unless the clip is
+        inactive.</div>
+    </div>
+    <div class="term fragment">
+      <div class="nm">Two readings</div>
+      <div class="ds">A larger clip shrinks the floor but needs more noise for the
+        same privacy. At a fixed budget the cost is free of $\tau$, so local work
+        costs nothing in privacy terms.</div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    Ne pas lire la formule. Dire d'abord qu'elle se coupe en deux: une partie qui
+    s'évanouit et un plancher. Puis les cinq termes. Insister sur d_M contre la
+    dimension ambiante, et sur le compromis clip contre bruit.
+  </aside>
+</section>
+
+<!-- ═══════════ What is new ═══════════ -->
+<section>
+  <h2>What this buys</h2>
+
+  <table class="tbl" style="margin-top:6px;">
+    <tr>
+      <th>Method</th><th>Manifold</th><th>Privacy</th>
+      <th>Convergence regime</th><th>Geometric ops</th>
+    </tr>
+    <tr>
+      <td class="nm">RFedSVRG</td><td>general</td><td class="no">✗</td>
+      <td>multi-step with one client, or one step with all</td>
+      <td>$\mathrm{Exp},\mathrm{Log}$, transport</td>
+    </tr>
+    <tr>
+      <td class="nm">AGS</td><td>general</td><td class="no">✗</td>
+      <td>multi-step, partial</td>
+      <td>$\mathrm{R}$, transport</td>
+    </tr>
+    <tr>
+      <td class="nm">PriRFed</td><td>general</td><td class="yes">✓</td>
+      <td>multi-step with one client, or one step with all</td>
+      <td>$\mathrm{R}$, $\mathrm{R}^{-1}$</td>
+    </tr>
+    <tr class="own">
+      <td class="nm">ours<span class="ourtag">DP-RFedProj</span></td>
+      <td>compact</td><td class="yes">✓</td>
+      <td>multi-step <strong>and</strong> partial</td>
+      <td>$\Pi$ only</td>
+    </tr>
+  </table>
+
+  <div class="cols" style="gap:44px; margin-top:24px;">
+    <div class="block fragment" style="margin:0;">
+      <div class="block-title">What is new</div>
+      The two regimes hold together for the first time with a privacy guarantee.
+      The projection-based linearisation is what makes them accessible at once,
+      without curvature-dependent constants.
+    </div>
+    <div class="block fragment" style="margin:0; border-left-color:var(--accent);">
+      <div class="block-title">What it costs</div>
+      Compactness. PriRFed covers general manifolds, ours does not. In exchange the
+      geometry enters through one map instead of a retraction and its inverse.
+    </div>
+  </div>
+
+  <aside class="notes">
+    Dire clairement le compromis: on perd la généralité de la variété, on gagne le
+    régime réaliste et une seule opération géométrique. Sur Stiefel, R et son inverse
+    ne sont pas disponibles ensemble en forme close, ce qui rend le point concret.
+  </aside>
+</section>
