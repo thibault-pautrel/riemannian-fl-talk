@@ -1,0 +1,202 @@
+<!-- ═══════════ Keeping data on the client is not enough ═══════════ -->
+<section>
+  <h2>Keeping data on the client is not enough</h2>
+  <p class="note" style="margin:-10px 0 2px;">
+    A client sends a submission $\Delta^{(i)}$, built from $\theta_t$ and its local
+    iterate. That submission is a known, deterministic function of its records.
+  </p>
+  <div class="fig fig-wide" data-figure="reconstruction"></div>
+  <div class="cols" style="gap:44px; margin-top:2px;">
+    <div>
+      <p class="fragment" data-fig-step="1">
+        The server observes $\Delta^{(i)}$. It also knows $\theta_t$, the model and
+        the protocol, because it chose them.
+      </p>
+      <p class="fragment" data-fig-step="2">
+        So it can guess a record and compute the submission that guess would produce.
+      </p>
+    </div>
+    <div>
+      <p class="fragment" data-fig-step="3">
+        Then it minimises the distance between the two submissions, over the guess.
+      </p>
+      <p class="fragment note" data-fig-step="4">
+        Reconstruction attacks <span class="hint">Zhu et al., 2019</span> and
+        membership inference <span class="hint">Shokri et al., 2017</span> are
+        exactly this, at scale.
+      </p>
+    </div>
+  </div>
+  <aside class="notes">
+    L'optimisation tourne vraiment. Cliquer sur "new record" pour la relancer sur un
+    autre enregistrement. Rien ici n'est propre à SPDNet, seule compte le fait que
+    la carte enregistrement vers soumission soit connue et différentiable.
+  </aside>
+</section>
+
+<!-- ═══════════ Threat model ═══════════ -->
+<section>
+  <h2>Threat model</h2>
+  <div class="cols w64" style="gap:36px; align-items:center;">
+    <div class="fig" data-figure="threat-model"></div>
+    <div>
+      <p>The server follows the protocol exactly. It simply keeps everything it sees.</p>
+      <p class="fragment" data-fig-step="1">Honest, and curious.</p>
+      <p class="fragment" data-fig-step="2">
+        Every round adds a line: the broadcast model, the sampled cohort,
+        and each selected client's update.
+      </p>
+      <div class="block fragment" data-fig-step="3">
+        $\mathcal{V}_T=\bigl(\{(\theta_t,S_t,\{\Delta^{(i)}\}_{i\in S_t})\}_{t=0}^{T-1},\theta_T\bigr)$
+      </div>
+      <p class="note fragment">
+        The guarantee has to hold for $\mathcal{V}_T$ as a whole, not for one message.
+      </p>
+    </div>
+  </div>
+  <aside class="notes">
+    Insister: les données ne bougent jamais, et pourtant la pile de messages grandit.
+    C'est elle qu'il faut protéger.
+  </aside>
+</section>
+
+<!-- ═══════════ Record-level ═══════════ -->
+<section>
+  <h2>What exactly do we protect?</h2>
+  <div class="fig fig-wide" data-figure="adjacency"></div>
+  <div class="cols" style="gap:44px; margin-top:6px;">
+    <div>
+      <p class="fragment" data-fig-step="1">
+        Two databases over the same cohort of clients.
+      </p>
+      <p class="fragment" data-fig-step="2">
+        <strong>Record-adjacent</strong>, $D\bowtie D'$: one client's dataset differs
+        by a single substituted record.
+      </p>
+    </div>
+    <div>
+      <p class="fragment" data-fig-step="3">
+        Everything else is untouched, including the other clients.
+      </p>
+      <p class="note fragment">
+        Record level, not client level. We hide one training example, not
+        whether a hospital took part.
+      </p>
+    </div>
+  </div>
+  <aside class="notes">
+    Cliquer sur n'importe quelle case pour changer l'enregistrement substitué.
+    Mentionner que les jeux locaux sont supposés disjoints.
+  </aside>
+</section>
+<!-- ═══════════ The mechanism ═══════════ -->
+<section>
+  <h2>Randomisation procedure</h2>
+
+  <div class="cols w64" style="gap:30px; align-items:center;">
+    <div>
+      <div class="fig" data-figure="clip-noise"></div>
+      <p class="figcap">
+        $\textcolor{#009E73}{\operatorname{clip}_C}(v)
+          =v\,\min\bigl(1,\,C/\lVert v\rVert\bigr)$,
+        the radial projection onto the ball of radius $C$
+      </p>
+    </div>
+
+    <div>
+      <div class="method fragment" data-fig-step="1">
+        <div class="nm">minibatch gradient</div>
+        <div class="fm">
+          $\displaystyle \widehat{\nabla} f(x,\mathcal{B})
+            =\frac1B\sum_{z\in\mathcal{B}}\nabla f(x,z)$
+        </div>
+      </div>
+
+      <div class="method fragment" data-fig-step="2">
+        <div class="nm">clipped</div>
+        <div class="fm">
+          $\displaystyle \widehat{\nabla}^{C} f(x,\mathcal{B})
+            =\frac1B\sum_{z\in\mathcal{B}}
+             \textcolor{#009E73}{\operatorname{clip}_C}\bigl(\nabla f(x,z)\bigr)$
+        </div>
+        <div class="cm">
+          If $\mathcal{B}'$ replaces $z$ by $z'$, then
+          $$\bigl\lVert\widehat{\nabla}^{C} f(x,\mathcal{B})
+            -\widehat{\nabla}^{C} f(x,\mathcal{B}')\bigr\rVert\le\frac{2C}{B}$$
+          whatever the two records are.
+        </div>
+      </div>
+
+      <div class="method fragment" data-fig-step="3">
+        <div class="nm">privatised</div>
+        <div class="fm">
+          $\displaystyle \textcolor{#6B3FA0}{\tilde{\nabla} f(x,\mathcal{B})}
+            =\widehat{\nabla}^{C} f(x,\mathcal{B})
+             +\mathcal{N}\!\Bigl(0,\sigma^{2}I\Bigr)$
+        </div>
+      </div>
+
+      <div class="method fragment" data-fig-step="4">
+        <div class="nm">and so is the update</div>
+        <div class="fm">
+          $\displaystyle \theta_{s+1}\leftarrow\theta_s-\eta\,
+            \textcolor{#6B3FA0}{\tilde{\nabla} f(\theta_s,\mathcal{B}_s)}$
+        </div>
+        <div class="cm">
+          After $\tau$ such steps the client builds $\Delta^{(i)}$ from
+          $\theta_{t,\tau}^{(i)}$. Every message in $\mathcal{V}_T$ is noisy.
+        </div>
+      </div>
+
+      <p class="note fragment">
+        Does that stop the attacker? The next definition says how much.
+      </p>
+    </div>
+  </div>
+
+  <aside class="notes">
+    Premier temps: le gradient de minibatch usuel, rien de privé. Deuxième temps:
+    le clipping, et surtout la borne, qui est ce qui rend le bruit calibrable.
+    Troisième temps: le bruit, et les deux flèches qui sautent d'un tirage à l'autre.
+  </aside>
+</section>
+<!-- ═══════════ Differential privacy ═══════════ -->
+<section>
+  <h2>Differential privacy</h2>
+
+  <div class="block" style="margin:-6px 0 8px;">
+    For every record-adjacent pair $D\bowtie D'$ and every set of outcomes $E$,
+    $$\Pr\bigl(\mathcal{A}(D)\in E\bigr)\le
+      e^{\varepsilon}\,\Pr\bigl(\mathcal{A}(D')\in E\bigr)+\delta .$$
+  </div>
+
+  <div class="fig" data-figure="tradeoff" style="max-width:860px; margin:0 auto;"></div>
+
+    <div class="cols" style="gap:44px; margin-top:2px;">
+    <div>
+      <p class="fragment" data-fig-step="1">
+        Substituting one record shifts the law of what is released. Only the noise
+        keeps the two close.
+      </p>
+      <p class="fragment" data-fig-step="2">
+        <strong>$\varepsilon$</strong> is the slack allowed on the right-hand side:
+        the red law is scaled by $e^{\varepsilon}$.
+      </p>
+    </div>
+    <div>
+      <p class="fragment" data-fig-step="3">
+        Take $E$ to be the outcomes where blue still sticks out. That is the set
+        that hurts the inequality most.
+      </p>
+      <p class="fragment" data-fig-step="4">
+        On that $E$, the left-hand side still exceeds the right-hand side by the
+        shaded area. <strong>$\delta$</strong> is exactly what has to cover it.
+      </p>
+    </div>
+  </div>
+
+  <aside class="notes">
+    Curseurs: baisser sigma écarte les deux lois et delta explose, monter sigma les
+    superpose et delta tombe. C'est tout le compromis, sans autre machinerie.
+  </aside>
+</section>

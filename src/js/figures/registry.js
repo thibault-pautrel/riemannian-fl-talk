@@ -11,7 +11,11 @@ export function mountAll(root = document) {
     if (instances.has(el)) return;
     const make = factories.get(el.dataset.figure);
     if (!make) { console.warn('unknown figure:', el.dataset.figure); return; }
-    instances.set(el, make(el));
+    try {
+      instances.set(el, make(el));
+    } catch (err) {
+      console.error('figure failed:', el.dataset.figure, err);
+    }
   });
 }
 

@@ -17,6 +17,11 @@ import spdnetArch from './figures/spdnet-arch.js';
 import fedRound, { fedRoundStatic } from './figures/fed-round.js';
 import localOpt from './figures/local-opt.js';
 import { aggExisting, aggProposed } from './figures/aggregation.js';
+import reconstruction from './figures/reconstruction.js';
+import threatModel from './figures/threat-model.js';
+import adjacency from './figures/adjacency.js';
+import clipNoise from './figures/clip-noise.js';
+import tradeoff from './figures/tradeoff.js';
 
 import '@fontsource-variable/inter';
 import 'reveal.js/dist/reveal.css';
@@ -66,6 +71,11 @@ register('fed-round-static', fedRoundStatic);
 register('local-opt', localOpt);
 register('agg-existing', aggExisting);
 register('agg-proposed', aggProposed);
+register('reconstruction', reconstruction);
+register('threat-model', threatModel);
+register('adjacency', adjacency);
+register('clip-noise', clipNoise);
+register('tradeoff', tradeoff);
 
 // a figure step is the largest data-fig-step among the visible fragments
 function stepOf(slide) {
@@ -101,9 +111,6 @@ window.renderFigureMath = (node) => renderMathInElement(node, {
 });
 
 deck.initialize().then(() => {
-  mountAll();
-  sync(deck.getCurrentSlide());
-
   renderMathInElement(document.querySelector('.reveal .slides'), {
     delimiters: [
       { left: '$$', right: '$$', display: true },
@@ -114,6 +121,9 @@ deck.initialize().then(() => {
     macros,
     throwOnError: false
   });
+
+  mountAll();
+  sync(deck.getCurrentSlide());
 });
 
 // handy while building

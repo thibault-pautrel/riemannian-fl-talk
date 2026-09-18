@@ -59,6 +59,20 @@ export function makeScene(el, { width = 1100, height = 620 } = {}) {
     toolBox.appendChild(d);
     return d;
   }
-
-  return { svg, W, H, uid, arrow, g, node, label, tool, hint };
+  function slider(label, { min = 0, max = 1, step = 0.01, value = 0.5 }, onInput) {
+    const wrap = document.createElement('label');
+    wrap.className = 'fig-slider';
+    const name = document.createElement('span');
+    name.className = 'nm';
+    name.innerHTML = label;
+    const input = document.createElement('input');
+    Object.assign(input, { type: 'range', min, max, step, value });
+    const out = document.createElement('span');
+    out.className = 'vl';
+    input.addEventListener('input', () => onInput(+input.value));
+    wrap.append(name, input, out);
+    toolBox.appendChild(wrap);
+    return { node: wrap, input, set(txt) { out.textContent = txt; } };
+  }
+  return { svg, W, H, uid, arrow, g, node, label, tool, hint, slider };
 }

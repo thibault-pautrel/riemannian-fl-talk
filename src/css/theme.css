@@ -307,3 +307,17 @@
 .twoform .hd{ font-weight:650; margin-bottom:6px; }
 .twoform .bx{ padding:12px 18px; background:#F4F7F9; border-left:3px solid var(--rule); }
 .twoform .bx.rie{ border-left-color:var(--accent); background:rgba(178,24,43,.06); }
+/* ---- sliders inside a figure ---- */
+.fig-slider{
+  display:flex; align-items:center; gap:10px;
+  font-size:15px; color:var(--slate);
+  background:#fff; border:1px solid var(--rule); border-radius:5px;
+  padding:4px 12px;
+}
+.fig-slider .nm{ font-family:var(--mono); }
+.fig-slider .vl{ font-family:var(--mono); color:var(--navy); min-width:54px; }
+.fig-slider input[type=range]{ width:128px; accent-color:var(--c1); }
+.figcap{
+  margin:8px 0 0; text-align:center;
+  font-size:19px; color:var(--slate);
+}
