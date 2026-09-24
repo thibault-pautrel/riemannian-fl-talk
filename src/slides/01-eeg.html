@@ -1,8 +1,9 @@
 <!-- ═══════════ S04 · EEG and motor imagery ═══════════ -->
 <section>
   <h2>EEG data</h2>
-  <p>Electrodes on the scalp record the electrical activity of the brain.
-     In motor imagery, the subject imagines a movement and the signal should
+  <p>Electrodes record the electrical activity of the brain.
+  </p>
+  <p>Motor imagery: the subject imagines a movement and the signal should
      tell us which one.</p>
   <div class="fig fig-wide" data-figure="eeg-head" style="margin-top:6px;"></div>
   <p class="fragment note" data-fig-step="1" style="margin-top:4px;">
@@ -23,8 +24,8 @@
 <!-- ═══════════ S05 · From signals to covariance ═══════════ -->
 <section>
   <h2>From raw signals to covariance</h2>
-  <p>The channels are correlated. What carries the class is how pairs of
-     electrodes co-vary over the trial, not the raw amplitudes.</p>
+  <p>The channels are correlated. Important information to predict the class: how pairs of
+     electrodes co-vary over the trial.</p>
   <div class="fig fig-wide" data-figure="eeg-cov" style="margin-top:2px;"></div>
   <p class="fragment" data-fig-step="1" style="display:none"></p>
   <p class="fragment" data-fig-step="2" style="display:none"></p>
@@ -39,6 +40,9 @@
 <!-- ═══════════ S06 · The SPD cone ═══════════ -->
 <section>
   <h2>SPD matrices</h2>
+    <p>
+    Covariance matrices are structured features. 
+  </p>
   <div class="cols w46">
     <div>
       <div class="block">
@@ -47,39 +51,24 @@
         $\Sigma^{\top}=\Sigma$ and $x^{\top}\Sigma x>0$ for every $x\neq 0$.
       </div>
       <p class="fragment" data-fig-step="1">
-        Here $C=2$, so $\Sigma$ has three free entries and we can see the whole set.
-      </p>
-      <p class="fragment" data-fig-step="2">
         An open convex cone: stable under positive scaling, unbounded, and its
         boundary $\det\Sigma=0$ does not belong to it.
       </p>
       <p class="fragment note" data-fig-step="2">
-        Not a vector space. This is the first place where the geometry shows up.
+        Not a vector space.
       </p>
+      <div class="fragment" data-fig-step="3">
+
+      </div>
     </div>
     <div class="fig" data-figure="spd-cone"></div>
   </div>
+  <p class="fragment" data-fig-step="4">
+    What model can we train on these features? 
+    </p>
   <aside class="notes">
     Drag a point toward the boundary and let them watch the determinant fall
     toward zero. That is the picture to keep for the whole talk.
   </aside>
 </section>
 
-<!-- ═══════════ S08 · Data is scattered ═══════════ -->
-<section>
-  <h2>The data is scattered</h2>
-  <p>Recordings come from different sites, and each site holds few subjects.</p>
-  <div class="fig fig-wide" data-figure="sites" style="margin-top:8px;"></div>
-  <p class="fragment" data-fig-step="1" style="display:none"></p>
-  <p class="fragment note" data-fig-step="2" style="margin-top:2px;">
-    EEG encodes mental state. It is personal data, so raw trials do not leave
-    the site that recorded them.
-  </p>
-  <p class="fragment note" data-fig-step="2">
-    The centralised pipeline is therefore unavailable, and each site alone has
-    too little data.
-  </p>
-  <aside class="notes">
-    End on the question: can we train one model on all of it without moving any of it?
-  </aside>
-</section>

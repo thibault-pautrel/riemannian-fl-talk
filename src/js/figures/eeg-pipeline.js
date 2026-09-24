@@ -1,6 +1,6 @@
 import { makeScene } from './scene.js';
 import { makeTicker } from '../anim.js';
-import { makeEEG, CHANNELS, GHOST, rdbu } from '../data/eeg.js';
+import { makeEEG, CHANNELS, GHOST, rdbu, activityAt } from '../data/eeg.js';
 
 const DATA = makeEEG();
 const C = DATA.C;
@@ -11,6 +11,9 @@ const C = DATA.C;
    The map is six radial blobs, one per electrode, coloured by the
    instantaneous amplitude, blurred and clipped to the scalp.
    ==================================================================== */
+let HEAD_ID = 0;                    // unique ids, the head is drawn in two figures
+const ACTIVITY_BLUE = '#1E64B4';
+
 function drawHead(sc, parent, cx, cy, R, { labels = 'outside' } = {}) {
   const P = (p) => ({ x: cx + R * p[0], y: cy - R * p[1] });
   const skin = '#F7F9FA', edge = '#9AA6B2';
@@ -23,6 +26,22 @@ function drawHead(sc, parent, cx, cy, R, { labels = 'outside' } = {}) {
     cx: cx + s * R, cy, rx: R * 0.06, ry: R * 0.11, fill: skin, stroke: edge, 'stroke-width': 1.2
   }));
   sc.node(parent, 'circle', { cx, cy, r: R, fill: skin, stroke: edge, 'stroke-width': 1.8 });
+
+  // activity map: one blue radial gradient per electrode, clipped to the scalp
+  const uid = `head${++HEAD_ID}`;
+  const defs = sc.node(parent, 'defs', {});
+  const clip = sc.node(defs, 'clipPath', { id: `${uid}-clip` });
+  sc.node(clip, 'circle', { cx, cy, r: R - 1 });
+  const grad = sc.node(defs, 'radialGradient', { id: `${uid}-grad` });
+  sc.node(grad, 'stop', { offset: '0%',   'stop-color': ACTIVITY_BLUE, 'stop-opacity': 0.75 });
+  sc.node(grad, 'stop', { offset: '45%',  'stop-color': ACTIVITY_BLUE, 'stop-opacity': 0.35 });
+  sc.node(grad, 'stop', { offset: '100%', 'stop-color': ACTIVITY_BLUE, 'stop-opacity': 0 });
+  const gMap = sc.node(parent, 'g', { 'clip-path': `url(#${uid}-clip)` });
+  const blobs = CHANNELS.map((c) => {
+    const q = P(c.pos);
+    return sc.node(gMap, 'circle', { cx: q.x, cy: q.y, r: R * 0.4,
+                                     fill: `url(#${uid}-grad)`, opacity: 0 });
+  });
 
   GHOST.forEach((p) => {
     const q = P(p);
@@ -64,9 +83,12 @@ function drawHead(sc, parent, cx, cy, R, { labels = 'outside' } = {}) {
   return {
     at: (i) => P(CHANNELS[i].pos),
     // lit: per channel brightness in [0, 1]
-    update({ lit = null, emph = null, showNames = true } = {}) {
+    update({ lit = null, emph = null, showNames = true, activity = null } = {}) {
       dots.forEach((d, i) => {
         const on = emph === null || emph.includes(i);
+        const a = activity ? activity[i] : 0;
+        blobs[i].setAttribute('opacity', a * (on ? 1 : 0.25));
+        blobs[i].setAttribute('r', R * (0.30 + 0.22 * a));
         const L = lit ? lit[i] : 1;
         d.setAttribute('opacity', on ? 0.35 + 0.65 * L : 0.3);
         d.setAttribute('r', R * 0.068 * (emph && on ? 1.3 : 1));
@@ -170,7 +192,14 @@ export function eegHead(el) {
       const start = i * 0.11, span = 0.42;
       return Math.max(0, Math.min(1, (g2 - start) / span));
     });
-    head.update({ lit: g2 > 0.01 ? grow : CHANNELS.map(() => g1), emph });
+    // activity under each electrode, read where its trace has reached
+    const lit = g2 > 0.01 ? grow : CHANNELS.map(() => g1);
+    const activity = lit.map((L, i) => {
+      const frac = g2 > 0.01 ? grow[i] : 0.5;
+      const amp = Math.min(1, Math.abs(activityAt(DATA, frac)[i]));
+      return L * (0.35 + 0.65 * amp);
+    });
+    head.update({ lit, emph, activity });
     labFront.show(true);
     link.setAttribute('opacity', g2 > 0.03 ? 1 : 0);
     sig.update({ grow: g2 > 0.01 ? grow : CHANNELS.map(() => 0), emph });

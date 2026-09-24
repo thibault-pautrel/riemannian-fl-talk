@@ -12,6 +12,7 @@ import logMap from './figures/log-map.js';
 import manifoldCharts from './figures/manifold-charts.js';
 import { eegHead, eegCov } from './figures/eeg-pipeline.js';
 import spdCone from './figures/spd-cone.js';
+import classifyFlat from './figures/classify-flat.js';
 import sites from './figures/sites.js';
 import spdnetArch from './figures/spdnet-arch.js';
 import fedRound, { fedRoundStatic } from './figures/fed-round.js';
@@ -25,6 +26,9 @@ import riemClipNoise from './figures/riem-clip-noise.js';
 import riemProposed from './figures/riem-proposed.js';
 import proximal from './figures/proximal.js';
 import tradeoff from './figures/tradeoff.js';
+import fdpCurve from './figures/fdp-curve.js';
+import gdpLink from './figures/gdp-link.js';
+import accounting from './figures/accounting.js';
 
 import '@fontsource-variable/inter';
 import 'reveal.js/dist/reveal.css';
@@ -69,6 +73,7 @@ register('manifold-charts', manifoldCharts);
 register('eeg-head', eegHead);
 register('eeg-cov', eegCov);
 register('spd-cone', spdCone);
+register('classify-flat', classifyFlat);
 register('sites', sites);
 register('spdnet-arch', spdnetArch);
 register('fed-round', fedRound);
@@ -84,6 +89,9 @@ register('riem-clip-noise', riemClipNoise);
 register('riem-proposed', riemProposed);
 register('proximal', proximal);
 register('tradeoff', tradeoff);
+register('fdp-curve', fdpCurve);
+register('gdp-link', gdpLink);
+register('accounting', accounting);
 
 // a figure step is the largest data-fig-step among the visible fragments
 function stepOf(slide) {

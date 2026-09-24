@@ -1,35 +1,34 @@
 import { makeScene } from './scene.js';
 import { makeTicker } from '../anim.js';
 
-/* (eps, delta)-DP, read straight off the formula.
+/* The definition, on what is actually transmitted.
 
-   Two neighbouring databases give two laws for the released quantity.
-   Draw the blue one, then e^eps times the red one. Wherever blue pokes
-   above, the bound by e^eps alone fails, and the area of that excess
-   is exactly delta. */
+   A client submission is random, because the gradients behind it are.
+   Substituting one record moves its law. E is any set of outcomes the
+   server may test, and the definition compares the two chances of
+   landing in it. */
 
-const CW = 1060, CH = 330;
+const CW = 1060, CH = 300;
 const NAVY = '#243B54', SLATE = '#8A9AA8';
-const D_COL = '#0072B2', N_COL = '#B2182B', EXC = '#E69F00';
+const D_COL = '#0072B2', N_COL = '#B2182B', OK = '#009E73';
+
+const PX = 250, PY = 150, S = 98;               // cloud panel
+const MD = [-0.30, 0.10], MN = [0.42, 0.34];    // the two means
+const SD0 = 0.42;
 
 export default function tradeoff(el) {
   const sc = makeScene(el, { width: CW, height: CH });
   const ticker = makeTicker();
 
-  let sigma = 0.8, eps = 1.0;
-  const SENS = 1;                                    // one record moves it by this much
+  let sigma = 1.0, eps = 1.0, delta = 0.05;
+  let E = { x: 0.52, y: 0.42, r: 0.62 };
+  const E0 = { ...E };
 
-  const LX = 70, LW = 920, LY = 232, LH = 178;
-  const T0 = -3.4, T1 = 4.6;
-  const tx = (t) => LX + LW * (t - T0) / (T1 - T0);
-  const ty = (d) => LY - LH * d / 0.62;
-
-  const pdf = (t, m) => Math.exp(-((t - m) ** 2) / (2 * sigma * sigma))
-                      / (sigma * Math.sqrt(2 * Math.PI));
+  const P = (v) => ({ x: PX + S * v[0], y: PY - S * v[1] });
 
   const g = sc.g();
-  const txt = (parent, x, y, s, o = {}) => {
-    const n = sc.node(parent, 'text', {
+  const txt = (x, y, s, o = {}) => {
+    const n = sc.node(g, 'text', {
       x, y, 'text-anchor': o.anchor ?? 'middle', 'font-size': o.size ?? 16,
       'font-weight': o.weight ?? 400, fill: o.fill ?? SLATE,
       'font-family': o.mono ? 'var(--mono)' : 'var(--sans)'
@@ -38,131 +37,150 @@ export default function tradeoff(el) {
     return n;
   };
 
-  sc.node(g, 'line', { x1: LX - 10, y1: LY, x2: LX + LW + 10, y2: LY,
-                       stroke: '#C8D2DA', 'stroke-width': 1.2 });
+  // ---- the two clouds, as contour rings
+  const rings = (col) => [0.55, 1.0, 1.55].map((k) => sc.node(g, 'circle', {
+    fill: col, 'fill-opacity': .10, stroke: col, 'stroke-opacity': .25,
+    'stroke-width': 1, opacity: 0, 'data-k': k }));
+  const ringD = rings(D_COL), ringN = rings(N_COL);
+  const coreD = sc.node(g, 'circle', { r: 4.5, fill: D_COL, opacity: 0 });
+  const coreN = sc.node(g, 'circle', { r: 4.5, fill: N_COL, opacity: 0 });
 
-  const excess = sc.node(g, 'path', { fill: EXC, 'fill-opacity': .55, stroke: 'none', opacity: 0 });
-  const curveQ = sc.node(g, 'path', { fill: 'none', stroke: N_COL, 'stroke-width': 2.6, opacity: 0 });
-  const curveS = sc.node(g, 'path', { fill: 'none', stroke: N_COL, 'stroke-width': 2.4,
-                                      'stroke-dasharray': '8 5', opacity: 0 });
-  const curveP = sc.node(g, 'path', { fill: 'none', stroke: D_COL, 'stroke-width': 2.8 });
-  const grow = sc.node(g, 'path', { fill: 'none', stroke: N_COL, 'stroke-opacity': .35,
-                                    'stroke-width': 1.4, 'marker-end': sc.arrow('accent'),
-                                    opacity: 0 });
+  const region = sc.node(g, 'circle', {
+    fill: 'none', stroke: NAVY, 'stroke-width': 2, 'stroke-dasharray': '7 5',
+    cursor: 'move', opacity: 0 });
+  const labE = txt(0, 0, 'E', { size: 19, fill: NAVY, weight: 650 });
+  const labD = txt(0, 0, 'record used', { size: 14, fill: D_COL });
+  const labN = txt(0, 0, 'record replaced', { size: 14, fill: N_COL });
 
-  const labP = txt(g, 0, 0, 'released quantity under D', { size: 16, fill: D_COL });
-  const labQ = txt(g, 0, 0, "under D′", { size: 16, fill: N_COL });
-  const labS = txt(g, 0, 0, 'e^ε × that', { size: 16, fill: N_COL, mono: true });
-  const labD = txt(g, 0, 0, 'δ', { size: 22, fill: '#9A6A0A', weight: 650 });
-  const eBar = sc.node(g, 'line', { y1: LY + 12, y2: LY + 12, stroke: EXC,
-                                    'stroke-width': 5, 'stroke-linecap': 'round', opacity: 0 });
-  const eLab = txt(g, 0, LY + 38, 'E', { size: 19, fill: '#9A6A0A', weight: 650 });
-  const readout = txt(g, CW / 2, CH - 12, '', { size: 16, fill: NAVY, mono: true });
-
-  const sSig = sc.slider('noise σ', { min: 0.25, max: 2.4, step: 0.01, value: sigma },
-                         (v) => { sigma = v; render(1); });
-  const sEps = sc.slider('ε', { min: 0.1, max: 3, step: 0.05, value: eps },
-                         (v) => { eps = v; render(1); });
-
-  const path = (m, scale, upTo = 1) => {
-    let d = '';
-    const n = 260;
-    for (let i = 0; i <= n; i++) {
-      const t = T0 + (T1 - T0) * i / n;
-      const v = pdf(t, m) * (1 + (scale - 1) * upTo);
-      d += (i ? 'L' : 'M') + tx(t).toFixed(1) + ' ' + ty(v).toFixed(1);
-    }
-    return d;
+  // ---- the inequality, as two bars
+  const BX = 560, BW = 230;
+  const row = (y, label) => {
+    txt(BX, y - 10, label, { anchor: 'start', size: 14, fill: NAVY });
+    sc.node(g, 'rect', { x: BX, y, width: BW, height: 20, rx: 3,
+                         fill: '#F2F5F7', stroke: '#DDE4EA', 'stroke-width': 1 });
   };
+  row(86, 'Pr( Δ lands in E )   if used');
+  row(150, 'e^ε × Pr( … )  + δ   if not');
+  const barD = sc.node(g, 'rect', { x: BX, y: 86, height: 20, rx: 3, fill: D_COL, width: 0 });
+  const barN = sc.node(g, 'rect', { x: BX, y: 150, height: 20, rx: 3, fill: N_COL,
+                                    'fill-opacity': .55, width: 0 });
+  const barE = sc.node(g, 'rect', { x: BX, y: 150, height: 20, rx: 3, fill: OK,
+                                    'fill-opacity': .6, width: 0 });
+  const vD = txt(0, 101, '', { anchor: 'start', size: 14, mono: true, fill: NAVY });
+  const vN = txt(0, 165, '', { anchor: 'start', size: 14, mono: true, fill: NAVY });
+  const verdict = txt(BX, 206, '', { anchor: 'start', size: 16, weight: 650 });
+  const moral = txt(BX, 232, '', { anchor: 'start', size: 14 });
 
-  // the region where p exceeds e^eps q, and its area
-  // E is the set where p exceeds e^eps q, the worst set for the definition
-  function excessRegion(scale) {
-    const n = 900, step = (T1 - T0) / n;
-    let up = '', down = [], area = 0, inside = false, peak = { t: 0, v: 0 };
-    let pE = 0, qE = 0, lo = null, hi = null;
-    for (let i = 0; i <= n; i++) {
-      const t = T0 + step * i;
-      const p = pdf(t, 0), q = pdf(t, SENS) * scale;
-      if (p > q) {
-        area += (p - q) * step;
-        pE += p * step;
-        qE += q * step;
-        if (lo === null) lo = t;
-        hi = t;
-        if (p - q > peak.v) peak = { t, v: p - q };
-        up += (inside ? 'L' : 'M') + `${tx(t).toFixed(1)} ${ty(p).toFixed(1)}`;
-        down.push(`L${tx(t).toFixed(1)} ${ty(q).toFixed(1)}`);
-        inside = true;
+  const sS = sc.slider('noise', { min: 0.3, max: 3, step: 0.02, value: sigma },
+                       (v) => { sigma = v; render(1); });
+  const sE = sc.slider('ε', { min: 0.1, max: 3, step: 0.05, value: eps },
+                       (v) => { eps = v; render(1); });
+  const sD = sc.slider('δ', { min: 0, max: 0.3, step: 0.005, value: delta },
+                       (v) => { delta = v; render(1); });
+
+  // chance that a Gaussian cloud lands in the disc, by quadrature
+  function mass(mean, sd) {
+    const n = 46;
+    let acc = 0;
+    for (let i = 0; i < n; i++)
+      for (let j = 0; j < n; j++) {
+        const x = E.x + E.r * (2 * (i + 0.5) / n - 1);
+        const y = E.y + E.r * (2 * (j + 0.5) / n - 1);
+        if ((x - E.x) ** 2 + (y - E.y) ** 2 > E.r * E.r) continue;
+        const d2 = (x - mean[0]) ** 2 + (y - mean[1]) ** 2;
+        acc += Math.exp(-d2 / (2 * sd * sd)) / (6.2832 * sd * sd);
       }
-    }
-    return { d: inside ? up + down.reverse().join('') + 'Z' : '',
-             area, peak, pE, qE, lo, hi };
+    return acc * (2 * E.r / n) ** 2;
   }
+
+  const toLocal = (e) => {
+    const m = sc.svg.getScreenCTM();
+    const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+    return [(p.x - PX) / S, (PY - p.y) / S];
+  };
+  let drag = false;
+  sc.svg.addEventListener('pointerdown', (e) => {
+    const p = toLocal(e);
+    if (Math.hypot(p[0] - E.x, p[1] - E.y) < E.r + 0.3) {
+      drag = true; sc.svg.setPointerCapture(e.pointerId);
+    }
+  });
+  sc.svg.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const p = toLocal(e);
+    E.x = p[0]; E.y = p[1];
+    render(1);
+  });
+  const stop = () => { drag = false; };
+  sc.svg.addEventListener('pointerup', stop);
+  sc.svg.addEventListener('pointercancel', stop);
 
   let step = 0, lastT = 1;
 
   function render(t = lastT) {
     lastT = t;
-    const g1 = step > 1 ? 1 : step === 1 ? t : 0;   // the second law
-    const g2 = step > 2 ? 1 : step === 2 ? t : 0;   // scale it by e^eps
-    const g3 = step >= 3 ? 1 : 0;                   // the leftover area
+    const g1 = step > 1 ? 1 : step === 1 ? t : 0;   // the second cloud
+    const g2 = step > 2 ? 1 : step === 2 ? t : 0;   // the set E
+    const g3 = step === 3 ? t : 0;                  // the comparison
 
-    sSig.set(sigma.toFixed(2));
-    sEps.set(eps.toFixed(2));
+    sS.set(sigma.toFixed(2));
+    sE.set(eps.toFixed(2));
+    sD.set(delta.toFixed(3));
 
-    curveP.setAttribute('d', path(0, 1));
-    curveQ.setAttribute('d', path(SENS, 1));
-    curveQ.setAttribute('opacity', g1 * (g2 > .2 ? 0.35 : 1));
+    const sd = SD0 * sigma;
+    const qD = P(MD), qN = P(MN);
+    ringD.forEach((c) => {
+      c.setAttribute('cx', qD.x); c.setAttribute('cy', qD.y);
+      c.setAttribute('r', S * sd * +c.getAttribute('data-k'));
+      c.setAttribute('opacity', 1);
+    });
+    ringN.forEach((c) => {
+      c.setAttribute('cx', qN.x); c.setAttribute('cy', qN.y);
+      c.setAttribute('r', S * sd * +c.getAttribute('data-k'));
+      c.setAttribute('opacity', g1);
+    });
+    coreD.setAttribute('cx', qD.x); coreD.setAttribute('cy', qD.y);
+    coreD.setAttribute('opacity', 1);
+    coreN.setAttribute('cx', qN.x); coreN.setAttribute('cy', qN.y);
+    coreN.setAttribute('opacity', g1);
+    labD.setAttribute('x', qD.x); labD.setAttribute('y', qD.y + S * sd * 1.55 + 18);
+    labN.setAttribute('x', qN.x); labN.setAttribute('y', qN.y - S * sd * 1.55 - 10);
+    labN.setAttribute('opacity', g1 > .5 ? 1 : 0);
 
-    const scale = 1 + (Math.exp(eps) - 1) * g2;
-    curveS.setAttribute('d', path(SENS, scale));
-    curveS.setAttribute('opacity', g2 > .03 ? 1 : 0);
+    const qE = P([E.x, E.y]);
+    region.setAttribute('cx', qE.x); region.setAttribute('cy', qE.y);
+    region.setAttribute('r', S * E.r);
+    region.setAttribute('opacity', g2);
+    labE.setAttribute('x', qE.x); labE.setAttribute('y', qE.y - S * E.r - 10);
+    labE.setAttribute('opacity', g2 > .5 ? 1 : 0);
 
-    const top = tx(SENS);
-    grow.setAttribute('d', `M${top} ${ty(pdf(SENS, SENS))}V${ty(pdf(SENS, SENS) * scale) + 8}`);
-    grow.setAttribute('opacity', g2 > .05 && g2 < .95 ? 1 : 0);
+    const pD = mass(MD, sd), pN = mass(MN, sd);
+    const shown = Math.max(g2, g3);
+    barD.setAttribute('width', BW * Math.min(1, pD) * shown);
+    vD.setAttribute('x', BX + BW * Math.min(1, pD) * shown + 10);
+    vD.textContent = shown > .5 ? pD.toFixed(2) : '';
 
-    labP.setAttribute('x', tx(-0.1)); labP.setAttribute('y', ty(pdf(0, 0)) - 16);
-    labQ.setAttribute('x', tx(SENS + 0.9)); labQ.setAttribute('y', ty(pdf(SENS + 0.9, SENS)) - 12);
-    labQ.setAttribute('opacity', g1 > .5 ? 1 : 0);
-    labS.setAttribute('x', tx(SENS + 1.0));
-    labS.setAttribute('y', ty(Math.min(0.60, pdf(SENS, SENS) * scale)) - 14);
-    labS.setAttribute('opacity', g2 > .7 ? 1 : 0);
+    const scaled = Math.min(1, Math.exp(eps) * pN);
+    const total = Math.min(1, scaled + delta);
+    barN.setAttribute('width', BW * scaled * shown);
+    barE.setAttribute('x', BX + BW * scaled * shown);
+    barE.setAttribute('width', BW * (total - scaled) * shown * (g3 > .1 ? 1 : 0));
+    vN.setAttribute('x', BX + BW * total * shown + 10);
+    vN.textContent = shown > .5 ? total.toFixed(2) : '';
 
-    const R = excessRegion(Math.exp(eps));
-    const onE = step >= 3 && R.d;
-    if (onE) {
-      eBar.setAttribute('x1', tx(R.lo)); eBar.setAttribute('x2', tx(Math.min(R.hi, T1)));
-      eBar.setAttribute('opacity', 1);
-      eLab.setAttribute('x', (tx(R.lo) + tx(Math.min(R.hi, T1))) / 2);
-      eLab.setAttribute('opacity', 1);
-    } else {
-      eBar.setAttribute('opacity', 0); eLab.setAttribute('opacity', 0);
-    }
-
-    if (step >= 4 && R.d) {
-      excess.setAttribute('d', R.d); excess.setAttribute('opacity', 1);
-      labD.setAttribute('x', tx(R.peak.t) - 6);
-      labD.setAttribute('y', ty(pdf(R.peak.t, 0)) - 14);
-      labD.setAttribute('opacity', 1);
-      readout.textContent =
-        `Pr(A(D) ∈ E) = ${R.pE.toFixed(3)}    ` +
-        `e^ε Pr(A(D′) ∈ E) = ${R.qE.toFixed(3)}    ` +
-        `δ must cover ${R.area.toFixed(3)}`;
-    } else {
-      excess.setAttribute('opacity', 0);
-      labD.setAttribute('opacity', 0);
-      readout.textContent = '';
-    }
+    const holds = pD <= total + 1e-9;
+    verdict.textContent = g3 > .5 ? (holds ? 'holds here' : 'fails here') : '';
+    verdict.setAttribute('fill', holds ? OK : N_COL);
+    moral.textContent = g3 > .7 ? 'must hold for every E' : '';
   }
 
   sc.tool('reset', () => {
-    sigma = 0.8; eps = 1.0;
-    sSig.input.value = sigma; sEps.input.value = eps; render(1);
+    E = { ...E0 }; sigma = 1.0; eps = 1.0; delta = 0.05;
+    sS.input.value = sigma; sE.input.value = eps; sD.input.value = delta;
+    render(1);
   });
 
-  const durations = [0, 800, 1100, 600, 700];
+  const durations = [0, 900, 800, 900];
   render(1);
 
   return {

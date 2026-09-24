@@ -103,6 +103,28 @@
 }
 .numlist .t{ padding-top:7px; }
 
+/* ---- table of contents, two columns filled top to bottom ---- */
+.toc{
+  list-style:none; margin:0; padding:0;
+  max-width:1200px;
+}
+.toc li{
+  display:flex; align-items:center; gap:26px;
+  padding:22px 0; border-bottom:1px solid var(--rule);
+}
+.toc .n{
+  flex:0 0 42px; height:42px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%;
+  background:var(--sky); color:#fff;
+  font-weight:700; font-size:19px;
+}
+.toc .t{ font-size:32px; font-weight:600; letter-spacing:-.01em; }
+.toc .sub{
+  display:block; margin-top:3px;
+  font-size:var(--fs-small); font-weight:400; color:var(--slate);
+}
+
 /* ---- cards ---- */
 .cards{
   display:grid; grid-template-columns:repeat(4,1fr);
@@ -121,27 +143,27 @@
 /* logo row, pinned to the bottom of every card */
 .card-logos{
   margin-top:auto; padding-top:24px;
-  display:flex; align-items:center; gap:22px;
-  min-height:62px;
+  display:flex; align-items:center; justify-content:center; gap:28px;
+  min-height:92px;
 }
 /* one height per logo, tuned so they carry the same visual weight */
 .card-logos img{ width:auto; object-fit:contain; }
-.logo-l2s{ height:34px; }
-.logo-cnrs{ height:40px; }
-.logo-listic{ height:56px; }
-.logo-inria{ height:26px; }
+.logo-l2s{ height:52px; }
+.logo-cnrs{ height:60px; }
+.logo-listic{ height:86px; }
+.logo-inria{ height:40px; }
 .logo-cs{ height:22px; }
 
 /* same logos, white silhouettes, for the navy title slide */
 .title-logos{
-  display:flex; align-items:center; gap:56px;
-  margin-top:56px;
+  display:flex; align-items:center; gap:72px;
+  margin-top:60px;
   filter:brightness(0) invert(1); opacity:.92;
 }
 .title-logos img{ width:auto; object-fit:contain; }
 /* the title slide needs them far larger than the collaborator cards */
-.title-logos .logo-l2s{ height:58px; }
-.title-logos .logo-cs { height:40px; }
+.title-logos .logo-l2s{ height:76px; }
+.title-logos .logo-cs { height:66px; }
 
 /* ---- dark slides, title and dividers ---- */
 .on-navy, .on-navy .reveal, .on-navy h1, .on-navy h2{ color:#fff; }

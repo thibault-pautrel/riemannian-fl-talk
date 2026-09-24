@@ -63,10 +63,7 @@ const CARDS = [
     tag: 'parametrised layer',
     title: 'BiMap',
     eq: '$X_k = W_k\\,X_{k-1}\\,W_k^{\\top}$',
-    body: 'A congruence by $W_k$. It reduces the dimension from $d_{k-1}$ to $d_k$ ' +
-          'and keeps the output symmetric positive definite as long as $W_k$ has full rank. ' +
-          'Taking orthonormal columns puts $W_k$ on the Stiefel manifold. ' +
-          'This is the only layer that carries parameters.',
+    body: 'Reduces the dimension from $d_{k-1}$ to $d_k$ and keep output SPD',
     art: `<svg viewBox="0 0 320 124">
       <rect x="22" y="30" width="72" height="72" fill="none" stroke="#C88C8C" stroke-width="1"/>
       <rect x="16" y="24" width="72" height="72" fill="none" stroke="#C88C8C" stroke-width="1"/>
@@ -87,9 +84,7 @@ const CARDS = [
     tag: 'no parameters',
     title: 'ReEig',
     eq: '$X_k = U\\max(\\varepsilon I,\\Sigma)\\,U^{\\top}$',
-    body: 'The analogue of a ReLU, acting on the spectrum of $X_{k-1}=U\\Sigma U^{\\top}$. ' +
-          'Eigenvalues below $\\varepsilon$ are lifted to $\\varepsilon$, which keeps the matrix ' +
-          'away from the boundary $\\det = 0$ and restores non-linearity.',
+    body: 'The analogue of a ReLU, acting on the spectrum of $X_{k-1}=U\\Sigma U^{\\top}$. ',
     art: `<svg viewBox="0 0 320 124">
       <line x1="16" y1="84" x2="300" y2="84" stroke="#C8D2DA" stroke-width="1"/>
       <line x1="16" y1="62" x2="300" y2="62" stroke="#009E73" stroke-width="1.2" stroke-dasharray="5 4"/>
@@ -108,9 +103,7 @@ const CARDS = [
     tag: 'no parameters',
     title: 'LogEig',
     eq: '$X_k = U\\log(\\Sigma)\\,U^{\\top}$',
-    body: 'The matrix logarithm sends the cone onto the tangent space at the identity, ' +
-          'a plain vector space. After this layer a fully connected layer and a softmax ' +
-          'become legitimate. Everything before it stays on the manifold.',
+    body: 'The matrix logarithm sends the cone onto a vector space for classification',
     art: `<svg viewBox="0 0 320 186">
       <defs><marker id="le-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5"
         markerHeight="5.5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#243B54"/></marker></defs>
@@ -258,6 +251,7 @@ export default function spdnetArch(el) {
       `<div class="art">${c.art}</div>` +
       `<p>${c.body}</p>`;
     el.appendChild(d);
+    window.renderFigureMath?.(d);      // the slides were typeset before this card existed
     return d;
   });
 

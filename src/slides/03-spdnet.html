@@ -1,3 +1,35 @@
+<!-- ═══════════ S21 · How to classify a covariance ═══════════ -->
+<section>
+<h2>How to classify a covariance matrix?</h2>
+<div class="cols w46" style="align-items:start; gap:40px;">
+  <div>
+    <div class="method fragment" data-fig-step="1">
+      <div class="nm">Naive idea</div>
+      <div class="fm">Classify $\mathrm{vec}(\Sigma)\in\R^{C^2}$</div>
+      <div class="cm"><span class="tag issue">Issue.</span>
+        High dimension. The symmetry is ignored and the SPD constraint
+        is not exploited.</div>
+    </div>
+    <div class="method fragment" data-fig-step="2">
+      <div class="nm">Refined idea</div>
+      <div class="fm">Classify $\mathrm{Vech}(\Sigma)\in\R^{C(C+1)/2}$</div>
+      <div class="cm"><span class="tag issue">Issue.</span>
+        Half the dimension. The <strong>positive definite</strong>
+        constraint is still ignored.</div>
+    </div>
+    <div class="block fragment" data-fig-step="3" style="margin-top:26px;">
+      <div class="block-title">Main idea</div>
+      Exploit the geometry of SPD matrices, with a
+      <strong>Riemannian architecture</strong>.
+    </div>
+  </div>
+  <div class="fig" data-figure="classify-flat" style="--fig-ar:760/550;"></div>
+</div>
+<aside class="notes">
+  With C = 22 channels, vec gives 484 coordinates and Vech gives 253.
+  Recall the Euclidean segment on the cone. Then announce SPDNet.
+</aside>
+</section>
 <!-- ═══════════ S22 · SPDNet architecture ═══════════ -->
 <section>
   <h2>SPDNet <span class="hint">Huang and Van Gool, 2017</span></h2>
