@@ -1,6 +1,7 @@
 import { makeSaddleScene } from './saddle-scene.js';
 import { makeGeodesics } from '../geometry/geodesic.js';
 import { makeTicker } from '../anim.js';
+import { svgEl } from '../svg.js';
 
 export default function expMap(el) {
   const sc = makeSaddleScene(el);
@@ -38,11 +39,17 @@ export default function expMap(el) {
   const dotQ = sc.dot('dots');
   const walker = sc.node('dots', 'circle', { r: 5.5, fill: '#B2182B' });
 
+  // the endpoint of the retraction, same treatment as exp_p(v) but amber
+  const walkerR = sc.node('dots', 'circle', { r: 5.5, fill: '#C77D24', opacity: 0 });
+  const dotR = sc.node('dots', 'g', { opacity: 0 });
+  dotR.appendChild(svgEl('circle', { r: 6.5, fill: '#fff' }));
+  dotR.appendChild(svgEl('circle', { r: 4.4, fill: '#C77D24' }));
+
   const labP     = sc.label('$p$');
   const labPlane = sc.label('$T_p\\mathcal{M}$', 'accent');
   const labV     = sc.label('$v$', 'accent');
   const labExp   = sc.label('$\\exp_p(v)$');
-  const labRetr  = sc.label('$R_p(tv)$', 'amber');
+  const labRetr  = sc.label('$R_p(v)$', 'amber');
 
   let step = 0, lastT = 1;
 
@@ -103,11 +110,20 @@ export default function expMap(el) {
       }
       retr.setAttribute('d', sc.pathUV(pts));
       retr.setAttribute('opacity', 1);
-      const e = pts[Math.round(pts.length * 0.78)];   // label before the end
-      labRetr.moveTo(sc.at(e[0], e[1]), -14, 32);
+
+      // endpoint: a moving dot while it travels, a ringed dot once arrived
+      const e = pts.at(-1);
+      const endPt = sc.at(e[0], e[1]);
+      walkerR.setAttribute('cx', endPt.x); walkerR.setAttribute('cy', endPt.y);
+      walkerR.setAttribute('opacity', g3 > .99 ? 0 : 1);
+      dotR.setAttribute('transform', `translate(${endPt.x.toFixed(1)} ${endPt.y.toFixed(1)})`);
+      dotR.setAttribute('opacity', g3 > .99 ? 1 : 0);
+      labRetr.moveTo(endPt, 16, 34);
       labRetr.show(g3 > .8);
     } else {
       retr.setAttribute('opacity', 0);
+      walkerR.setAttribute('opacity', 0);
+      dotR.setAttribute('opacity', 0);
       labRetr.show(false);
     }
   }

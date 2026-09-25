@@ -72,7 +72,7 @@
 .reveal .lede{ font-size:32px; color:var(--navy); line-height:1.35; }
 .reveal .note{ font-size:var(--fs-small); color:var(--slate); }
 .reveal strong{ font-weight:650; }
-.reveal .katex{ font-size:1.02em; }
+.reveal .katex{ font-size:1.06em; }
 
 /* ---- block, replaces the beamer block ---- */
 .block{
@@ -106,14 +106,16 @@
 /* ---- table of contents, two columns filled top to bottom ---- */
 .toc{
   list-style:none; margin:0; padding:0;
-  max-width:1200px;
+  display:grid; grid-template-columns:1fr 1fr;
+  grid-template-rows:repeat(2,auto); grid-auto-flow:column;
+  gap:0 60px;
 }
 .toc li{
-  display:flex; align-items:center; gap:26px;
+  display:flex; align-items:flex-start; gap:24px;
   padding:22px 0; border-bottom:1px solid var(--rule);
 }
 .toc .n{
-  flex:0 0 42px; height:42px;
+  flex:0 0 42px; height:42px; margin-top:-2px;
   display:flex; align-items:center; justify-content:center;
   border-radius:50%;
   background:var(--sky); color:#fff;
@@ -237,8 +239,8 @@
 /* ---- manifold comparison table ---- */
 .mtable{ display:grid; grid-template-columns:150px repeat(3,1fr); gap:0 22px; font-size:20px; }
 .mtable > div{ padding:11px 0; border-bottom:1px solid var(--rule); }
-.mtable .head{ font-weight:650; font-size:23px; border-bottom:2px solid var(--navy); }
-.mtable .row{ color:var(--slate); font-size:18px; }
+.mtable .head{ font-weight:650; font-size:28px; border-bottom:2px solid var(--navy); }
+.mtable .row{ color:var(--slate); font-size:22px; }
 .mtable .miss{ color:var(--accent); font-weight:600; }
 .mtable .katex{ font-size:.95em; }
 /* ---- SPDNet architecture, detail cards ---- */
@@ -413,3 +415,43 @@
 .term .nm{ font-weight:650; font-size:20px; }
 .term .ds{ margin-top:2px; font-size:18px; color:var(--slate); line-height:1.4; }
 .term.floor .nm{ color:var(--accent); }
+/* ---- larger variant of .method, for the comparison slide ---- */
+.method.lg{ padding:26px 0; }
+.method.lg:first-child{ padding-top:6px; }
+.method.lg .nm{ font-size:21px; }
+.method.lg .fm{ margin:12px 0 9px; font-size:31px; }
+.method.lg .cm{ font-size:26px; line-height:1.45; }
+.block.lg{ padding:24px 32px; font-size:28px; }
+.block.lg .block-title{ font-size:31px; margin-bottom:7px; }
+/* ---- larger variant of .layercard, for the optimisation slide ---- */
+.eyebrow.lg{ font-size:18px; margin-bottom:20px; }
+.layercard.lg{ padding:18px 26px; margin-bottom:24px; }
+.layercard.lg .nm{ font-size:28px; }
+.layercard.lg .eq{ margin:13px 0 10px; font-size:25px; }
+.layercard.lg .ds{ margin-top:8px; font-size:23px; line-height:1.45; }
+.consequence.lg{ margin-top:40px; padding:22px 30px; }
+.consequence.lg .tag{ font-size:15px; }
+.consequence.lg .bd{ margin-top:8px; font-size:28px; }
+/* ---- slides with a larger base size ---- */
+.reveal section.big{ font-size:31px; }
+.reveal section.big .note{ font-size:24px; }
+
+/* ---- numbered workflow, larger ---- */
+.steps.lg li{ padding:15px 0 15px 60px; }
+.steps.lg li::before{ top:15px; width:38px; height:38px; font-size:20px; }
+.steps.lg .tt{ font-size:27px; }
+.steps.lg .dd{ font-size:23px; margin-top:5px; }
+.steps.lg .eqline{ margin:13px 0 5px; font-size:25px; }
+
+/* ---- objective line, larger ---- */
+.block.objective.lg{ padding:22px 30px; }
+.objline.lg{ gap:40px; }
+.objline.lg .ttl{ font-size:27px; }
+.objline.lg .gl{ font-size:26px; }
+.objline.lg .fi{ font-size:21px; }
+/* ---- aggregation slides: long formulas, wide spacing ---- */
+.method.agg{ padding:22px 0; }
+.method.agg:first-child{ padding-top:4px; }
+.method.agg .nm{ font-size:19px; }
+.method.agg .fm{ margin:14px 0 12px; font-size:27px; }
+.method.agg .cm{ font-size:23px; line-height:1.45; }

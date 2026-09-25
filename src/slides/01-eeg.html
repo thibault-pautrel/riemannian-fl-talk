@@ -51,8 +51,11 @@
         $\Sigma^{\top}=\Sigma$ and $x^{\top}\Sigma x>0$ for every $x\neq 0$.
       </div>
       <p class="fragment" data-fig-step="1">
-        An open convex cone: stable under positive scaling, unbounded, and its
-        boundary $\det\Sigma=0$ does not belong to it.
+      <ul>
+        <li class="fragment" data-fig-step="1">Open and unbounded</li>
+        <li class="fragment" data-fig-step="1">Convex</li>
+        <li class="fragment" data-fig-step="1">Stable under positive scaling</li>
+      </ul>
       </p>
       <p class="fragment note" data-fig-step="2">
         Not a vector space.
@@ -63,9 +66,10 @@
     </div>
     <div class="fig" data-figure="spd-cone"></div>
   </div>
-  <p class="fragment" data-fig-step="4">
-    What model can we train on these features? 
-    </p>
+  <div class="consequence fragment" data-fig-step="4">
+    <div class="tag">Question</div>
+    <div class="bd">What model can we train on these features?</div>
+  </div>
   <aside class="notes">
     Drag a point toward the boundary and let them watch the determinant fall
     toward zero. That is the picture to keep for the whole talk.

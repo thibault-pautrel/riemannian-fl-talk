@@ -1,23 +1,23 @@
 <!-- ═══════════ S21 · How to classify a covariance ═══════════ -->
 <section>
 <h2>How to classify a covariance matrix?</h2>
-<div class="cols w46" style="align-items:start; gap:40px;">
+<div class="cols" style="align-items:center; gap:52px;">
   <div>
-    <div class="method fragment" data-fig-step="1">
+    <div class="method lg fragment" data-fig-step="1">
       <div class="nm">Naive idea</div>
       <div class="fm">Classify $\mathrm{vec}(\Sigma)\in\R^{C^2}$</div>
       <div class="cm"><span class="tag issue">Issue.</span>
         High dimension. The symmetry is ignored and the SPD constraint
         is not exploited.</div>
     </div>
-    <div class="method fragment" data-fig-step="2">
+    <div class="method lg fragment" data-fig-step="2">
       <div class="nm">Refined idea</div>
       <div class="fm">Classify $\mathrm{Vech}(\Sigma)\in\R^{C(C+1)/2}$</div>
       <div class="cm"><span class="tag issue">Issue.</span>
         Half the dimension. The <strong>positive definite</strong>
         constraint is still ignored.</div>
     </div>
-    <div class="block fragment" data-fig-step="3" style="margin-top:26px;">
+    <div class="block lg fragment" data-fig-step="3" style="margin-top:28px;">
       <div class="block-title">Main idea</div>
       Exploit the geometry of SPD matrices, with a
       <strong>Riemannian architecture</strong>.
@@ -47,25 +47,19 @@
 
 <!-- ═══════════ S23 · What is optimised ═══════════ -->
 <section>
-  <h2>What is optimised?</h2>
-
-  <p class="note" style="margin:-14px 0 20px;">
-    SPDNet stacks $L$ <strong>BiRe</strong> blocks, each a BiMap followed by a ReEig,
-    then one LogEig, one Vech and one fully connected layer.
-  </p>
-
-  <div class="cols" style="gap:56px; align-items:start;">
+  <h2>SPDNet: What is optimised?</h2>
+  <div class="cols" style="gap:64px; align-items:start;">
     <div>
-      <div class="eyebrow">Layers without learnable parameters</div>
-      <div class="layercard fragment">
+      <div class="eyebrow lg">Layers without learnable parameters</div>
+      <div class="layercard lg fragment">
         <div class="nm" style="color:#009E73;">ReEig</div>
         <div class="ds">spectral rectification, a fixed map</div>
       </div>
-      <div class="layercard fragment">
+      <div class="layercard lg fragment">
         <div class="nm" style="color:#E69F00;">LogEig</div>
         <div class="ds">tangent space at $I$, a fixed map</div>
       </div>
-      <div class="layercard fragment">
+      <div class="layercard lg fragment">
         <div class="nm">Vech</div>
         <div class="ds">
           upper triangle of the matrix, a fixed linear map into
@@ -75,10 +69,10 @@
     </div>
 
     <div>
-      <div class="eyebrow" style="color:var(--c1);">Parametrised layers</div>
+      <div class="eyebrow lg" style="color:var(--c1);">Parametrised layers</div>
 
-      <div class="layercard param fragment">
-        <div class="nm">BiMap<sub style="font-size:14px;color:var(--slate);">1..L</sub></div>
+      <div class="layercard lg param fragment">
+        <div class="nm">BiMap<sub style="font-size:17px;color:var(--slate);">1..L</sub></div>
         <div class="eq">$X_k = W_k\,X_{k-1}\,W_k^{\top}$</div>
         <div class="ds">
           $W_k\in\mathrm{St}(d_{k-1},d_k)$, orthonormal columns.
@@ -86,7 +80,7 @@
         </div>
       </div>
 
-      <div class="layercard euclid fragment">
+      <div class="layercard lg euclid fragment">
         <div class="nm">Fully connected</div>
         <div class="eq">
           $\hat{y}=\mathrm{softmax}\bigl(\xi\,\mathrm{Vech}(X_L)+\beta\bigr)$
@@ -99,7 +93,7 @@
     </div>
   </div>
 
-  <div class="consequence fragment">
+  <div class="consequence lg fragment">
     <div class="tag">Consequence</div>
     <div class="bd">
       Two optimisers in the same model. <strong>Riemannian</strong> on Stiefel for the

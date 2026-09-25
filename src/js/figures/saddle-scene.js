@@ -12,6 +12,11 @@ import { makeSurface } from '../geometry/surface.js';
 
 let seq = 0;
 
+/* Pixels per unit of the surface. This is the single knob that
+   controls how large every tutorial figure looks inside its box.
+   A figure may override it through opts.scale. */
+const SCALE = 160;
+
 export function makeSaddleScene(el, opts = {}) {
   const W = opts.width ?? 1100, H = opts.height ?? 620;
   const uid = 'fig' + (++seq);
@@ -43,7 +48,7 @@ export function makeSaddleScene(el, opts = {}) {
   const arrow = (name) => `url(#${uid}-${name})`;
 
   const cam = makeCamera({
-    scale: opts.scale ?? 105, zScale: opts.zScale ?? 1,
+    scale: opts.scale ?? SCALE, zScale: opts.zScale ?? 1,
     cx: opts.cx ?? W / 2, cy: opts.cy ?? H * 0.53,
     azimuth: opts.azimuth ?? 225, elevation: opts.elevation ?? 34
   });

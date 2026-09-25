@@ -10,14 +10,14 @@
         Two domains $U$ and $V$, overlapping.
       </p>
       <p class="fragment" data-fig-step="2">
-        $\varphi$ flattens $U$ into coordinates.
+        $\varphi$  and $\psi$ flatten their respective domains into coordinates.
       </p>
       <p class="fragment" data-fig-step="3">
-        $\psi$ does the same for $V$, with its own coordinates.
+
       </p>
       <p class="fragment" data-fig-step="4">
-        On the overlap both descriptions hold, and the transition map
-        $\psi\circ\varphi^{-1}$ is smooth. That is the whole definition.
+        Compatibility: the transition map
+        $\psi\circ\varphi^{-1}$ is smooth.
       </p>
     </div>
     <div class="fig" data-figure="manifold-charts"></div>
@@ -46,8 +46,7 @@
         All these velocities fill one plane, attached to $p$.
       </p>
       <p class="fragment" data-fig-step="4">
-        This is the only linearisation of $\mathcal{M}$ we get, and every
-        algorithm will work in it.
+        Useful tool to linearise.
       </p>
     </div>
     <div class="fig" data-figure="tangent-space"></div>
@@ -63,20 +62,19 @@
   <h2>Riemannian metric</h2>
   <div class="cols w46">
     <div>
-      <p>A metric is an inner product $\langle\cdot,\cdot\rangle_p$ on each
-         tangent space, varying smoothly with $p$. It gives lengths and angles
-         without ever leaving $\mathcal{M}$.</p>
+      <p class="fragment" data-fig-step="1">Riemannian metric: smooth $p \mapsto \langle\cdot,\cdot\rangle_p$ on each
+         tangent space $T_p\M$. </p>
+         <p  class="fragment" data-fig-step="1">Gives meaning to lengths and angles on $\mathcal{M}$.</p>
 
-      <p class="fragment" data-fig-step="1">
-        Here $\mathcal{M}\subset\mathbb{R}^n$ is a submanifold, so the ambient
-        product is inherited.
+      <p  class="fragment" data-fig-step="1">
+        Riemannian submanifold: $\langle \cdot, \cdot\rangle_p = \langle \cdot, \cdot\rangle_{\mathrm{eucl}}$.
       </p>
       <p class="fragment" data-fig-step="2">
         Take a function $\bar f$ defined around $\mathcal{M}$, and its ambient
         gradient at $p$.
       </p>
-      <p class="fragment" data-fig-step="3">
-        Project it onto the tangent space:
+      <p class="fragment" data-fig-step="2">
+        $\Pi_{T_p\mathcal{M}}$: orthogonal projection onto the tangent space at $p$.
       </p>
 
       <div class="block fragment" data-fig-step="3">
@@ -110,8 +108,7 @@
       </div>
 
       <p class="fragment" data-fig-step="3">
-        Its speed is constant, and it is longer than the chord. That gap is
-        the curvature of $\mathcal{M}$.
+
       </p>
     </div>
     <div class="fig" data-figure="geodesic"></div>
@@ -126,7 +123,7 @@
   <h2>Exponential map</h2>
   <div class="cols w46">
     <div>
-      <p>At $p$, the map $\exp_p$ turns a tangent vector into a point of $\mathcal{M}$.</p>
+      <p>At $p$, $\exp_p$ : tangent vector $\mapsto$ point of $\mathcal{M}$.</p>
 
       <div class="block">
         $\exp_p(v)=\gamma(1)$, where $\gamma$ is the geodesic with
@@ -134,16 +131,29 @@
       </div>
 
       <p class="fragment" data-fig-step="1">
-        Pick a direction and a length in $T_p\mathcal{M}$.
+
       </p>
       <p class="fragment" data-fig-step="2">
-        The point $\exp_p(tv)$ walks the geodesic. The arc it covers has
-        length $\lVert v\rVert_p$.
+
       </p>
       <p class="fragment" data-fig-step="3">
-        A <strong>retraction</strong> $R_p$ agrees with $\exp_p$ to first order
-        at $t=0$, and costs far less.
+        A <strong>retraction</strong> is a cheap substitute for $\exp_p$: a smooth
+        $R_p:T_p\mathcal{M}\to\mathcal{M}$ with $R_p(0_p)=p$ and
+        $\mathrm{D}R_p(0_p)[v]=v$. 
       </p>
+            <p class="fragment" data-fig-step="3">
+        $R_p(v)$ matches $\exp_p$ to first order:
+                \[\;\lVert R_p(tv)-\exp_p(tv)\rVert = O(t^{2}).\]
+      </p>
+      <div class="block fragment" data-fig-step="3">
+        <div class="block-title">Projection-based retraction</div>
+        $R_p(v)=\Pi(p+v)$, with $\Pi(y)=\arg\min_{q\in\mathcal{M}}\lVert y-q\rVert^2$
+        the nearest point of $\mathcal{M}$.
+        <div class="note" style="margin-top:6px;">
+          Well defined near $\mathcal{M}$ when it is compact.
+          <span class="hint" style="float:none;">Absil and Malick, 2012</span>
+        </div>
+      </div>
     </div>
 
     <div class="fig" data-figure="exp-map"></div>
@@ -158,7 +168,7 @@
   <h2>Logarithmic map</h2>
   <div class="cols w46">
     <div>
-      <p>The inverse question. Given $q$, which tangent vector reaches it?</p>
+      <p>Given $q$, which tangent vector reaches it?</p>
 
       <div class="block">
         $\log_p = \exp_p^{-1}$ where it is defined, and
@@ -166,14 +176,13 @@
       </div>
 
       <p class="fragment" data-fig-step="1">
-        The answer lives in $T_p\mathcal{M}$.
+
       </p>
       <p class="fragment" data-fig-step="2">
-        Shooting: start from a guess, see where the geodesic lands, correct.
+  
       </p>
       <p class="fragment" data-fig-step="3">
-        The vector obtained reads $q$ as a direction and a distance. This is
-        the operation that makes averaging on $\mathcal{M}$ possible.
+$\log_p(q) \in T_p\mathcal{M}$.
       </p>
     </div>
     <div class="fig" data-figure="log-map"></div>
@@ -185,7 +194,7 @@
 </section>
 <!-- ═══════════ S19 · Three manifolds ═══════════ -->
 <section>
-  <h2>The three manifolds we need</h2>
+  <h2>Examples of common Riemannian manifolds</h2>
 
   <div class="mtable">
     <div class="head"></div>

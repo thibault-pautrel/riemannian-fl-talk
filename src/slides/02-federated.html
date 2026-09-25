@@ -5,11 +5,10 @@
      the site that recorded them.</p>
   <div class="fig fig-wide" data-figure="sites" style="margin-top:10px;"></div>
   <p class="fragment" data-fig-step="1" style="display:none"></p>
-  <p class="fragment note" data-fig-step="2" style="margin-top:2px;">
-    The centralised pipeline is unavailable, and each site alone has
-    too little data.
-  </p>
-  <p class="fragment lede">Can we train one model on all of it without moving any of it?</p>
+  <div class="consequence lg fragment">
+    <div class="tag">Question</div>
+    <div class="bd">Can we train one model on all data without moving any of it?</div>
+  </div>
   <aside class="notes">
     Let the crosses appear, then ask the question and pause.
   </aside>
@@ -18,8 +17,8 @@
 <section>
   <h2>Federated learning</h2>
 
-  <div class="block objective" style="margin:0 0 18px;">
-    <div class="objline">
+  <div class="block objective lg" style="margin:0 0 18px;">
+    <div class="objline lg">
       <div class="ttl">One shared objective,<br>no shared data</div>
       <div class="gl">
         $\displaystyle\arg\min_{\theta}\Bigl\{F(\theta):=\tfrac{1}{N}\sum_{i=1}^{N}
@@ -39,7 +38,7 @@
       <p class="note" style="margin-bottom:10px;">
         Initialise $\theta_0$. Then repeat for $T$ communication rounds.
       </p>
-      <ol class="steps">
+      <ol class="steps lg">
         <li class="fragment" data-fig-step="1">
           <span class="tt">Broadcast</span>
           <div class="dd">The server sends $\theta_t$ to a subset $S_t$ of clients.</div>

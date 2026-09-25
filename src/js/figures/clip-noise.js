@@ -44,15 +44,17 @@ export default function clipNoise(el) {
   const GZ  = [2.35 * Math.cos(1.15), 2.35 * Math.sin(1.15)];   // record z, in D
   const GZP = [1.75 * Math.cos(4.05), 1.75 * Math.sin(4.05)];   // record z', in D'
 
-  const OX = 244, OY = 236, S1 = 68;
-  const ZX = 748, ZY = 236, S2 = 330;
+  // pixels per unit, one per panel. Raise them to make the drawing larger.
+  const S1 = 78, S2 = 392;
+  const OX = 252, OY = 232;
+  const ZX = 742, ZY = 232;
   const p1 = (v) => ({ x: OX + S1 * v[0], y: OY - S1 * v[1] });
   const p2 = (v) => ({ x: ZX + S2 * v[0], y: ZY - S2 * v[1] });
 
   const gL = sc.g(), gR = sc.g();
   const txt = (parent, x, y, s, o = {}) => {
     const n = sc.node(parent, 'text', {
-      x, y, 'text-anchor': o.anchor ?? 'middle', 'font-size': o.size ?? 15,
+      x, y, 'text-anchor': o.anchor ?? 'middle', 'font-size': o.size ?? 17,
       'font-weight': o.weight ?? 400, fill: o.fill ?? SLATE,
       'font-family': o.mono ? 'var(--mono)' : 'var(--sans)'
     });
@@ -65,14 +67,14 @@ export default function clipNoise(el) {
     sc.node(parent, 'line', { x1: cx, y1: cy - half, x2: cx, y2: cy + half,
                               stroke: '#E1E7EC', 'stroke-width': 1 });
   };
-  axes(gL, OX, OY, 180);
-  axes(gR, ZX, ZY, 140);
+  axes(gL, OX, OY, 196);
+  axes(gR, ZX, ZY, 150);
 
   // ---- left panel
   const ball = sc.node(gL, 'circle', { cx: OX, cy: OY, fill: OK, 'fill-opacity': .06,
                                        stroke: OK, 'stroke-width': 1.8,
                                        'stroke-dasharray': '7 5', opacity: 0 });
-  const ballLab = txt(gL, 0, 0, 'C', { size: 16, fill: OK, mono: true });
+  const ballLab = txt(gL, 0, 0, 'C', { size: 18, fill: OK, mono: true });
 
   const shArr = SHARED.map(() => sc.node(gL, 'line', {
     stroke: SLATE, 'stroke-width': 1.7, 'stroke-opacity': .75,
@@ -82,10 +84,10 @@ export default function clipNoise(el) {
   const zpArr = sc.node(gL, 'line', { stroke: N_COL, 'stroke-width': 2.8,
                                       'stroke-dasharray': '7 5',
                                       'marker-end': sc.arrow('accent') });
-  const labZ  = txt(gL, 0, 0, '∇f(x, z)', { size: 14, fill: D_COL, mono: true });
-  const labZP = txt(gL, 0, 0, "∇f(x, z′)", { size: 14, fill: N_COL, mono: true });
-  txt(gL, OX, 40, 'one gradient per record of the minibatch', { size: 16, fill: NAVY });
-  txt(gL, OX, CH - 22, "z and z′ are the substituted record", { size: 14 });
+  const labZ  = txt(gL, 0, 0, '∇f(x, z)', { size: 16, fill: D_COL, mono: true });
+  const labZP = txt(gL, 0, 0, "∇f(x, z′)", { size: 16, fill: N_COL, mono: true });
+  txt(gL, OX, 36, 'one gradient per record of the minibatch', { size: 18, fill: NAVY });
+  txt(gL, OX, CH - 22, "z and z′ are the substituted record", { size: 16 });
 
   // ---- right panel
   const gap = sc.node(gR, 'line', { stroke: NAVY, 'stroke-opacity': .55, 'stroke-width': 1.6,
@@ -103,13 +105,16 @@ export default function clipNoise(el) {
   const mN = sc.node(gR, 'line', { stroke: MEAN, 'stroke-width': 2.6,
                                    'stroke-dasharray': '7 5',
                                    'marker-end': sc.arrow('mean'), opacity: 0 });
+  // which database each minibatch gradient comes from, said by colour alone
+  const markD = sc.node(gR, 'circle', { r: 7, fill: D_COL, stroke: '#fff',
+                                        'stroke-width': 2, opacity: 0 });
+  const markN = sc.node(gR, 'circle', { r: 7, fill: N_COL, stroke: '#fff',
+                                        'stroke-width': 2, opacity: 0 });
   const labIter = txt(gR, ZX, CH - 70, 'each local step uses a fresh draw',
-                      { size: 14, fill: NAVY });
-  const labMD = txt(gR, 0, 0, 'minibatch gradient, D', { size: 14, fill: MEAN });
-  const labMN = txt(gR, 0, 0, "with z′ instead", { size: 14, fill: MEAN });
-  txt(gR, ZX, 40, 'what the client releases', { size: 16, fill: NAVY });
-  const sensLab = txt(gR, ZX, CH - 46, '', { size: 15, mono: true, fill: NAVY });
-  const noiseLab = txt(gR, ZX, CH - 22, '', { size: 15, mono: true, fill: NAVY });
+                      { size: 16, fill: NAVY });
+  txt(gR, ZX, 36, 'what the client releases', { size: 18, fill: NAVY });
+  const sensLab = txt(gR, ZX, CH - 46, '', { size: 17, mono: true, fill: NAVY });
+  const noiseLab = txt(gR, ZX, CH - 22, '', { size: 17, mono: true, fill: NAVY });
 
   // a violet arrow head
   const defs = sc.node(sc.svg, 'defs');
@@ -174,8 +179,8 @@ export default function clipNoise(el) {
     zArr.setAttribute('x2', qz.x); zArr.setAttribute('y2', qz.y);
     zpArr.setAttribute('x1', OX); zpArr.setAttribute('y1', OY);
     zpArr.setAttribute('x2', qzp.x); zpArr.setAttribute('y2', qzp.y);
-    labZ.setAttribute('x', qz.x + 8); labZ.setAttribute('y', qz.y - 14);
-    labZP.setAttribute('x', qzp.x - 4); labZP.setAttribute('y', qzp.y + 24);
+    labZ.setAttribute('x', qz.x + 10); labZ.setAttribute('y', qz.y - 15);
+    labZP.setAttribute('x', qzp.x - 4); labZP.setAttribute('y', qzp.y + 26);
 
     // ---- the two minibatch gradients
     const cl = SHARED.map((v) => clip(v, C));
@@ -192,10 +197,12 @@ export default function clipNoise(el) {
     mN.setAttribute('x1', ZX); mN.setAttribute('y1', ZY);
     mN.setAttribute('x2', aN.x); mN.setAttribute('y2', aN.y);
     mN.setAttribute('opacity', g2 > .5 ? 1 : 0);
-    labMD.setAttribute('x', aD.x + 6); labMD.setAttribute('y', aD.y - 16);
-    labMD.setAttribute('opacity', g0 > .3 ? 1 : 0);
-    labMN.setAttribute('x', aN.x + 6); labMN.setAttribute('y', aN.y + 22);
-    labMN.setAttribute('opacity', g2 > .6 ? 1 : 0);
+
+    // a coloured dot just above each arrow tip, no text
+    markD.setAttribute('cx', aD.x); markD.setAttribute('cy', aD.y - 16);
+    markD.setAttribute('opacity', g0 > .3 ? 1 : 0);
+    markN.setAttribute('cx', aN.x); markN.setAttribute('cy', aN.y - 16);
+    markN.setAttribute('opacity', g2 > .6 ? 1 : 0);
 
     // the gap the substitution can open, and what bounds it
     gap.setAttribute('x1', aD.x); gap.setAttribute('y1', aD.y);
@@ -204,7 +211,7 @@ export default function clipNoise(el) {
 
     // the released gradients, each one mean plus a noise draw
     const cap = (v) => {
-      const n = Math.hypot(v[0], v[1]), L = 0.40;
+      const n = Math.hypot(v[0], v[1]), L = 0.36;
       return n > L ? [v[0] * L / n, v[1] * L / n] : v;
     };
     const rD = p2(cap([avgD[0] + sd * nzD[0] * g3, avgD[1] + sd * nzD[1] * g3]));

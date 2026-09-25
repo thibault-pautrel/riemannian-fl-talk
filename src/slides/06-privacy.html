@@ -43,14 +43,13 @@
       <p>The server follows the protocol exactly. It simply keeps everything it sees.</p>
       <p class="fragment" data-fig-step="1">Honest, and curious.</p>
       <p class="fragment" data-fig-step="2">
-        Every round adds a line: the broadcast model, the sampled cohort,
-        and each selected client's update.
+
       </p>
       <div class="block fragment" data-fig-step="3">
         $\mathcal{V}_T=\bigl(\{(\theta_t,S_t,\{\Delta^{(i)}\}_{i\in S_t})\}_{t=0}^{T-1},\theta_T\bigr)$
       </div>
       <p class="note fragment">
-        The guarantee has to hold for $\mathcal{V}_T$ as a whole, not for one message.
+
       </p>
     </div>
   </div>
@@ -62,32 +61,33 @@
 
 <!-- ═══════════ Record-level ═══════════ -->
 <section>
-  <h2>What exactly do we protect?</h2>
-  <div class="fig fig-wide" data-figure="adjacency"></div>
-  <div class="cols" style="gap:44px; margin-top:6px;">
-    <div>
-      <p class="fragment" data-fig-step="1">
-        Two databases over the same cohort of clients.
-      </p>
-      <p class="fragment" data-fig-step="2">
-        <strong>Record-adjacent</strong>, $D\bowtie D'$: one client's dataset differs
-        by a single substituted record.
-      </p>
-    </div>
-    <div>
-      <p class="fragment" data-fig-step="3">
-        Everything else is untouched, including the other clients.
-      </p>
-      <p class="note fragment">
-        Record level, not client level. We hide one training example, not
-        whether a hospital took part.
-      </p>
-    </div>
+<h2>Protecting records</h2>
+<div class="fig" data-figure="adjacency"
+     style="--fig-ar:1160/520; max-width:1060px; margin:0 auto;"></div>
+<div class="cols" style="gap:44px; margin-top:14px;">
+  <div>
+    <p class="fragment" data-fig-step="1">
+      Two databases over the same cohort of clients.
+    </p>
+    <p class="fragment" data-fig-step="2">
+      <strong>Record-adjacent</strong>, $D\bowtie D'$: one client's dataset differs
+      by a single substituted record.
+    </p>
   </div>
-  <aside class="notes">
+  <div>
+    <p class="fragment" data-fig-step="3">
+      Everything else is untouched, including the other clients.
+    </p>
+    <p class="note fragment" data-fig-step="3">
+      Record level, not client level. We hide one training example, not
+      whether a hospital took part.
+    </p>
+  </div>
+</div>
+<aside class="notes">
     Cliquer sur n'importe quelle case pour changer l'enregistrement substitué.
     Mentionner que les jeux locaux sont supposés disjoints.
-  </aside>
+</aside>
 </section>
 <!-- ═══════════ The mechanism ═══════════ -->
 <section>
@@ -96,11 +96,6 @@
   <div class="cols w64" style="gap:30px; align-items:center;">
     <div>
       <div class="fig" data-figure="clip-noise"></div>
-      <p class="figcap">
-        $\textcolor{#009E73}{\operatorname{clip}_C}(v)
-          =v\,\min\bigl(1,\,C/\lVert v\rVert\bigr)$,
-        the radial projection onto the ball of radius $C$
-      </p>
     </div>
 
     <div>
@@ -119,6 +114,10 @@
             =\frac1B\sum_{z\in\mathcal{B}}
              \textcolor{#009E73}{\operatorname{clip}_C}\bigl(\nabla f(x,z)\bigr)$
         </div>
+              <p class="figcap" data-fig-step="2">
+        $\textcolor{#009E73}{\operatorname{clip}_C}(v)
+          =v\,\min\bigl(1,\,C/\lVert v\rVert\bigr)$
+      </p>
         <div class="cm">
           If $\mathcal{B}'$ replaces $z$ by $z'$, then
           $$\bigl\lVert\widehat{\nabla}^{C} f(x,\mathcal{B})
@@ -143,8 +142,7 @@
             \textcolor{#6B3FA0}{\tilde{\nabla} f(\theta_s,\mathcal{B}_s)}$
         </div>
         <div class="cm">
-          After $\tau$ such steps the client builds $\Delta^{(i)}$ from
-          $\theta_{t,\tau}^{(i)}$. Every message in $\mathcal{V}_T$ is noisy.
+          $\tau$ steps $\mapsto$ client $i$ submission $\Delta^{(i)}$. 
         </div>
       </div>
 

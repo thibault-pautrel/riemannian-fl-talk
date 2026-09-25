@@ -4,9 +4,8 @@
   <div class="cols w64" style="gap:40px; align-items:center;">
     <div class="fig" data-figure="fed-round-static"></div>
     <div>
-      <p>The parameter is now constrained:
-         $\theta\in\mathcal{M}$, a compact submanifold of $\mathbb{R}^{d\times p}$.
-         Broadcast and upload move points of $\mathcal{M}$, so they need no change.</p>
+      <p>Now:
+         $\theta\in\mathcal{M}$, a compact submanifold of $\mathbb{R}^{d\times p}$.</p>
 
       <div class="block" style="border-left-color:#E69F00;">
         <div class="block-title">Local optimisation</div>
@@ -20,7 +19,6 @@
           \bigl(\theta_t,\theta_t^{(i)}\bigr)\in\mathcal{M}$
       </div>
 
-      <p class="note">Two steps to repair, and nothing else.</p>
     </div>
   </div>
   <aside class="notes">
@@ -73,7 +71,7 @@
   <h2>Aggregation <span class="hint">existing answers</span></h2>
   <div class="cols w46" style="gap:36px; align-items:center;">
     <div>
-      <div class="method fragment" data-fig-step="1">
+      <div class="method agg fragment" data-fig-step="1">
         <div class="nm">Fréchet mean</div>
         <div class="fm">
           $\theta_{t+1}\leftarrow\arg\min_{\theta\in\mathcal{M}}\tfrac1k\sum_i
@@ -83,7 +81,7 @@
           no closed form, only an iterative flow.</div>
       </div>
 
-      <div class="method fragment" data-fig-step="2">
+      <div class="method agg fragment" data-fig-step="2">
         <div class="nm">KFAvg</div>
         <div class="fm">
           $\theta_{t+1}\leftarrow\exp_{\theta_t}\Bigl(\tfrac1k\sum_i
@@ -93,7 +91,7 @@
           $\exp$ and $\log$ often unknown or expensive.</div>
       </div>
 
-      <div class="method fragment" data-fig-step="3">
+      <div class="method agg fragment" data-fig-step="3">
         <div class="nm">RetAvg</div>
         <div class="fm">
           $\theta_{t+1}\leftarrow R_{\theta_t}\Bigl(\tfrac1k\sum_i
@@ -113,43 +111,38 @@
 
 <!-- ═══════════ Aggregation, proposed ═══════════ -->
 <section>
-  <h2>Aggregation <span class="hint">what we propose</span></h2>
-  <div class="cols w46" style="gap:36px; align-items:center;">
-    <div>
-      <p class="note" style="margin-bottom:12px;">
-        A useful barycentre need not be the Fréchet mean.
-      </p>
+<h2>Aggregation <span class="hint">what we propose</span></h2>
+<div class="cols w46" style="gap:36px; align-items:center;">
+<div>
+  <p class="note" style="margin-bottom:18px; font-size:23px;">
+    Computationally cheap, geometry-preserving aggregations
+  </p>
 
-      <div class="method fragment" data-fig-step="1">
-        <div class="nm">RLAvg</div>
-        <div class="fm">
-          $\theta_{t+1}\leftarrow R_{\theta_t}\Bigl(\tfrac1k\sum_i
-            L_{\theta_t}(\theta_t^{(i)})\Bigr)
-            =\Pi\Bigl(\theta_t+\tfrac1k\sum_i L_{\theta_t}(\theta_t^{(i)})\Bigr)$
-        </div>
-        <div class="cm"><span class="tag idea">Idea:</span>
-          replace $R^{-1}$ by the lifting
-          $L_{\theta_t}(\theta)=P_{\theta_t}(\theta-\theta_t)$.</div>
-      </div>
-
-      <div class="method fragment" data-fig-step="2">
-        <div class="nm">ProjAvg</div>
-        <div class="fm">
-          $\theta_{t+1}\leftarrow\Pi\Bigl(\tfrac1k\sum_i\theta_t^{(i)}\Bigr)$
-        </div>
-        <div class="cm"><span class="tag idea">Idea:</span>
-          average in the ambient space, then project back.</div>
-      </div>
-
-      <div class="block fragment">
-        A natural choice for $\Pi$ is the nearest-point projection, but any
-        projection works. On Stiefel that is $\mathrm{uf}$, and a QR factor does too.
-      </div>
+  <div class="method agg fragment" data-fig-step="1">
+    <div class="nm">RLAvg</div>
+    <div class="fm">
+      $\theta_{t+1}\leftarrow R_{\theta_t}\Bigl(\tfrac1k\sum_i
+        L_{\theta_t}(\theta_t^{(i)})\Bigr)$
     </div>
-    <div class="fig" data-figure="agg-proposed"></div>
+    <div class="cm"><span class="tag idea">Idea:</span>
+      replace $R^{-1}$ by the lifting
+      $L_{\theta_t}(\theta)=P_{\theta_t}(\theta-\theta_t)$.</div>
   </div>
-  <aside class="notes">
+
+  <div class="method agg fragment" data-fig-step="2">
+    <div class="nm">ProjAvg</div>
+    <div class="fm">
+      $\theta_{t+1}\leftarrow\Pi\Bigl(\tfrac1k\sum_i\theta_t^{(i)}\Bigr)$
+    </div>
+    <div class="cm"><span class="tag idea">Idea:</span>
+      average in the ambient space, then project back.</div>
+  </div>
+
+</div>
+<div class="fig" data-figure="agg-proposed"></div>
+</div>
+<aside class="notes">
     Mentionner les r-barycentres de Bouchard et al. Insister sur le coût: une projection,
     la même que celle du pas local.
-  </aside>
+</aside>
 </section>

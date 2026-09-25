@@ -8,6 +8,10 @@ import { makeTicker } from '../anim.js';
 
 const NAVY = '#243B54', RED = '#B2182B', VIO = '#6B3FA0', NEW = '#14508C';
 
+/* Pixels per unit of the surface, for these two figures only.
+   Raise it to make the drawing larger inside the same box. */
+const SCALE = 190;
+
 // labels whose TeX changes while the figure runs
 const setTex = (lab, tex) => {
   if (lab.node.dataset.tex === tex) return;
@@ -17,7 +21,7 @@ const setTex = (lab, tex) => {
 };
 
 function build(el, mode) {
-  const sc = makeSaddleScene(el, { scale: 128, cy: 330 });
+  const sc = makeSaddleScene(el, { scale: SCALE, cy: 322 });
   const geo = makeGeodesics(sc.surface);
   const ticker = makeTicker();
   const S = sc.surface;

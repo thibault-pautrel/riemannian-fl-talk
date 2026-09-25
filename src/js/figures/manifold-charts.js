@@ -3,7 +3,7 @@ import { makeTicker } from '../anim.js';
 import { svgEl, polyline } from '../svg.js';
 
 export default function manifoldCharts(el) {
-  const sc = makeSaddleScene(el, { scale: 86, cx: 330, cy: 330 });
+  const sc = makeSaddleScene(el, { scale: 120, cx: 330, cy: 330 });
   const ticker = makeTicker();
   const RAD = Math.PI / 180;
 
