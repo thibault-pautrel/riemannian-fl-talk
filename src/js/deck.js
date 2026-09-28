@@ -29,6 +29,10 @@ import tradeoff from './figures/tradeoff.js';
 import fdpCurve from './figures/fdp-curve.js';
 import gdpLink from './figures/gdp-link.js';
 import accounting from './figures/accounting.js';
+import eegnetArch from './figures/eegnet-arch.js';
+import { centralBars, fedBars } from './figures/results.js';
+import curvesBnci from './figures/curves-bnci.js';
+import aggTime from './figures/agg-time.js';
 
 import '@fontsource-variable/inter';
 import 'reveal.js/dist/reveal.css';
@@ -92,7 +96,11 @@ register('tradeoff', tradeoff);
 register('fdp-curve', fdpCurve);
 register('gdp-link', gdpLink);
 register('accounting', accounting);
-
+register('eegnet-arch', eegnetArch);
+register('central-bars', centralBars);
+register('fed-bars', fedBars);
+register('curves-bnci', curvesBnci);
+register('agg-time', aggTime);
 // a figure step is the largest data-fig-step among the visible fragments
 function stepOf(slide) {
   let step = 0;

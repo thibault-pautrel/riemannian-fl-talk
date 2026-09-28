@@ -1,3 +1,18 @@
+<!-- ═══════════ Section 1 · divider ═══════════ -->
+<section class="fullbleed on-navy" data-background-color="#243B54">
+  <div class="layer fullbleed">
+    <div class="kicker">Section 1</div>
+    <h1 style="margin-top:28px;">The problem</h1>
+    <div class="meta">
+      <div>EEG trials, covariance matrices, scattered sites, SPDNet</div>
+    </div>
+  </div>
+  <aside class="notes">
+    Annoncer: d'où viennent les données, pourquoi elles sont contraintes,
+    et quel modèle on veut entraîner.
+  </aside>
+</section>
+
 <!-- ═══════════ S04 · EEG and motor imagery ═══════════ -->
 <section>
   <h2>EEG data</h2>
@@ -50,13 +65,11 @@
         $\Sigma\in\mathbb{R}^{C\times C}$ is symmetric positive definite if
         $\Sigma^{\top}=\Sigma$ and $x^{\top}\Sigma x>0$ for every $x\neq 0$.
       </div>
-      <p class="fragment" data-fig-step="1">
       <ul>
         <li class="fragment" data-fig-step="1">Open and unbounded</li>
         <li class="fragment" data-fig-step="1">Convex</li>
         <li class="fragment" data-fig-step="1">Stable under positive scaling</li>
       </ul>
-      </p>
       <p class="fragment note" data-fig-step="2">
         Not a vector space.
       </p>
@@ -75,4 +88,3 @@
     toward zero. That is the picture to keep for the whole talk.
   </aside>
 </section>
-

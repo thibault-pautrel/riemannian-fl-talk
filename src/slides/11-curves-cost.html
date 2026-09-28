@@ -1,0 +1,36 @@
+<!-- ═══════════ S · Learning curves, BNCI at eps = 20 ═══════════ -->
+<section>
+  <h2>Learning curves <span class="hint">BNCI2014_001, $\varepsilon = 20$, full participation</span></h2>
+  <div class="fig" data-figure="curves-bnci"
+       style="--fig-ar:1180/560; max-width:1150px; margin:0 auto;"></div>
+  <p class="fragment" data-fig-step="1" style="display:none"></p>
+  <p class="fragment" data-fig-step="2" style="display:none"></p>
+  <p class="fragment" data-fig-step="3" style="display:none"></p>
+  <div class="consequence fragment" data-fig-step="3" style="margin-top:10px;">
+    <div class="tag">Reading</div>
+    <div class="bd">
+      The three SPDNet arms rise together and keep rising. EEGNet needs far more
+      rounds and plateaus lower. PriRFed stalls just above chance.
+    </div>
+  </div>
+  <aside class="notes">
+    Faire apparaître les trois bras SPDNet, puis EEGNet, puis PriRFed.
+    Bandes: un écart type sur les graines. Dire que le budget est consommé
+    par tour, donc les tours supplémentaires d'EEGNet coûtent cher.
+  </aside>
+</section>
+
+<!-- ═══════════ S · Aggregation cost ═══════════ -->
+<section>
+  <h2>Aggregation cost <span class="hint">per round, log scale</span></h2>
+  <div class="fig" data-figure="agg-time"
+       style="--fig-ar:1220/470; max-width:1180px; margin:0 auto;"></div>
+  <p class="fragment" data-fig-step="1" style="display:none"></p>
+  <p class="fragment" data-fig-step="2" style="display:none"></p>
+  <p class="fragment" data-fig-step="3" style="display:none"></p>
+  <aside class="notes">
+    Un jeu de données par clic. Marqueur plein pour la participation totale,
+    creux pour la moitié. Insister: l'écart vient de l'inverse de la rétraction,
+    que ProjAvg n'a jamais à calculer.
+  </aside>
+</section>

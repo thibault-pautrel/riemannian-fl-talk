@@ -1,0 +1,80 @@
+<!-- ═══════════ Section 4 · divider ═══════════ -->
+<section class="fullbleed on-navy" data-background-color="#243B54">
+  <div class="layer fullbleed">
+    <div class="kicker">Section 4</div>
+    <h1 style="margin-top:28px;">Numerical experiments</h1>
+    <div class="meta">
+      <div>Three EEG datasets, two architectures, four privacy budgets</div>
+    </div>
+  </div>
+  <aside class="notes">
+    Annoncer le plan de la section: les deux modèles comparés, puis les résultats.
+  </aside>
+</section>
+
+<!-- ═══════════ S · EEGNet ═══════════ -->
+<section>
+  <h2>EEGNet <span class="hint">Lawhern et al., 2018</span></h2>
+  <p class="note" style="margin:-14px 0 10px;">
+    A compact convolutional network, applied to the raw trial instead of its covariance.
+  </p>
+  <div class="fig fig-wide" data-figure="eegnet-arch" style="--fig-ar:1760/640;"></div>
+  <p class="fragment" data-fig-step="1" style="display:none"></p>
+  <p class="fragment" data-fig-step="2" style="display:none"></p>
+  <p class="fragment" data-fig-step="3" style="display:none"></p>
+  <p class="fragment" data-fig-step="4" style="display:none"></p>
+  <aside class="notes">
+    Vue d'ensemble, puis un zoom par bloc. Premier bloc: convolutions temporelles
+    puis convolution spatiale depthwise, plusieurs filtres spatiaux par filtre
+    temporel. Deuxième bloc: convolution séparable, noyau temporel depthwise puis
+    filtres pointwise. Les deux blocs finissent par batch norm, ELU, average
+    pooling et dropout. Tête linéaire pour les scores de classe.
+    Terminer en insistant: ici tout est euclidien, aucune contrainte de variété.
+    C'est le point de comparaison avec SPDNet.
+  </aside>
+</section>
+
+<!-- ═══════════ S · The two models side by side ═══════════ -->
+<section>
+  <h2>Two architectures: Riemannian vs. Euclidean</h2>
+  <div class="cols" style="gap:56px; align-items:start;">
+    <div>
+      <div class="eyebrow lg" style="color:var(--c1);">SPDNet</div>
+      <div class="layercard lg param">
+        <div class="nm">Input</div>
+        <div class="ds">the covariance matrix $\Sigma\in\mathcal{S}^{++}_C$</div>
+      </div>
+      <div class="layercard lg param">
+        <div class="nm">Trunk</div>
+        <div class="ds">$L$ BiRe blocks, then LogEig and Vech</div>
+      </div>
+      <div class="layercard lg param">
+        <div class="nm">Parameters</div>
+        <div class="ds">
+          $W_k$ on Stiefel, plus a Euclidean head. Two optimisers.
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="eyebrow lg" style="color:#009E73;">EEGNet</div>
+      <div class="layercard lg">
+        <div class="nm" style="color:#009E73;">Input</div>
+        <div class="ds">the raw trial $X\in\mathbb{R}^{C\times\mathcal{T}}$</div>
+      </div>
+      <div class="layercard lg">
+        <div class="nm" style="color:#009E73;">Trunk</div>
+        <div class="ds">two convolution blocks, each with pooling and dropout</div>
+      </div>
+      <div class="layercard lg">
+        <div class="nm" style="color:#009E73;">Parameters</div>
+        <div class="ds">all free and Euclidean. One optimiser.</div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    Dire que les deux modèles ont une tête linéaire, et que seule SPDNet a un
+    tronc contraint. C'est ce qui rend la comparaison informative.
+  </aside>
+</section>

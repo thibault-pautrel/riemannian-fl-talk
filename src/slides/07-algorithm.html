@@ -2,9 +2,9 @@
 <section>
   <h2>DP-RFedProj <span class="hint">record-level DP Riemannian federated learning</span></h2>
 
-  <div class="cols w46" style="gap:34px; align-items:start;">
+  <div class="cols" style="grid-template-columns:5.5fr 4.5fr; gap:40px; align-items:start;">
 
-    <div class="algo">
+    <div class="algo air">
       <div class="hd">
         input: $n$ clients, $k$ per round, $\tau$ local steps, batch $B$, $T$ rounds,
         client optimisers $\textsc{Opt}^{(i)}$, clip $C$, noise $\sigma$
@@ -19,7 +19,7 @@
         <li class="ind2 own" style="margin-left:22px;">
           $\tilde g_{t,j}^{(i)}\gets\frac1B\sum_{\ell}
             \operatorname{clip}_C\bigl(P\,\nabla f(\theta_{t,j}^{(i)};z_{i,\ell})\bigr)
-            +P\,\xi,\quad \xi\sim\mathcal{N}(0,\sigma^2 I)$
+            +P\mathcal{N}(0,\sigma^2 I)$
         </li>
         <li class="ind2" style="margin-left:22px;">
           $\bigl(u_{t,j}^{(i)},s\bigr)\gets\textsc{Opt}^{(i)}\bigl(\tilde g_{t,j}^{(i)},s\bigr)$
@@ -41,7 +41,7 @@
     </div>
 
     <div>
-      <table class="tbl" style="margin-bottom:26px;">
+      <table class="tbl air" style="margin-bottom:58px;">
         <caption>aggregation primitives</caption>
         <tr>
           <th>Scheme</th>

@@ -78,10 +78,6 @@
     <p class="fragment" data-fig-step="3">
       Everything else is untouched, including the other clients.
     </p>
-    <p class="note fragment" data-fig-step="3">
-      Record level, not client level. We hide one training example, not
-      whether a hospital took part.
-    </p>
   </div>
 </div>
 <aside class="notes">
@@ -160,40 +156,48 @@
 </section>
 <!-- ═══════════ Differential privacy ═══════════ -->
 <section>
-  <h2>Differential privacy</h2>
+<h2>Differential privacy</h2>
 
-  <div class="block" style="margin:-6px 0 10px;">
-    <div class="block-title">$(\varepsilon,\delta)$-DP</div>
-    A randomised $\mathcal{A}$ is $(\varepsilon,\delta)$-DP if, for every
-    record-adjacent pair $D\bowtie D'$ and every measurable set $E$,
-    $$\Pr\bigl(\mathcal{A}(D)\in E\bigr)\le
-      e^{\varepsilon}\,\Pr\bigl(\mathcal{A}(D')\in E\bigr)+\delta .$$
+<div class="block" style="margin:-6px 0 10px;">
+  <div class="block-title">$(\varepsilon,\delta)$-DP
+    <span class="hint" style="float:none; font-weight:400;">(Dwork et al., 2006)</span>
+  </div>
+  A randomised $\mathcal{A}$ is $(\varepsilon,\delta)$-DP if, for every
+  record-adjacent pair $D\bowtie D'$ and every measurable set $E$,
+  $$\Pr\bigl(\mathcal{A}(D)\in E\bigr)\le
+    e^{\varepsilon}\,\Pr\bigl(\mathcal{A}(D')\in E\bigr)+\delta .$$
+</div>
+
+<div class="cols w46" style="gap:36px; align-items:center;">
+  <div>
+    <p class="fragment" data-fig-step="1">
+      Here $\mathcal{A}$: one client submission $\Delta^{(i)}$
+    </p>
+    <p class="fragment" data-fig-step="2">
+      $E$: any set of outcomes the server may test.
+    </p>
+    <p class="note fragment">
+      Target: the whole transcript $\mathcal{V}_T$.
+    </p>
+    <p class="fragment" data-fig-step="3">
+      $(\varepsilon,\delta)$-DP $\mapsto~f$-DP formalism (hypothesis testing)
+      <span class="hint" style="float:none;">(Dong et al., 2022)</span>
+    </p>
+    <p class="fragment" data-fig-step="3">
+      Particular case: $\mu$-Gaussian Differential Privacy
+    </p>
+    <p class="fragment" data-fig-step="4">
+      Key properties: post-processing, subsampling amplification, tensorisation
+    </p>
   </div>
 
-  <div class="cols w46" style="gap:36px; align-items:center;">
-    <div>
-      <p class="fragment" data-fig-step="1">
-        Here $\mathcal{A}$: one client submission $\Delta^{(i)}$, random because the
-        gradients behind it are.
-      </p>
-      <p class="fragment" data-fig-step="2">
-        $E$: any set of outcomes the server may test.
-      </p>
-      <p class="fragment" data-fig-step="3">
-        $\varepsilon$ caps the ratio, $\delta$ is the slack.
-      </p>
-      <p class="note fragment">
-        Target: the whole transcript $\mathcal{V}_T$.
-      </p>
-    </div>
+  <div class="fig" data-figure="tradeoff"></div>
+</div>
 
-    <div class="fig" data-figure="tradeoff"></div>
-  </div>
-
-  <aside class="notes">
-    Déplacer E à la souris, l'inégalité tient partout. Baisser le bruit: les deux
-    nuages se séparent et on trouve une région où elle casse.
-  </aside>
+<aside class="notes">
+  Déplacer E à la souris, l'inégalité tient partout. Baisser le bruit: les deux
+  nuages se séparent et on trouve une région où elle casse.
+</aside>
 </section>
 <!-- ═══════════ The mechanism, on a manifold ═══════════ -->
 <section>
@@ -223,14 +227,13 @@
       </div>
 
       <div class="method fragment" data-fig-step="3">
-        <div class="nm">where does the noise live?</div>
+        <div class="nm">Tangent Gaussian noise</div>
         <div class="cm">
-          A Gaussian of $\mathbb{R}^{d\times p}$ cannot simply be added: the sum would
-          leave $T_\theta\mathcal{M}$. Pick an orthonormal basis
+          Pick an orthonormal basis
           $\bigl(E_1(\theta),\dots,E_d(\theta)\bigr)$ of $T_\theta\mathcal{M}$ for
           $\langle\cdot,\cdot\rangle_\theta$, and draw
           $\xi=\sum_{k} w_k\,E_k(\theta)$ with
-          $w_k\overset{\text{iid}}{\sim}\mathcal{N}\bigl(0,\sigma^2(2C/B)^2\bigr)$.
+          $w_k\overset{\text{iid}}{\sim}\mathcal{N}\bigl(0,\sigma^2\bigr)$.
         </div>
       </div>
 
@@ -255,12 +258,11 @@
 </section>
 <!-- ═══════════ The proposed mechanism ═══════════ -->
 <section>
-  <h2>What we propose <span class="hint">compact submanifolds</span></h2>
+  <h2>What we propose: ambient operation then projection </h2>
 
   <p class="note" style="margin:-8px 0 8px;">
     $\mathcal{M}$ is a <strong>compact submanifold</strong> of $\mathbb{R}^{d\times p}$,
-    carrying the <strong>inherited</strong> metric. Every step below is then an
-    ambient operation followed by the same projection $P_\theta$.
+    carrying the <strong>inherited</strong> metric. .
   </p>
 
   <div class="cols w46" style="gap:32px; align-items:center;">
@@ -278,29 +280,30 @@
           $\lVert v\rVert_\theta=\lVert v\rVert$ for every $v\in T_\theta\mathcal{M}$
         </div>
         <div class="cm">
-          The inherited metric is the ambient one, so the clipping ball no longer
-          depends on $\theta$. The Euclidean sensitivity $2C/B$ carries over unchanged.
+          The clipping ball no longer
+          depends on $\theta$. 
+        </div>
+                <div class="cm">
+The Euclidean sensitivity $2C/B$ carries over unchanged.
         </div>
       </div>
 
       <div class="method fragment" data-fig-step="3">
         <div class="nm">noise</div>
         <div class="fm">
-          $\xi=P_\theta(Z),\qquad Z\sim\mathcal{N}\bigl(0,\sigma^2(2C/B)^2 I\bigr)$
+          $\xi=P_\theta(Z),\qquad Z\sim\mathcal{N}\bigl(0,\sigma^2 I\bigr)$
         </div>
         <div class="cm">
-          Projecting an isotropic ambient Gaussian gives an isotropic Gaussian on
-          $T_\theta\mathcal{M}$. No frame to build, and it coincides with the intrinsic
-          definition of the previous slide.
+          It coincides with the intrinsic
+          definition.
         </div>
       </div>
 
       <div class="method fragment" data-fig-step="4">
-        <div class="nm">then any optimiser</div>
-        <div class="cm">
-          The updates are computed from
-          $\widetilde{\operatorname{grad}} f(\theta,\mathcal{B})$ alone, so the choice of
-          optimiser and of retraction is left free.
+        <div class="fm">
+          $\tilde g\gets\frac1B\sum_{\ell}
+            \operatorname{clip}_C\bigl(P\,\nabla f(\theta;z_{\ell})\bigr)
+            +P\,\xi,\quad \xi\sim\mathcal{N}(0,\sigma^2 I)$
         </div>
       </div>
     </div>
@@ -312,137 +315,5 @@
     Déplacer theta: la boule verte garde la même taille, contrairement à la slide
     précédente. Compacité: elle garantit que la projection est bien définie et que
     les quantités restent bornées.
-  </aside>
-</section>
-<!-- ═══════════ From a pair to a profile ═══════════ -->
-<section>
-  <h2>From $(\varepsilon,\delta)$ to
-      $\varepsilon\mapsto\bigl(\varepsilon,\delta(\varepsilon)\bigr)$</h2>
-
-  <p class="note" style="margin:-8px 0 2px;">
-    A test is a set $E$: the attacker says <em>used</em> when the message lands in it.
-    Two error rates follow.
-  </p>
-
-  <div class="fig fig-wide" data-figure="fdp-curve"></div>
-
-  <p class="fragment" data-fig-step="1" style="display:none"></p>
-  <p class="fragment" data-fig-step="2" style="display:none"></p>
-  <p class="fragment" data-fig-step="3" style="display:none"></p>
-  <p class="fragment" data-fig-step="4" style="display:none"></p>
-
-  <div class="block fragment" style="margin-top:4px;">
-    Rewriting the definition with those two rates gives, for every test,
-    $$\text{miss}\;\ge\;1-\delta-e^{\varepsilon}\,\text{false alarm}
-      \qquad\text{and}\qquad
-      \text{miss}\;\ge\;e^{-\varepsilon}\bigl(1-\delta-\text{false alarm}\bigr),$$
-    two straight lines. Their maximum is the red floor.
-  </div>
-
-  <aside class="notes">
-    Les points violets sont des tests possibles. Aucun ne descend sous la courbe.
-    Une paire ne donne qu'un plancher, la courbe les résume tous.
-  </aside>
-</section>
-
-<!-- ═══════════ Where mu comes from ═══════════ -->
-<section>
-  <h2>One number: $\mu$</h2>
-
-  <div class="fig fig-wide" data-figure="gdp-link"></div>
-
-  <div class="cols" style="gap:44px; margin-top:2px;">
-    <div>
-      <p class="fragment" data-fig-step="1">
-        The hardest direction is the line joining the two centres.
-      </p>
-      <p class="fragment" data-fig-step="2">
-        Along it, the two clouds are two Gaussians.
-      </p>
-    </div>
-    <div>
-      <p class="fragment" data-fig-step="3">
-        Their gap over the noise is $\mu$.
-      </p>
-      <div class="block fragment" style="margin-top:6px;">
-        $\mu$-GDP: attacking is no easier than telling
-        $\mathcal{N}(0,1)$ from $\mathcal{N}(\mu,1)$ on one draw.
-        <div class="note" style="margin-top:4px;">
-          Our per-step mechanism: $\mu_0=2C/(B\sigma)$.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <aside class="notes">
-    Le lien direct avec la slide du mécanisme: 2C/B est ce qu'un enregistrement
-    déplace, sigma est le bruit. Le rapport est mu.
-  </aside>
-</section>
-<!-- ═══════════ Accounting ═══════════ -->
-<section>
-  <h2>Accounting</h2>
-
-  <p class="note" style="margin:-8px 0 2px;">
-    From one release to the whole run, four moves on the same curve.
-  </p>
-
-  <div class="fig fig-wide" data-figure="accounting"></div>
-
-  <p class="fragment" data-fig-step="1" style="display:none"></p>
-  <p class="fragment" data-fig-step="2" style="display:none"></p>
-  <p class="fragment" data-fig-step="3" style="display:none"></p>
-  <p class="fragment" data-fig-step="4" style="display:none"></p>
-  <p class="fragment" data-fig-step="5" style="display:none"></p>
-
-  <aside class="notes">
-    Le moment fort est la deuxième ligne: la projection ne bouge pas la courbe.
-    Toute la géométrie passe par là. Les curseurs q et Ttau montrent le compromis:
-    des lots rares aident, des étapes nombreuses coûtent.
-    Remarque à dire: l'amplification vaut pour le minibatch, qui ne sort jamais du
-    client, pas pour le tirage des clients, que le serveur publie.
-  </aside>
-</section>
-
-<!-- ═══════════ The guarantee ═══════════ -->
-<section>
-  <h2>The guarantee</h2>
-
-  <div class="block" style="margin:-4px 0 18px;">
-    <div class="block-title">Record-level privacy of DP-RFedProj</div>
-    Under an honest-but-curious server, the whole transcript $\mathcal{V}_T$ is
-    private at level
-    $$\mu_{\text{tot}}\;\approx\;\frac{2C\sqrt{T\tau}}{m_\star\,\sigma},$$
-    and any $(\varepsilon,\delta)$ pair can be read off afterwards.
-  </div>
-
-  <div class="cols" style="gap:44px; align-items:start;">
-    <div>
-      <div class="eyebrow">the budget sees</div>
-      <div class="asum"><div class="nm">$C$ and $\sigma$</div>
-        <div class="ds">the clip, and how much noise covers it</div></div>
-      <div class="asum"><div class="nm">$B$ and $m_\star$</div>
-        <div class="ds">how rarely a record is drawn, worst client</div></div>
-      <div class="asum"><div class="nm">$T\tau$</div>
-        <div class="ds">total number of releases, only through the product</div></div>
-    </div>
-    <div>
-      <div class="eyebrow" style="color:var(--c3);">the budget does not see</div>
-      <div class="asum"><div class="nm">$k$</div>
-        <div class="ds">how many clients take part each round</div></div>
-      <div class="asum"><div class="nm">$\mathcal{M}$, $\Pi$</div>
-        <div class="ds">the manifold and the projection</div></div>
-      <div class="asum"><div class="nm">$\textsc{Agg}$, $\textsc{Opt}$</div>
-        <div class="ds">the aggregation rule and the local optimiser</div></div>
-      <p class="note fragment" style="margin-top:12px;">
-        They all act after the noise, so they are post-processing. Changing the
-        geometry costs nothing in privacy.
-      </p>
-    </div>
-  </div>
-
-  <aside class="notes">
-    C'est la réduction géométrie-libre, dite sans formalisme. Conséquence pratique:
-    on peut changer de variété ou d'agrégateur sans refaire la comptabilité.
   </aside>
 </section>

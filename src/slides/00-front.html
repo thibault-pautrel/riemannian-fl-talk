@@ -61,15 +61,48 @@
 <section>
   <h2>Contents</h2>
   <ol class="toc">
-    <li><span class="n">1</span><span class="t">From EEG to learning on a manifold
-      <span class="sub">Covariance matrices, scattered data, Riemannian geometry and SPDNet.</span></span></li>
-    <li><span class="n">2</span><span class="t">Private Riemannian federated learning
-      <span class="sub">Local optimisation, aggregation on a manifold, what shared parameters leak,
-        and the proposed algorithm with its convergence rate.</span></span></li>
-    <li><span class="n">3</span><span class="t">Numerical experiments
-      <span class="sub">Results on real EEG datasets.</span></span></li>
-    <li><span class="n">4</span><span class="t">Perspectives
-      <span class="sub">Open questions and next steps.</span></span></li>
+    <li>
+      <span class="n">1</span>
+      <span class="t">The problem
+        <span class="sub">EEG trials and covariance matrices</span>
+        <span class="sub">Data scattered across sites</span>
+        <span class="sub">Classifying an SPD matrix, SPDNet</span>
+      </span>
+    </li>
+    <li>
+      <span class="n">2</span>
+      <span class="t">Riemannian geometry tutorial
+        <span class="sub">Manifolds, tangent spaces, metrics</span>
+        <span class="sub">Geodesics, exponential, logarithm, retractions</span>
+        <span class="sub">Sphere, Stiefel, SPD</span>
+      </span>
+    </li>
+    <li>
+      <span class="n">3</span>
+      <span class="t">Private Riemannian federated learning
+        <span class="sub">Local optimisation and aggregation</span>
+        <span class="sub">What shared parameters leak</span>
+        <span class="sub">DP-RFedProj and its convergence rate</span>
+      </span>
+    </li>
+    <li>
+      <span class="n">4</span>
+      <span class="t">Numerical experiments
+        <span class="sub">Datasets and centralised baseline</span>
+        <span class="sub">Accuracy against the privacy budget</span>
+        <span class="sub">Aggregation cost</span>
+      </span>
+    </li>
+    <li>
+      <span class="n">5</span>
+      <span class="t">Conclusion and perspectives
+        <span class="sub">What the framework buys, what it costs</span>
+        <span class="sub">Cross-subject private learning</span>
+      </span>
+    </li>
   </ol>
-  <aside class="notes">Walk through the plan. Say the geometry part assumes nothing.</aside>
+  <aside class="notes">
+    Walk through the plan. Say section 2 is a tutorial and assumes nothing,
+    so that people who know it can relax and the others are not lost.
+  </aside>
 </section>

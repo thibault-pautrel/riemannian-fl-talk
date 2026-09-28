@@ -129,19 +129,28 @@
       <th>Convergence regime</th><th>Geometric ops</th>
     </tr>
     <tr>
-      <td class="nm">RFedSVRG</td><td>general</td><td class="no">✗</td>
+      <td class="nm">RFedSVRG<span class="ref">Li and Ma, 2022</span></td>
+      <td>general</td><td class="no">✗</td>
       <td>multi-step with one client, or one step with all</td>
       <td>$\mathrm{Exp},\mathrm{Log}$, transport</td>
     </tr>
     <tr>
-      <td class="nm">AGS</td><td>general</td><td class="no">✗</td>
+      <td class="nm">AGS<span class="ref">Huang et al., 2024</span></td>
+      <td>general</td><td class="no">✗</td>
       <td>multi-step, partial</td>
       <td>$\mathrm{R}$, transport</td>
     </tr>
     <tr>
-      <td class="nm">PriRFed</td><td>general</td><td class="yes">✓</td>
+      <td class="nm">PriRFed<span class="ref">Huang et al., 2026</span></td>
+      <td>general</td><td class="yes">✓</td>
       <td>multi-step with one client, or one step with all</td>
       <td>$\mathrm{R}$, $\mathrm{R}^{-1}$</td>
+    </tr>
+    <tr>
+      <td class="nm">projection-based<span class="ref">Zhang et al., 2024 · Wang et al., 2025</span></td>
+      <td>compact</td><td class="no">✗</td>
+      <td>multi-step, full</td>
+      <td>$\Pi$ only</td>
     </tr>
     <tr class="own">
       <td class="nm">ours<span class="ourtag">DP-RFedProj</span></td>
@@ -154,14 +163,11 @@
   <div class="cols" style="gap:44px; margin-top:24px;">
     <div class="block fragment" style="margin:0;">
       <div class="block-title">What is new</div>
-      The two regimes hold together for the first time with a privacy guarantee.
-      The projection-based linearisation is what makes them accessible at once,
-      without curvature-dependent constants.
+Multiple local step+ partial participation + privacy 
     </div>
     <div class="block fragment" style="margin:0; border-left-color:var(--accent);">
       <div class="block-title">What it costs</div>
-      Compactness. PriRFed covers general manifolds, ours does not. In exchange the
-      geometry enters through one map instead of a retraction and its inverse.
+      Compactness
     </div>
   </div>
 

@@ -107,7 +107,7 @@
 .toc{
   list-style:none; margin:0; padding:0;
   display:grid; grid-template-columns:1fr 1fr;
-  grid-template-rows:repeat(2,auto); grid-auto-flow:column;
+  grid-template-rows:repeat(3,auto); grid-auto-flow:column;
   gap:0 60px;
 }
 .toc li{
@@ -455,3 +455,20 @@
 .method.agg .nm{ font-size:19px; }
 .method.agg .fm{ margin:14px 0 12px; font-size:27px; }
 .method.agg .cm{ font-size:23px; line-height:1.45; }
+/* ---- algorithm slide: more air ---- */
+.algo.air{ padding:20px 24px 22px; line-height:1.75; }
+.algo.air li{ padding:5px 0 5px 34px; }
+.algo.air li.ind{ padding-left:58px; }
+.algo.air li.ind2{ padding-left:80px; }
+.algo.air .hd{ padding-bottom:12px; margin-bottom:12px; line-height:1.5; }
+.tbl.air th{ padding-bottom:10px; }
+.tbl.air td{ padding:11px 12px 11px 0; }
+.tbl.air caption{ padding-bottom:12px; }
+/* ---- references slide ---- */
+.refs p{ margin:0 0 10px; line-height:1.35; }
+.refs .note{ margin-bottom:14px; }
+.tbl .ref{
+  display:block; margin-top:2px;
+  font-family:var(--sans); font-size:14px; font-weight:400;
+  color:var(--slate); letter-spacing:0; text-transform:none;
+}

@@ -1,0 +1,154 @@
+<!-- ═══════════ Section 5 · divider ═══════════ -->
+<section class="fullbleed on-navy" data-background-color="#243B54">
+  <div class="layer fullbleed">
+    <div class="kicker">Section 5</div>
+    <h1 style="margin-top:28px;">Conclusion<br>and perspectives</h1>
+    <div class="meta">
+      <div>What the framework buys, what it costs, and what comes next</div>
+    </div>
+  </div>
+  <aside class="notes">
+    Court. Enchaîner directement sur la conclusion.
+  </aside>
+</section>
+
+<!-- ═══════════ S · Conclusion ═══════════ -->
+<section>
+  <h2>Conclusion</h2>
+
+  <div class="block lg" style="margin-top:0;">
+    <div class="block-title">DP-RFedProj</div>
+    Record-level private federated learning on compact submanifolds,
+    with closed-form projections for aggregation.
+  </div>
+
+  <ol class="steps lg" style="margin-top:20px;">
+    <li class="fragment">
+      <span class="tt">The accounting detaches from the geometry</span>
+      <div class="dd">
+        A fixed ambient metric makes the privacy analysis independent of the
+        manifold, the aggregator and the local optimiser.
+      </div>
+    </li>
+    <li class="fragment">
+      <span class="tt">The analysis covers the regime we actually run</span>
+      <div class="dd">
+        Many local steps, partial participation, heterogeneous clients.
+      </div>
+    </li>
+    <li class="fragment">
+      <span class="tt">Privacy reverses the ranking</span>
+      <div class="dd">
+        On EEG motor imagery, the Riemannian architecture wins once noise is
+        added, and projection-based aggregation matches the retraction-based
+        one at a fraction of the compute.
+      </div>
+    </li>
+  </ol>
+
+  <div class="consequence fragment" style="margin-top:26px;">
+    <div class="tag">Limitation: geometry</div>
+    <div class="bd">
+      <li> The framework needs a <strong>compact</strong> submanifold under the
+      Euclidean-induced metric. </li>
+      <li>Iterate-dependent metrics with no ambient
+      projection are left out (SPD-AI).</li>
+    </div>
+  </div>
+
+  <aside class="notes">
+    Trois points, puis la limite géométrique, qui est celle qui compte pour
+    cet auditoire. Les autres limites arrivent sur la slide suivante.
+  </aside>
+</section>
+
+
+
+<!-- ═══════════ S · Perspectives ═══════════ -->
+<section>
+  <h2>Perspectives</h2>
+
+  <div class="consequence lg" style="margin-top:0;">
+    <div class="tag">Next question</div>
+    <div class="bd">
+      Cross-subject private federated learning: train on some subjects,
+      evaluate on a client never seen during training.
+    </div>
+  </div>
+
+  <ol class="steps lg" style="margin-top:26px;">
+    <li class="fragment">
+      <span class="tt">Why it matters</span>
+      <div class="dd">
+        A new subject arrives with no labelled trials. Calibration is what a
+        BCI user actually wants to avoid.
+      </div>
+    </li>
+    <li class="fragment">
+      <span class="tt">Domain adaptation on the manifold</span>
+      <div class="dd">
+        Each subject has its own covariance distribution. Aligning them, by
+        recentring on a reference point of $\mathcal{S}^{++}_C$ for instance,
+        is itself a geometric operation.
+      </div>
+    </li>
+    <li class="fragment">
+      <span class="tt">Beyond the current framework</span>
+      <div class="dd">
+        Adaptive optimisers in the analysis, tighter accounting on what the
+        server observes, and metrics with no ambient projection.
+      </div>
+    </li>
+  </ol>
+
+  <aside class="notes">
+    Terminer sur le cross-subject. C'est la suite naturelle du travail et
+    le point sur lequel on veut des questions.
+  </aside>
+</section>
+<!-- ═══════════ References ═══════════ -->
+<section>
+  <h2>References</h2>
+  <div class="cols refs" style="gap:44px; align-items:start; font-size:20px;">
+    <div>
+      <p class="note">Riemannian federated learning</p>
+      <p>Li and Ma. Federated learning on Riemannian manifolds. 2022.</p>
+      <p>Huang et al. Riemannian federated learning via averaging gradient streams. 2024.</p>
+      <p>Zhang et al. Nonconvex federated learning on compact smooth submanifolds. 2024.</p>
+      <p>Wang et al. Zeroth-order federated learning on compact submanifolds. 2025.</p>
+      <p>Huang et al. PriRFed. 2026.</p>
+      <p>McMahan et al. Communication-efficient learning from decentralized data. 2017.</p>
+    </div>
+    <div>
+      <p class="note">Privacy, geometry, EEG</p>
+      <p>Dwork et al. Calibrating noise to sensitivity in private data analysis. 2006.</p>
+      <p>Dong, Roth and Su. Gaussian differential privacy. 2022.</p>
+      <p>Han et al. Differentially private Riemannian optimization. 2024.</p>
+      <p>Zhu et al. Deep leakage from gradients. 2019.</p>
+      <p>Absil and Malick. Projection-like retractions on matrix manifolds. 2012.</p>
+      <p>Huang and Van Gool. A Riemannian network for SPD matrix learning. 2017.</p>
+      <p>Lawhern et al. EEGNet. 2018.</p>
+      <p>Chevallier et al. The largest EEG-based BCI reproducibility study. 2024.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    Slide de secours. Ne pas la montrer, y revenir seulement si une question
+    porte sur une référence précise.
+  </aside>
+</section>
+<!-- ═══════════ S · Thanks ═══════════ -->
+<section class="fullbleed on-navy" data-background-color="#243B54">
+  <div class="fig-bg" data-figure="title-manifold"></div>
+  <div class="scrim"></div>
+  <div class="layer fullbleed">
+    <div class="kicker">Thank you</div>
+    <h1 style="margin-top:28px;">Questions</h1>
+    <div class="meta">
+      <div>Thibault Pautrel</div>
+      <div class="affil">L2S, CentraleSup&eacute;lec, Universit&eacute; Paris-Saclay</div>
+    </div>
+  </div>
+  <aside class="notes">
+    Garder la figure de la variété à l'écran pendant les questions.
+  </aside>
+</section>

@@ -1,0 +1,107 @@
+<!-- ═══════════ S · The three datasets ═══════════ -->
+<section>
+  <h2>Datasets <span class="hint">MOABB benchmark, Chevallier et al., 2024</span></h2>
+
+  <div class="mtable" style="grid-template-columns:230px repeat(3,1fr);">
+    <div class="head"></div>
+    <div class="head">BNCI2014_001</div>
+    <div class="head">Weibo2014</div>
+    <div class="head">Cho2017</div>
+
+    <div class="row">Subjects</div>
+    <div>9</div><div>10</div><div>52</div>
+
+    <div class="row">Channels</div>
+    <div>22</div><div>60</div><div>64</div>
+
+    <div class="row">Classes</div>
+    <div>4</div><div>7</div><div>2</div>
+
+    <div class="row">Native rate (Hz)</div>
+    <div>250</div><div>200</div><div>512</div>
+
+    <div class="row">$\mathcal{T}$</div>
+    <div>513</div><div>513</div><div>384</div>
+
+    <div class="row">Trials per class</div>
+    <div>144</div><div>80</div><div>100</div>
+  </div>
+
+  <div class="cols" style="gap:44px; margin-top:30px;">
+    <div>
+    </div>
+    <div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    Ne pas lire le tableau. Pointer la ligne des canaux, puis celle des sujets.
+    Dire que les essais sont rééchantillonnés à une fenêtre commune.
+  </aside>
+</section>
+
+<!-- ═══════════ S · Centralised baseline ═══════════ -->
+<section>
+  <h2>Centralised baseline</h2>
+  <div class="fig" data-figure="central-bars"
+       style="--fig-ar:1020/430; max-width:1080px; margin:0 auto;"></div>
+  <p class="fragment" data-fig-step="1" style="display:none"></p>
+  <div class="consequence fragment" style="margin-top:18px;">
+    <div class="tag">Reading</div>
+    <div class="bd">
+      Pooled in one place, EEGNet is ahead on all three datasets.
+      Whiskers are one standard deviation over ten seeds.
+    </div>
+  </div>
+  <aside class="notes">
+    Dire que c'est le point de départ: sans fédération ni confidentialité,
+    EEGNet gagne. La suite montre que cet ordre s'inverse.
+  </aside>
+</section>
+
+<!-- ═══════════ S · Federated results ═══════════ -->
+<section>
+  <h2>Federated accuracy <span class="hint">full participation, 10 seeds</span></h2>
+  <div class="fig fig-wide" data-figure="fed-bars" style="--fig-ar:1620/570;"></div>
+  <p class="fragment" data-fig-step="1" style="display:none"></p>
+  <p class="fragment" data-fig-step="2" style="display:none"></p>
+  <p class="fragment" data-fig-step="3" style="display:none"></p>
+  <p class="fragment" data-fig-step="4" style="display:none"></p>
+  <aside class="notes">
+    Groupe par groupe: non privé, puis les trois budgets. Les boutons changent
+    de jeu de données. Insister sur le renversement: EEGNet est devant sans
+    confidentialité, derrière dès que le bruit arrive.
+  </aside>
+</section>
+
+<!-- ═══════════ S · What the numbers say ═══════════ -->
+<section>
+  <h2>What the numbers say</h2>
+  <ol class="steps lg">
+    <li class="fragment">
+      <span class="tt">Without privacy, EEGNet wins</span>
+      <div class="dd">
+        57.0 against 53.2 on BNCI2014_001, 47.0 against 42.8 on Weibo2014,
+        67.7 against 60.8 on Cho2017.
+      </div>
+    </li>
+    <li class="fragment">
+      <span class="tt">With privacy, the order reverses</span>
+      <div class="dd">
+        At $\varepsilon=20$ on Weibo2014, ProjAvg reaches 24.3 while EEGNet falls
+        to 17.4, barely above the chance level of 14.3.
+      </div>
+    </li>
+    <li class="fragment">
+      <span class="tt">Among aggregations, the cheap ones hold up</span>
+      <div class="dd">
+        ProjAvg and RLAvg match or beat RetAvg under every budget, for one
+        projection per round.
+      </div>
+    </li>
+  </ol>
+  <aside class="notes">
+    Quatre points, un clic chacun. Ne pas répéter tous les chiffres, ils sont
+    sur la slide précédente.
+  </aside>
+</section>
