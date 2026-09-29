@@ -33,6 +33,7 @@ import eegnetArch from './figures/eegnet-arch.js';
 import { centralBars, fedBars } from './figures/results.js';
 import curvesBnci from './figures/curves-bnci.js';
 import aggTime from './figures/agg-time.js';
+import proofSchema from './figures/proof-schema.js';
 
 import '@fontsource-variable/inter';
 import 'reveal.js/dist/reveal.css';
@@ -101,6 +102,7 @@ register('central-bars', centralBars);
 register('fed-bars', fedBars);
 register('curves-bnci', curvesBnci);
 register('agg-time', aggTime);
+register('proof-schema', proofSchema);
 // a figure step is the largest data-fig-step among the visible fragments
 function stepOf(slide) {
   let step = 0;

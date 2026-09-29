@@ -3,27 +3,29 @@ import { makeTicker } from '../anim.js';
 
 /* Where mu comes from.
 
-   The two clouds of the previous slide, projected on the line joining
-   their centres, become two bells. Their separation measured in units
-   of the noise is mu. */
+   Two laws of the released quantity, one per adjacent database, seen
+   along the line joining their means. The gap between the two, measured
+   in units of the noise, is mu. Larger mu is easier to tell apart. */
 
-const CW = 1060, CH = 330;
+const CW = 900, CH = 420;
 const NAVY = '#243B54', SLATE = '#8A9AA8';
 const D_COL = '#0072B2', N_COL = '#B2182B';
 
-const PX = 210, PY = 150, S = 96;
-const MD = [-0.30, 0.10], MN = [0.42, 0.34];
-const SD = 0.42;
+const BASE = 306;            // baseline of the bells
+const AMP = 190;             // height of a bell
+const SD = 62;               // pixels per standard deviation
+const CX = CW / 2;
 
 export default function gdpLink(el) {
   const sc = makeScene(el, { width: CW, height: CH });
   const ticker = makeTicker();
 
-  const P = (v) => ({ x: PX + S * v[0], y: PY - S * v[1] });
+  let mu = 1.6;
+
   const g = sc.g();
   const txt = (x, y, s, o = {}) => {
     const n = sc.node(g, 'text', {
-      x, y, 'text-anchor': o.anchor ?? 'middle', 'font-size': o.size ?? 15,
+      x, y, 'text-anchor': o.anchor ?? 'middle', 'font-size': o.size ?? 17,
       'font-weight': o.weight ?? 400, fill: o.fill ?? SLATE,
       'font-family': o.mono ? 'var(--mono)' : 'var(--sans)'
     });
@@ -31,98 +33,86 @@ export default function gdpLink(el) {
     return n;
   };
 
-  const rings = (col) => [0.55, 1.0, 1.55].map((k) => sc.node(g, 'circle', {
-    fill: col, 'fill-opacity': .10, stroke: col, 'stroke-opacity': .25,
-    'stroke-width': 1, 'data-k': k }));
-  const ringD = rings(D_COL), ringN = rings(N_COL);
-  const qD = P(MD), qN = P(MN);
-  ringD.forEach((c) => { c.setAttribute('cx', qD.x); c.setAttribute('cy', qD.y);
-                         c.setAttribute('r', S * SD * +c.getAttribute('data-k')); });
-  ringN.forEach((c) => { c.setAttribute('cx', qN.x); c.setAttribute('cy', qN.y);
-                         c.setAttribute('r', S * SD * +c.getAttribute('data-k')); });
-  sc.node(g, 'circle', { cx: qD.x, cy: qD.y, r: 4.5, fill: D_COL });
-  sc.node(g, 'circle', { cx: qN.x, cy: qN.y, r: 4.5, fill: N_COL });
-  txt(qD.x - 10, qD.y + 86, 'not used', { size: 14, fill: D_COL });
-  txt(qN.x + 16, qN.y - 78, 'used', { size: 14, fill: N_COL });
+  sc.node(g, 'line', { x1: 40, y1: BASE, x2: CW - 40, y2: BASE,
+                       stroke: '#C8D2DA', 'stroke-width': 1.4 });
 
-  // the axis joining the two centres
-  const dir = [qN.x - qD.x, qN.y - qD.y];
-  const L = Math.hypot(dir[0], dir[1]);
-  const u = [dir[0] / L, dir[1] / L];
-  const axis = sc.node(g, 'line', {
-    x1: qD.x - 70 * u[0], y1: qD.y - 70 * u[1],
-    x2: qN.x + 70 * u[0], y2: qN.y + 70 * u[1],
-    stroke: NAVY, 'stroke-width': 1.6, 'stroke-dasharray': '6 5', opacity: 0 });
-  const drops = Array.from({ length: 10 }, () => sc.node(g, 'line', {
-    stroke: NAVY, 'stroke-opacity': .3, 'stroke-width': 1,
-    'stroke-dasharray': '3 3', opacity: 0 }));
-
-  // ---- the two bells
-  const BX = 560, BY = 236, BW = 330, AMP = 120;
-  const SEP = 118;
-  sc.node(g, 'line', { x1: BX - 20, y1: BY, x2: BX + BW + 20, y2: BY,
-                       stroke: '#C8D2DA', 'stroke-width': 1.2 });
-  const bell = (cx, col) => {
+  // one bell, filled and outlined, centred on cx
+  const bellPath = (cx, close = false) => {
     let d = '';
-    for (let i = 0; i <= 70; i++) {
-      const t = -3.4 + 6.8 * i / 70;
-      d += (i ? 'L' : 'M') + (cx + 34 * t).toFixed(1) + ' ' +
-           (BY - AMP * Math.exp(-t * t / 2)).toFixed(1);
+    for (let i = 0; i <= 90; i++) {
+      const t = -3.6 + 7.2 * i / 90;
+      d += (i ? 'L' : 'M') + (cx + SD * t).toFixed(1) + ' ' +
+           (BASE - AMP * Math.exp(-t * t / 2)).toFixed(1);
     }
-    return sc.node(g, 'path', { d, fill: 'none', stroke: col, 'stroke-width': 2.4, opacity: 0 });
+    return close ? d + `L${(cx + SD * 3.6).toFixed(1)} ${BASE}L${(cx - SD * 3.6).toFixed(1)} ${BASE}Z` : d;
   };
-  const c1 = BX + 96, c2 = c1 + SEP;
-  const bellD = bell(c1, D_COL), bellN = bell(c2, N_COL);
-  const sep = sc.node(g, 'line', { x1: c1, y1: BY - AMP - 16, x2: c2, y2: BY - AMP - 16,
-                                   stroke: NAVY, 'stroke-width': 1.6, opacity: 0 });
-  const tick = [c1, c2].map((x) => sc.node(g, 'line', {
-    x1: x, y1: BY - AMP - 22, x2: x, y2: BY - AMP - 10,
-    stroke: NAVY, 'stroke-width': 1.6, opacity: 0 }));
-  const labMu = txt((c1 + c2) / 2, BY - AMP - 26, 'μ', { size: 19, fill: NAVY, weight: 650 });
-  const labFor = txt(BX + BW / 2, BY + 30, '', { size: 17, fill: NAVY });
-  const labVal = txt(BX + BW / 2, BY + 58, '', { size: 16, mono: true, fill: NAVY });
-  [labMu, labFor, labVal].forEach((l) => l.setAttribute('opacity', 0));
 
-  const arrow = sc.node(g, 'path', {
-    d: `M${PX + 190} ${PY}H${BX - 60}`, stroke: SLATE, 'stroke-width': 1.6,
-    fill: 'none', 'marker-end': sc.arrow('slate'), opacity: 0 });
-  const labProj = txt((PX + 190 + BX - 60) / 2, PY - 16, 'project', { size: 14 });
-  labProj.setAttribute('opacity', 0);
+  const fillD = sc.node(g, 'path', { fill: D_COL, 'fill-opacity': .10, stroke: 'none' });
+  const fillN = sc.node(g, 'path', { fill: N_COL, 'fill-opacity': .10, stroke: 'none' });
+  const lineD = sc.node(g, 'path', { fill: 'none', stroke: D_COL, 'stroke-width': 2.8 });
+  const lineN = sc.node(g, 'path', { fill: 'none', stroke: N_COL, 'stroke-width': 2.8 });
+
+  const labD = txt(0, BASE + 30, 'record used', { size: 18, fill: D_COL });
+  const labN = txt(0, BASE + 30, 'record replaced', { size: 18, fill: N_COL });
+
+  // the gap between the two means
+  const tickD = sc.node(g, 'line', { stroke: NAVY, 'stroke-width': 1.4,
+                                     'stroke-dasharray': '5 4', opacity: 0 });
+  const tickN = sc.node(g, 'line', { stroke: NAVY, 'stroke-width': 1.4,
+                                     'stroke-dasharray': '5 4', opacity: 0 });
+  const span = sc.node(g, 'path', { fill: 'none', stroke: NAVY, 'stroke-width': 1.8, opacity: 0 });
+  const labMu = txt(0, 0, 'μ', { size: 26, fill: NAVY, weight: 650 });
+  const labGap = txt(CX, 58, '', { size: 18, fill: NAVY });
+  const labFor = txt(CX, CH - 34, '', { size: 19, fill: NAVY, mono: true });
+  [labMu, labGap, labFor].forEach((n) => n.setAttribute('opacity', 0));
+
+  const sMu = sc.slider('μ', { min: 0.2, max: 3.2, step: 0.02, value: mu },
+                        (v) => { mu = v; render(1); });
 
   let step = 0, lastT = 1;
 
   function render(t = lastT) {
     lastT = t;
-    const g1 = step > 1 ? 1 : step === 1 ? t : 0;   // the axis
-    const g2 = step > 2 ? 1 : step === 2 ? t : 0;   // the bells
-    const g3 = step === 3 ? t : 0;                  // mu
+    const g1 = step > 1 ? 1 : step === 1 ? t : 0;   // the two laws
+    const g2 = step > 2 ? 1 : step === 2 ? t : 0;   // the gap
+    const g3 = step === 3 ? t : 0;                  // what sets it
 
-    axis.setAttribute('opacity', g1);
-    drops.forEach((d, k) => {
-      const s = -1.4 + 2.8 * k / 9;
-      const from = { x: qD.x + (qN.x - qD.x) * 0.5 + 62 * s * -u[1],
-                     y: qD.y + (qN.y - qD.y) * 0.5 + 62 * s * u[0] };
-      const proj = { x: qD.x + (qN.x - qD.x) * 0.5, y: qD.y + (qN.y - qD.y) * 0.5 };
-      d.setAttribute('x1', from.x); d.setAttribute('y1', from.y);
-      d.setAttribute('x2', proj.x + 0.0); d.setAttribute('y2', proj.y + 0.0);
-      d.setAttribute('opacity', g1 > .5 ? 0.6 : 0);
-    });
+    sMu.set(mu.toFixed(2));
 
-    arrow.setAttribute('opacity', g2 > .1 ? 1 : 0);
-    labProj.setAttribute('opacity', g2 > .3 ? 1 : 0);
-    bellD.setAttribute('opacity', g2);
-    bellN.setAttribute('opacity', g2);
+    const c1 = CX - SD * mu / 2, c2 = CX + SD * mu / 2;
 
-    sep.setAttribute('opacity', g3);
-    tick.forEach((n) => n.setAttribute('opacity', g3));
-    labMu.setAttribute('opacity', g3 > .4 ? 1 : 0);
-    labFor.textContent = g3 > .5 ? 'the gap, measured in units of noise' : '';
+    fillD.setAttribute('d', bellPath(c1, true));
+    lineD.setAttribute('d', bellPath(c1));
+    labD.setAttribute('x', c1 - SD * 1.1);
+
+    fillN.setAttribute('d', bellPath(c2, true));
+    lineN.setAttribute('d', bellPath(c2));
+    labN.setAttribute('x', c2 + SD * 1.3);
+    [fillN, lineN, labN].forEach((n) => n.setAttribute('opacity', g1));
+
+    const top = BASE - AMP - 26;
+    tickD.setAttribute('x1', c1); tickD.setAttribute('y1', BASE);
+    tickD.setAttribute('x2', c1); tickD.setAttribute('y2', top - 6);
+    tickN.setAttribute('x1', c2); tickN.setAttribute('y1', BASE);
+    tickN.setAttribute('x2', c2); tickN.setAttribute('y2', top - 6);
+    [tickD, tickN].forEach((n) => n.setAttribute('opacity', g2));
+    span.setAttribute('d',
+      `M${c1} ${top}H${c2}M${c1} ${top - 7}V${top + 7}M${c2} ${top - 7}V${top + 7}`);
+    span.setAttribute('opacity', g2);
+    labMu.setAttribute('x', (c1 + c2) / 2);
+    labMu.setAttribute('y', top - 14);
+    labMu.setAttribute('opacity', g2 > .5 ? 1 : 0);
+
+    labGap.textContent = g2 > .6 ? 'the gap, in units of the noise' : '';
+    labGap.setAttribute('opacity', g2 > .6 ? 1 : 0);
+
+    labFor.textContent = g3 > .5 ? 'μ = 2C / (B σ)  for one release' : '';
     labFor.setAttribute('opacity', g3 > .5 ? 1 : 0);
-    labVal.textContent = g3 > .7 ? 'μ = 2C / (B σ)' : '';
-    labVal.setAttribute('opacity', g3 > .7 ? 1 : 0);
   }
 
-  const durations = [0, 800, 900, 900];
+  sc.tool('reset', () => { mu = 1.6; sMu.input.value = mu; render(1); });
+
+  const durations = [0, 800, 900, 700];
   render(1);
 
   return {

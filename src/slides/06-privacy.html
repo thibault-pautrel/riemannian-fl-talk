@@ -85,9 +85,45 @@
     Mentionner que les jeux locaux sont supposés disjoints.
 </aside>
 </section>
-<!-- ═══════════ The mechanism ═══════════ -->
+<!-- ═══════════ Differential privacy ═══════════ -->
 <section>
-  <h2>Randomisation procedure</h2>
+<h2>Differential privacy</h2>
+
+<div class="block" style="margin:-6px 0 10px;">
+  <div class="block-title">$(\varepsilon,\delta)$-DP
+    <span class="hint" style="float:none; font-weight:400;">(Dwork et al., 2006)</span>
+  </div>
+  A randomised $\mathcal{A}$ is $(\varepsilon,\delta)$-DP if, for every
+  record-adjacent pair $D\bowtie D'$ and every measurable set $E$,
+  $$\Pr\bigl(\mathcal{A}(D)\in E\bigr)\le
+    e^{\varepsilon}\,\Pr\bigl(\mathcal{A}(D')\in E\bigr)+\delta .$$
+</div>
+
+<div class="cols w46" style="gap:36px; align-items:center;">
+  <div>
+    <p class="fragment" data-fig-step="1">
+      Here $\mathcal{A}$: one client submission $\Delta^{(i)}$
+    </p>
+    <p class="fragment" data-fig-step="2">
+      $E$: any set of outcomes the server may test.
+    </p>
+    <p class="note fragment">
+      Target: the whole transcript $\mathcal{V}_T$.
+    </p>
+
+  </div>
+
+  <div class="fig" data-figure="tradeoff"></div>
+</div>
+
+<aside class="notes">
+  Déplacer E à la souris, l'inégalité tient partout. Baisser le bruit: les deux
+  nuages se séparent et on trouve une région où elle casse.
+</aside>
+</section>
+<!-- ═══════════ The mechanism: Euclidean═══════════ -->
+<section>
+  <h2>Gradient privatisation in Euclidean spaces</h2>
 
   <div class="cols w64" style="gap:30px; align-items:center;">
     <div>
@@ -141,10 +177,6 @@
           $\tau$ steps $\mapsto$ client $i$ submission $\Delta^{(i)}$. 
         </div>
       </div>
-
-      <p class="note fragment">
-        Does that stop the attacker? The next definition says how much.
-      </p>
     </div>
   </div>
 
@@ -154,51 +186,7 @@
     Troisième temps: le bruit, et les deux flèches qui sautent d'un tirage à l'autre.
   </aside>
 </section>
-<!-- ═══════════ Differential privacy ═══════════ -->
-<section>
-<h2>Differential privacy</h2>
 
-<div class="block" style="margin:-6px 0 10px;">
-  <div class="block-title">$(\varepsilon,\delta)$-DP
-    <span class="hint" style="float:none; font-weight:400;">(Dwork et al., 2006)</span>
-  </div>
-  A randomised $\mathcal{A}$ is $(\varepsilon,\delta)$-DP if, for every
-  record-adjacent pair $D\bowtie D'$ and every measurable set $E$,
-  $$\Pr\bigl(\mathcal{A}(D)\in E\bigr)\le
-    e^{\varepsilon}\,\Pr\bigl(\mathcal{A}(D')\in E\bigr)+\delta .$$
-</div>
-
-<div class="cols w46" style="gap:36px; align-items:center;">
-  <div>
-    <p class="fragment" data-fig-step="1">
-      Here $\mathcal{A}$: one client submission $\Delta^{(i)}$
-    </p>
-    <p class="fragment" data-fig-step="2">
-      $E$: any set of outcomes the server may test.
-    </p>
-    <p class="note fragment">
-      Target: the whole transcript $\mathcal{V}_T$.
-    </p>
-    <p class="fragment" data-fig-step="3">
-      $(\varepsilon,\delta)$-DP $\mapsto~f$-DP formalism (hypothesis testing)
-      <span class="hint" style="float:none;">(Dong et al., 2022)</span>
-    </p>
-    <p class="fragment" data-fig-step="3">
-      Particular case: $\mu$-Gaussian Differential Privacy
-    </p>
-    <p class="fragment" data-fig-step="4">
-      Key properties: post-processing, subsampling amplification, tensorisation
-    </p>
-  </div>
-
-  <div class="fig" data-figure="tradeoff"></div>
-</div>
-
-<aside class="notes">
-  Déplacer E à la souris, l'inégalité tient partout. Baisser le bruit: les deux
-  nuages se séparent et on trouve une région où elle casse.
-</aside>
-</section>
 <!-- ═══════════ The mechanism, on a manifold ═══════════ -->
 <section>
   <h2>The same mechanism, on a manifold</h2>

@@ -1,0 +1,108 @@
+<!-- ═══════════ Calibrating sigma, then f-DP ═══════════ -->
+<section>
+  <h2>Which $\sigma$ certifies a target $(\varepsilon,\delta)$?</h2>
+
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:30px; margin:6px 0 24px;">
+    <div class="method fragment" style="border-top:2px solid var(--rule); border-bottom:none; padding:12px 0 0;">
+      <div class="nm">one pair</div>
+      <div class="cm">not tight under composition</div>
+    </div>
+    <div class="method fragment" style="border-top:2px solid var(--rule); border-bottom:none; padding:12px 0 0;">
+      <div class="nm">loose accounting</div>
+      <div class="cm">more noise, less accuracy</div>
+    </div>
+    <div class="method fragment" style="border-top:2px solid var(--c1); border-bottom:none; padding:12px 0 0;">
+      <div class="nm" style="color:var(--c1);">a family instead</div>
+      <div class="cm">the curve $\varepsilon\mapsto\delta(\varepsilon)$</div>
+    </div>
+  </div>
+
+  <div class="cols w64" style="gap:34px; align-items:center;">
+    <div>
+      <div class="block fragment" data-fig-step="1" style="margin-top:0;">
+        <div class="block-title">Trade-off function</div>
+        The server tests $z$ against $z'$. The best miss rate at false alarm level $\alpha$ is
+        $$\mathcal{T}(P,Q)(\alpha)=\inf_{\phi}\bigl\{\mathbb{E}_Q[1-\phi]
+          \ :\ \mathbb{E}_P[\phi]\le\alpha\bigr\}.$$
+        <div class="note" style="margin-top:6px;">
+        </div>
+      </div>
+
+      <div class="block fragment" data-fig-step="1">
+        <div class="block-title">$f$-DP</div>
+        $\mathcal{T}\bigl(\mathcal{A}(D),\mathcal{A}(D')\bigr)\ge f$ for every
+        $D\bowtie D'$: no test does better than $f$.
+      </div>
+
+      <div class="block fragment" data-fig-step="2">
+        <div class="block-title">$\mu$-GDP</div>
+        $f=G_\mu(\alpha)=\Phi\bigl(\Phi^{-1}(1-\alpha)-\mu\bigr)$:
+        $\mathcal{N}(0,1)$ against $\mathcal{N}(\mu,1)$, $\Phi$ the normal cdf.
+        <div class="note" style="margin-top:6px;">
+          $\mu$: the gap in units of noise. Larger $\mu$, weaker guarantee.
+        </div>
+      </div>
+    </div>
+    <div class="fig" data-figure="gdp-link" style="--fig-ar:900/420;"></div>
+  </div>
+
+  <aside class="notes">
+    Trois mots-clés, puis la définition. Dire que P est la loi de la sortie quand z
+    est présent, Q quand z' le remplace. Le curseur mu montre que grand mu veut dire
+    facile à distinguer.
+  </aside>
+</section>
+
+<!-- ═══════════ Proof schema ═══════════ -->
+<section>
+  <h2>Our guarantee <span class="hint">proof schema</span></h2>
+  <div class="fig fig-wide" data-figure="proof-schema" style="--fig-ar:1500/660;"></div>
+  <p class="fragment" data-fig-step="1" style="display:none"></p>
+  <p class="fragment" data-fig-step="2" style="display:none"></p>
+  <p class="fragment" data-fig-step="3" style="display:none"></p>
+  <p class="fragment" data-fig-step="4" style="display:none"></p>
+  <p class="fragment" data-fig-step="5" style="display:none"></p>
+  <p class="fragment" data-fig-step="6" style="display:none"></p>
+  <aside class="notes">
+    Six clics. Une carte par flèche, avec la règle utilisée. La cinquième est la
+    nôtre: la variété, l'agrégateur et l'optimiseur entrent dans Psi, jamais dans
+    le budget. La sixième redonne la famille (epsilon, delta).
+  </aside>
+</section>
+
+<!-- ═══════════ The budget ═══════════ -->
+<section>
+  <h2>Reading the budget</h2>
+
+  <div class="rate" style="margin-top:10px;">
+    $\displaystyle \mu_{\mathrm{tot}}
+      =\frac{2C\sqrt{T\tau}}{m_\star\,\sigma}\bigl(1+O(\mu_0)\bigr)$
+  </div>
+
+  <div class="terms" style="margin-top:20px;">
+    <div class="term fragment">
+      <div class="nm">Grows as $\sqrt{T\tau}$</div>
+      <div class="ds">Every local step is a release. Rounds and local work cost the
+        same, at fixed $T\tau$.</div>
+    </div>
+    <div class="term fragment">
+      <div class="nm">Clip over noise</div>
+      <div class="ds">Only the ratio $C/\sigma$ matters, not either alone.</div>
+    </div>
+    <div class="term fragment">
+      <div class="nm">Damped by $m_\star$</div>
+      <div class="ds">The smallest client sets the budget, through its subsampling
+        rate.</div>
+    </div>
+    <div class="term fragment">
+      <div class="nm">The batch size cancels</div>
+      <div class="ds">At leading order, $B$ leaves the expression. It buys variance,
+        not privacy.</div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    Dire que mu_tot vient du TCL f-DP et sert à interpréter. Les sigma des
+    expériences sont calibrés par l'accountant exact du théorème.
+  </aside>
+</section>
