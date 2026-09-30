@@ -34,6 +34,9 @@ import { centralBars, fedBars } from './figures/results.js';
 import curvesBnci from './figures/curves-bnci.js';
 import aggTime from './figures/agg-time.js';
 import proofSchema from './figures/proof-schema.js';
+import protocols from './figures/protocols.js';
+import architectures from './figures/architectures.js';
+import perspectives from './figures/perspectives.js';
 
 import '@fontsource-variable/inter';
 import 'reveal.js/dist/reveal.css';
@@ -103,6 +106,9 @@ register('fed-bars', fedBars);
 register('curves-bnci', curvesBnci);
 register('agg-time', aggTime);
 register('proof-schema', proofSchema);
+register('protocols', protocols);
+register('architectures', architectures);
+register('perspectives', perspectives);
 // a figure step is the largest data-fig-step among the visible fragments
 function stepOf(slide) {
   let step = 0;

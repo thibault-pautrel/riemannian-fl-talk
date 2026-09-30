@@ -1,0 +1,254 @@
+<!-- ═══════════ Title ═══════════ -->
+<section class="fullbleed on-navy" data-background-color="#243B54">
+  <div class="fig-bg" data-figure="title-manifold"></div>
+  <div class="scrim"></div>
+  <div class="layer fullbleed">
+    <div class="kicker">Progress report</div>
+    <h1 style="margin-top:28px;">Riemannian federated learning<br>where we stand</h1>
+    <div class="meta">
+      <div>Thibault Pautrel</div>
+      <div class="affil">L2S, CentraleSup&eacute;lec, Universit&eacute; Paris-Saclay</div>
+    </div>
+  </div>
+  <aside class="notes">Court. Annoncer: ce qui est fait, ce qui reste ouvert.</aside>
+</section>
+
+<!-- ═══════════ Contents ═══════════ -->
+<section>
+  <h2>Contents</h2>
+  <ol class="toc">
+    <li>
+      <span class="n">1</span>
+      <span class="t">Theory
+        <span class="sub">Setting, aggregation schemes, what privacy and convergence cover</span>
+      </span>
+    </li>
+    <li>
+      <span class="n">2</span>
+      <span class="t">Experiments
+        <span class="sub">Centralised, federated, private, personalised</span>
+      </span>
+    </li>
+    <li>
+      <span class="n">3</span>
+      <span class="t">Next
+        <span class="sub">Perspectives and project ideas</span>
+      </span>
+    </li>
+  </ol>
+</section>
+
+<!-- ═══════════ Theory, one slide ═══════════ -->
+<section>
+  <h2>Theory <span class="hint">compact Riemannian submanifolds</span></h2>
+
+  <p style="margin:-12px 0 14px;">
+    $\mathcal{M}$ a compact Riemannian submanifold, metric induced from the ambient
+    one: $\langle\xi,\eta\rangle=\operatorname{tr}(\xi^{\top}\eta)$ on each
+    $T_x\mathcal{M}$.
+  </p>
+
+  <div class="cols" style="grid-template-columns:5.6fr 4.4fr; gap:30px; align-items:start;">
+
+    <div class="algo air" style="font-size:22px;">
+      <div class="hd">DP-RFedProj</div>
+      <ol>
+        <li><span class="kw">for</span> $t=0,\dots,T-1$</li>
+        <li class="ind">draw $S_t$, broadcast $\theta_t$</li>
+        <li class="ind"><span class="kw">for each</span> $i\in S_t$</li>
+        <li class="ind2"><span class="kw">for</span> $j=0,\dots,\tau-1$</li>
+        <li class="ind2 own" style="margin-left:22px;">
+          $\tilde g\gets\operatorname{clip}_C\bigl(P\,\nabla f\bigr)+P\xi$
+        </li>
+        <li class="ind2" style="margin-left:22px;">
+          $\theta\gets\Pi\bigl(\theta-\textsc{Opt}(\tilde g)\bigr)$
+        </li>
+        <li class="ind2 own">send $\Delta^{(i)}=\textsc{Agg.Sub}(\theta_t,\theta^{(i)})$</li>
+        <li class="ind own">$\theta_{t+1}\gets\textsc{Agg.Out}\bigl(\theta_t,
+          \tfrac1k\sum_i\Delta^{(i)}\bigr)$</li>
+      </ol>
+    </div>
+
+    <div>
+      <div class="block" style="margin:0 0 18px;">
+        <div class="block-title">Tools</div>
+        <li>$\Pi$: manifold projection </li>
+        <li>$P_x$: orthogonal tangent projector</li>
+      </div>
+
+      <table class="tbl" style="font-size:22px;">
+        <tr>
+          <th>Scheme</th><th>$\textsc{Agg.Sub}$</th><th>$\textsc{Agg.Out}$</th>
+        </tr>
+        <tr>
+          <td class="nm">KFAvg</td>
+          <td>$\mathrm{Log}_{\theta_t}(\theta^{(i)})$</td>
+          <td>$\mathrm{Exp}_{\theta_t}(\Delta_t)$</td>
+        </tr>
+        <tr>
+          <td class="nm">RetAvg</td>
+          <td>$\mathrm{R}^{-1}_{\theta_t}(\theta^{(i)})$</td>
+          <td>$\mathrm{R}_{\theta_t}(\Delta_t)$</td>
+        </tr>
+        <tr class="own">
+          <td class="nm">ProjAvg<span class="ourtag">ours</span></td>
+          <td>$\theta^{(i)}$</td>
+          <td>$\Pi(\Delta_t)$</td>
+        </tr>
+        <tr class="own">
+          <td class="nm">RLAvg<span class="ourtag">ours</span></td>
+          <td>$P_{\theta_t}(\theta^{(i)}-\theta_t)$</td>
+          <td>$\Pi(\theta_t+\Delta_t)$</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:22px;">
+    <div class="block fragment" style="margin:0; font-size:20px;">
+      <div class="block-title" style="font-size:22px;">Algorithm</div>
+      Unified: Euclidean and compact, all four schemes.
+    </div>
+    <div class="block fragment" style="margin:0; font-size:20px;">
+      <div class="block-title" style="font-size:22px;">Privacy</div>
+      Record-level, $f$-DP and $\mu$-GDP: Euclidean and compact, all four schemes.
+    </div>
+    <div class="block fragment" style="margin:0; font-size:20px; border-left-color:var(--accent);">
+      <div class="block-title" style="font-size:22px;">Convergence</div>
+      Compact only, $\Pi$ nearest-point, local SGD, ProjAvg and RLAvg.
+      SPD-AI not covered.
+    </div>
+  </div>
+
+  <aside class="notes">
+    Une seule slide pour la théorie. Trois blocs en bas: ce que couvre l'algorithme,
+    ce que couvre la confidentialité, ce que couvre la convergence.
+  </aside>
+</section>
+<!-- ═══════════ The two models ═══════════ -->
+<section>
+  <h2>The two models</h2>
+  <div class="fig fig-wide" data-figure="architectures" style="--fig-ar:1560/520;"></div>
+  <p class="fragment" data-fig-step="1" style="display:none"></p>
+  <p class="fragment" data-fig-step="2" style="display:none"></p>
+  <aside class="notes">
+    Une ligne par modèle. Même découpage tronc puis tête, c'est ce qui rend la
+    comparaison possible et ce qui sert à la personnalisation. Dire que la BN
+    d'EEGNet est testée allumée et éteinte.
+  </aside>
+</section>
+
+<!-- ═══════════ Experimental setting ═══════════ -->
+<section>
+  <h2>Experimental setting <span class="hint">in EEG, one client = a set of subjects</span></h2>
+  <div class="fig fig-wide" data-figure="protocols" style="--fig-ar:1560/650;"></div>
+  <p class="fragment" data-fig-step="1" style="display:none"></p>
+  <p class="fragment" data-fig-step="2" style="display:none"></p>
+  <p class="fragment" data-fig-step="3" style="display:none"></p>
+  <p class="fragment" data-fig-step="4" style="display:none"></p>
+  <p class="fragment" data-fig-step="5" style="display:none"></p>
+
+  <div class="consequence fragment" data-fig-step="5" style="margin-top:12px;">
+    <div class="tag">Open problem</div>
+    <div class="bd">
+      Beat purely local training, when each client holds little data.
+      Accuracy against the amount of training data per client.
+    </div>
+  </div>
+
+  <aside class="notes">
+    Une carte par clic, puis la variante FedBN. Centralisé: données regroupées, un seul modèle.
+    Fédéré: tronc et tête échangés. Personnalisé: seul le tronc est échangé.
+    Cinquieme clic: sous DP, les modeles n'ont pas de batch norm.
+    Preciser le nombre de sujets par client selon le jeu de donnees.
+    Dernier clic: c'est la vraie question. La federation doit battre
+    l'entrainement local, sinon elle ne sert a rien.
+  </aside>
+</section>
+<!-- ═══════════ Perspectives ═══════════ -->
+<section>
+  <h2>Perspectives</h2>
+  <div class="fig fig-wide" data-figure="perspectives" style="--fig-ar:1560/680;"></div>
+  <p class="fragment" data-fig-step="1" style="display:none"></p>
+  <p class="fragment" data-fig-step="2" style="display:none"></p>
+  <p class="fragment" data-fig-step="3" style="display:none"></p>
+  <aside class="notes">
+    Une carte par clic.
+    1. Un nouveau sujet arrive, sans etiquettes, apres l'entrainement. Trois
+       questions ouvertes: DP au niveau client, personnalisation, adaptation de
+       domaine.
+    2. Les entrees des clients n'ont ni la meme taille ni la meme nature.
+       Chercher un modele riemannien ou les utiliser comme features.
+    3. Flow matching sur la variete, pour generer des covariances.
+  </aside>
+</section>
+<!-- ═══════════ Project with UCLouvain ═══════════ -->
+<section>
+  <h2>UCLouvain: Project idea <span class="hint">with E. Massart, UCLouvain</span></h2>
+
+  <div class="block lg" style="margin:-4px 0 20px;">
+    <div class="block-title">Goal</div>
+    Can the training covariances be recovered from the weights of an SPD network?
+  </div>
+
+  <div class="cols" style="grid-template-columns:7.4fr 2.6fr; gap:34px; align-items:start;">
+    <div>
+      <table class="tbl" style="font-size:21px;">
+        <tr>
+          <th></th>
+          <th>Their setting</th>
+          <th>What we propose</th>
+        </tr>
+        <tr>
+          <td class="nm">Data</td>
+          <td>$x_i\in\sqrt{d}\,\mathbb{S}^{d-1}$</td>
+          <td>$\Sigma_i\in\mathcal{K}=\{\Sigma\succ0:\det\Sigma=1\}$</td>
+        </tr>
+        <tr>
+          <td class="nm">Features</td>
+          <td>$\varphi(x)=\tfrac{1}{\sqrt p}\phi(Vx+b)$</td>
+          <td>$\varphi(\Sigma)=\tfrac{1}{\sqrt m}\bigl(\mathrm{vech}\log(W_j^{\top}\Sigma W_j)\bigr)_{j\le m}$</td>
+        </tr>
+        <tr>
+          <td class="nm">Randomness</td>
+          <td>$V$ Gaussian, frozen</td>
+          <td>$W_j\sim\mathrm{unif}\,\mathrm{St}(n,k)$, frozen</td>
+        </tr>
+        <tr>
+          <td class="nm">Attack</td>
+          <td colspan="2" style="text-align:center;">
+            $\displaystyle\min_{\hat x,\hat\alpha}\bigl\lVert\theta^\star
+              -\textstyle\sum_i\hat\alpha_i\varphi(\hat x_i)\bigr\rVert^2$,
+            with $\theta^\star=\sum_i\alpha_i\varphi(x_i)$
+          </td>
+        </tr>
+        <tr class="own">
+          <td class="nm">Question</td>
+          <td>how wide must the network be?</td>
+          <td>what does the geometry change?</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="text-align:center; padding-top:8px;">
+      <div class="eyebrow lg" style="margin-bottom:10px;">starting point</div>
+      <div style="display:inline-block; padding:9px; background:#fff;
+                  border:1px solid var(--rule); border-radius:8px;">
+        <svg viewBox="0 0 33 33" width="150" height="150" style="display:block;" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTpiMzQ5ZDFhMi04N2MxLTQzNDItYTUyOS04MDViOTgyYzYxZWIAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaHWRutvS6DQ1N50CVmtCefkAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo2MjA0NWRhYS02MmU5LTRiNmMtODgxMS1lM2Q5Y2Y1NDQzMzBscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNok+4mrzD23wGfTVdBBi3b0gAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggM34TR0DjDg92lt9rb5HQ/s1KCY7/P5ZSdRAGvjujosWkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaPsvNXeU703bcBYLosh/VR8AAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCD5SoPawh3fiqeK8dNbGQd9UtzMy7AdBD5AHMNX3vlLvGRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBiIZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOmIzNDlkMWEyLTg3YzEtNDM0Mi1hNTI5LTgwNWI5ODJjNjFlYi9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjA0N2NkMDEwLTk2NDctNGFhNi04OTEwLTM0ZDZiNWZlZTQ0MXJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCAzfhNHQOMOD3aW32tvkdD+zUoJjv8/llJ1EAa+O6OixaJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFgg+yHtfC5eCdP9USzkhg7S1a1oEJBmK0pPD6olHgjYw9eiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFgghFHJ3m/XPRichVFipqZEKiPbdP/KxMwl673Xg0UyDVJ0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQE9+UnmW4Dzqvp7xMJRaivsb8GAY2H/4XV2VA0092icLnGEh47CPgQwrn83Fud8CsYbIi1A/hPVebXZ8qdEWJJQ=</c2pa:manifest></metadata><rect width="33" height="33" fill="#fff"/><path d="M2 2h7v1h-7zM12 2h1v1h-1zM14 2h2v1h-2zM18 2h1v1h-1zM21 2h2v1h-2zM24 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h6v1h-6zM22 3h1v1h-1zM24 3h1v1h-1zM30 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM13 4h1v1h-1zM15 4h1v1h-1zM18 4h5v1h-5zM24 4h1v1h-1zM26 4h3v1h-3zM30 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h5v1h-5zM24 5h1v1h-1zM26 5h3v1h-3zM30 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM11 6h2v1h-2zM15 6h2v1h-2zM18 6h1v1h-1zM22 6h1v1h-1zM24 6h1v1h-1zM26 6h3v1h-3zM30 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h7v1h-7zM19 7h3v1h-3zM24 7h1v1h-1zM30 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h7v1h-7zM12 9h2v1h-2zM16 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM2 10h1v1h-1zM5 10h1v1h-1zM7 10h2v1h-2zM10 10h5v1h-5zM17 10h1v1h-1zM20 10h1v1h-1zM22 10h2v1h-2zM25 10h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM9 11h2v1h-2zM12 11h1v1h-1zM14 11h1v1h-1zM16 11h2v1h-2zM19 11h2v1h-2zM22 11h1v1h-1zM24 11h1v1h-1zM27 11h1v1h-1zM30 11h1v1h-1zM2 12h1v1h-1zM5 12h4v1h-4zM11 12h1v1h-1zM13 12h1v1h-1zM18 12h1v1h-1zM20 12h4v1h-4zM25 12h5v1h-5zM4 13h1v1h-1zM6 13h1v1h-1zM9 13h1v1h-1zM12 13h3v1h-3zM16 13h2v1h-2zM22 13h3v1h-3zM26 13h1v1h-1zM28 13h2v1h-2zM3 14h2v1h-2zM8 14h2v1h-2zM11 14h4v1h-4zM18 14h3v1h-3zM22 14h1v1h-1zM24 14h1v1h-1zM27 14h1v1h-1zM29 14h2v1h-2zM2 15h1v1h-1zM5 15h1v1h-1zM7 15h1v1h-1zM10 15h1v1h-1zM12 15h3v1h-3zM17 15h1v1h-1zM19 15h5v1h-5zM2 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM14 16h1v1h-1zM17 16h3v1h-3zM22 16h2v1h-2zM25 16h6v1h-6zM4 17h2v1h-2zM7 17h1v1h-1zM10 17h3v1h-3zM15 17h2v1h-2zM18 17h4v1h-4zM23 17h5v1h-5zM29 17h1v1h-1zM2 18h1v1h-1zM4 18h2v1h-2zM7 18h11v1h-11zM19 18h5v1h-5zM25 18h1v1h-1zM29 18h1v1h-1zM4 19h1v1h-1zM6 19h2v1h-2zM9 19h1v1h-1zM12 19h2v1h-2zM17 19h1v1h-1zM19 19h1v1h-1zM23 19h3v1h-3zM27 19h1v1h-1zM30 19h1v1h-1zM2 20h1v1h-1zM4 20h3v1h-3zM8 20h4v1h-4zM15 20h1v1h-1zM19 20h1v1h-1zM23 20h1v1h-1zM29 20h2v1h-2zM7 21h1v1h-1zM9 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM15 21h1v1h-1zM17 21h3v1h-3zM21 21h2v1h-2zM25 21h1v1h-1zM29 21h2v1h-2zM2 22h1v1h-1zM7 22h4v1h-4zM14 22h1v1h-1zM16 22h2v1h-2zM20 22h7v1h-7zM28 22h1v1h-1zM10 23h1v1h-1zM12 23h1v1h-1zM15 23h1v1h-1zM19 23h4v1h-4zM26 23h1v1h-1zM28 23h3v1h-3zM2 24h7v1h-7zM13 24h4v1h-4zM18 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM29 24h1v1h-1zM2 25h1v1h-1zM8 25h1v1h-1zM10 25h1v1h-1zM13 25h3v1h-3zM17 25h1v1h-1zM21 25h2v1h-2zM26 25h4v1h-4zM2 26h1v1h-1zM4 26h3v1h-3zM8 26h1v1h-1zM12 26h2v1h-2zM16 26h1v1h-1zM19 26h2v1h-2zM22 26h5v1h-5zM30 26h1v1h-1zM2 27h1v1h-1zM4 27h3v1h-3zM8 27h1v1h-1zM10 27h5v1h-5zM16 27h1v1h-1zM18 27h5v1h-5zM24 27h1v1h-1zM26 27h4v1h-4zM2 28h1v1h-1zM4 28h3v1h-3zM8 28h1v1h-1zM11 28h4v1h-4zM21 28h1v1h-1zM23 28h1v1h-1zM26 28h3v1h-3zM30 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM11 29h3v1h-3zM17 29h3v1h-3zM21 29h3v1h-3zM29 29h1v1h-1zM2 30h7v1h-7zM10 30h1v1h-1zM12 30h4v1h-4zM18 30h3v1h-3zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h2v1h-2zM29 30h1v1h-1z" fill="#243B54"/></svg>
+      </div>
+      <p class="note" style="margin-top:12px; font-size:18px; line-height:1.35;">
+        Tansley, Makhlouf, Massart, Cartis.<br>
+        Finite-width recovery guarantees. 2026.
+      </p>
+      <p class="note" style="font-size:16px;">arXiv:2605.06519</p>
+    </div>
+  </div>
+
+  <aside class="notes">
+    Objectif d'abord. Puis le tableau: meme attaque, geometrie differente.
+    A l'oral: sans reduction de dimension n vers k, seule une moyenne ponderee
+    des log est visible. Et plus les donnees sont proches de l'identite, plus la
+    reconstruction est instable, donc le recentrage riemannien protege.
+  </aside>
+</section>
+

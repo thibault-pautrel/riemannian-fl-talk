@@ -16,7 +16,7 @@ function includePartials() {
       handler: (html) => expand(html, process.cwd())
     },
     handleHotUpdate({ file, server }) {
-      if (file.includes('/src/slides/')) {
+      if (file.includes('/src/slides/') || file.includes('/src/slides-bilan/')) {
         server.hot.send({ type: 'full-reload' });
       }
     }
@@ -25,5 +25,13 @@ function includePartials() {
 
 export default defineConfig({
   base: './',
-  plugins: [includePartials()]
+  plugins: [includePartials()],
+  build: {
+    rollupOptions: {
+      input: {
+        main: resolve(process.cwd(), 'index.html'),
+        bilan: resolve(process.cwd(), 'bilan.html')
+      }
+    }
+  }
 });
