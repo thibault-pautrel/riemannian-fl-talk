@@ -2,6 +2,11 @@ import { makeSaddleScene } from './saddle-scene.js';
 import { makeGeodesics } from '../geometry/geodesic.js';
 import { makeTicker } from '../anim.js';
 
+/* The chord of the ambient space, then the geodesic.
+
+   This figure shares a slide with the exponential one, which owns steps 3
+   and 4, so everything here is done by step 2 and then stays on screen. */
+
 export default function geodesicFig(el) {
   const sc = makeSaddleScene(el);
   const geo = makeGeodesics(sc.surface);
@@ -25,9 +30,6 @@ export default function geodesicFig(el) {
     fill: 'none', stroke: '#B2182B', 'stroke-width': 3,
     'stroke-linecap': 'round', opacity: 0
   });
-  const vdot = sc.node('vectors', 'line', {
-    stroke: '#B2182B', 'stroke-width': 2, 'marker-end': sc.arrow('accent'), opacity: 0
-  });
 
   const hP = sc.handle('dots', '#243B54');
   const hQ = sc.handle('dots', '#243B54');
@@ -35,15 +37,14 @@ export default function geodesicFig(el) {
   const labP     = sc.label('$p$');
   const labQ     = sc.label('$q$');
   const labGamma = sc.label('$\\gamma$', 'accent');
-  const labVdot  = sc.label('$\\dot\\gamma$', 'accent');
+  const labChord = sc.label('off the surface', 'muted');
 
   let step = 0, lastT = 1;
 
   function render(t = lastT) {
     lastT = t;
     const g1 = step > 1 ? 1 : step === 1 ? t : 0;   // the chord
-    const g2 = step > 2 ? 1 : step === 2 ? t : 0;   // the geodesic
-    const g3 = step === 3 ? t : 0;                  // velocity and length
+    const g2 = step > 2 ? 1 : step === 2 ? t : 0;   // the geodesic, then kept
 
     const a = sc.at(p[0], p[1]), b = sc.at(q[0], q[1]);
     hP.moveTo(a); labP.moveTo(a, -14, 26); labP.show(true);
@@ -54,6 +55,8 @@ export default function geodesicFig(el) {
     chord.setAttribute('x2', a.x + (b.x - a.x) * g1);
     chord.setAttribute('y2', a.y + (b.y - a.y) * g1);
     chord.setAttribute('opacity', g1 > .02 ? 1 : 0);
+    labChord.moveTo({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }, 0, -24);
+    labChord.show(g1 > .85 && g2 < .3);
 
     // ---- the geodesic, drawn progressively
     if (g2 > 0.001) {
@@ -67,23 +70,6 @@ export default function geodesicFig(el) {
       geod.setAttribute('opacity', 0);
       labGamma.show(false);
     }
-
-    // ---- velocity at mid curve, and the two lengths
-    if (g3 > 0.001) {
-      const s = 0.55;
-      const here = geo.trace(p, vel, s, 40).at(-1);
-      const sp = geo.trace(p, vel, s + 0.02, 42).at(-1);
-      const dir = [(sp[0] - here[0]) / 0.02, (sp[1] - here[1]) / 0.02];
-      const o = sc.at(here[0], here[1]);
-      const tip = sc.planePoint(here, dir[0] * 0.28 * g3, dir[1] * 0.28 * g3);
-      vdot.setAttribute('x1', o.x); vdot.setAttribute('y1', o.y);
-      vdot.setAttribute('x2', tip.x); vdot.setAttribute('y2', tip.y);
-      vdot.setAttribute('opacity', 1);
-      labVdot.moveTo(tip, 24, -12); labVdot.show(g3 > .6);
-    } else {
-      vdot.setAttribute('opacity', 0);
-      labVdot.show(false);
-    }
   }
 
   sc.onRedraw(() => render());
@@ -93,7 +79,7 @@ export default function geodesicFig(el) {
 
   sc.tool('reset', () => { p = p0.slice(); q = q0.slice(); reshoot(); sc.resetView(); });
 
-  const durations = [0, 800, 1500, 800];
+  const durations = [0, 800, 1500];
   render(1);
 
   return {

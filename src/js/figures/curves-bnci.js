@@ -113,11 +113,13 @@ export default function curvesBnci(el) {
   }
 
   const durations = [0, 1600, 1200, 1200];
+  const ghost = el.classList.contains('ghost');
   render(1);
+  if (ghost) { step = 3; render(1); }
 
   return {
     setStep(n) {
-      if (n === step) return;
+      if (ghost || n === step) return;
       const back = n < step;
       step = n;
       ticker.run(back ? 0 : durations[n] ?? 900, render, { instant: back });

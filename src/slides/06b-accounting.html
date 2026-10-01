@@ -1,75 +1,86 @@
 <!-- ═══════════ Calibrating sigma, then f-DP ═══════════ -->
 <section>
-  <h2>Which $\sigma$ certifies a target $(\varepsilon,\delta)$?</h2>
+<h2>How to calibrate the noise ?</h2>
 
-  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:30px; margin:6px 0 24px;">
-    <div class="method fragment" style="border-top:2px solid var(--rule); border-bottom:none; padding:12px 0 0;">
-      <div class="nm">one pair</div>
-      <div class="cm">not tight under composition</div>
+<div class="lg" style="margin:4px 0 10px;">
+    Limitations of the $(\varepsilon,\delta)$ approach
+</div>
+
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:30px; margin:0 0 24px;">
+  <div class="method fragment" data-fragment-index="1" style="border-top:2px solid var(--rule); border-bottom:none; padding:12px 0 0;">
+    <div class="nm">a single pair</div>
+    <div class="cm">summarises the mechanism by one point</div>
+  </div>
+  <div class="method fragment" data-fragment-index="2" style="border-top:2px solid var(--rule); border-bottom:none; padding:12px 0 0;">
+    <div class="nm">loose generic composition</div>
+    <div class="cm">holds for the worst mechanism those pairs could describe</div>
+  </div>
+  <div class="method fragment" data-fragment-index="3" style="border-top:2px solid var(--accent); border-bottom:none; padding:12px 0 0;">
+    <div class="nm" style="color:var(--accent);">the price</div>
+    <div class="cm">more noise than needed, at the same certified budget</div>
+  </div>
+</div>
+
+<div class="cols w64" style="gap:34px; align-items:center;">
+  <div>
+    <div class="block fragment" data-fragment-index="4" data-fig-step="2" style="margin-top:0;">
+      <div class="block-title">Trade-off function</div>
+      The server tests $z$ against $z'$.
+      $$\mathcal{T}(P,Q)(\alpha)=\inf_{\phi}\bigl\{\mathbb{E}_Q[1-\phi]
+        \ :\ \mathbb{E}_P[\phi]\le\alpha\bigr\}.$$
+      (best miss rate at false alarm level $\alpha$)
     </div>
-    <div class="method fragment" style="border-top:2px solid var(--rule); border-bottom:none; padding:12px 0 0;">
-      <div class="nm">loose accounting</div>
-      <div class="cm">more noise, less accuracy</div>
+
+    <div class="block fragment" data-fragment-index="4" data-fig-step="2">
+      <div class="block-title">$f$-DP</div>
+      $\mathcal{T}\bigl(\mathcal{A}(D),\mathcal{A}(D')\bigr)\ge f$ for every
+      $D\bowtie D'$: no test does better than $f$.
     </div>
-    <div class="method fragment" style="border-top:2px solid var(--c1); border-bottom:none; padding:12px 0 0;">
-      <div class="nm" style="color:var(--c1);">a family instead</div>
-      <div class="cm">the curve $\varepsilon\mapsto\delta(\varepsilon)$</div>
+
+    <div class="block fragment" data-fragment-index="5" data-fig-step="3">
+      <div class="block-title">$\mu$-GDP</div>
+      $f=G_\mu(\alpha)=\Phi\bigl(\Phi^{-1}(1-\alpha)-\mu\bigr)$:
+      $\mathcal{N}(0,1)$ against $\mathcal{N}(\mu,1)$, $\Phi$ the normal cdf.
+      <div class="note" style="margin-top:6px;">
+        $\mu$: the gap in units of noise. Larger $\mu$, weaker guarantee.
+      </div>
     </div>
   </div>
 
-  <div class="cols w64" style="gap:34px; align-items:center;">
-    <div>
-      <div class="block fragment" data-fig-step="1" style="margin-top:0;">
-        <div class="block-title">Trade-off function</div>
-        The server tests $z$ against $z'$. The best miss rate at false alarm level $\alpha$ is
-        $$\mathcal{T}(P,Q)(\alpha)=\inf_{\phi}\bigl\{\mathbb{E}_Q[1-\phi]
-          \ :\ \mathbb{E}_P[\phi]\le\alpha\bigr\}.$$
-        <div class="note" style="margin-top:6px;">
-        </div>
-      </div>
-
-      <div class="block fragment" data-fig-step="1">
-        <div class="block-title">$f$-DP</div>
-        $\mathcal{T}\bigl(\mathcal{A}(D),\mathcal{A}(D')\bigr)\ge f$ for every
-        $D\bowtie D'$: no test does better than $f$.
-      </div>
-
-      <div class="block fragment" data-fig-step="2">
-        <div class="block-title">$\mu$-GDP</div>
-        $f=G_\mu(\alpha)=\Phi\bigl(\Phi^{-1}(1-\alpha)-\mu\bigr)$:
-        $\mathcal{N}(0,1)$ against $\mathcal{N}(\mu,1)$, $\Phi$ the normal cdf.
-        <div class="note" style="margin-top:6px;">
-          $\mu$: the gap in units of noise. Larger $\mu$, weaker guarantee.
-        </div>
-      </div>
-    </div>
+  <div class="fragment" data-fragment-index="4" data-fig-step="2">
     <div class="fig" data-figure="gdp-link" style="--fig-ar:900/420;"></div>
   </div>
+</div>
 
-  <aside class="notes">
-    Trois mots-clés, puis la définition. Dire que P est la loi de la sortie quand z
-    est présent, Q quand z' le remplace. Le curseur mu montre que grand mu veut dire
-    facile à distinguer.
-  </aside>
+<aside class="notes">
+    Trois limites, puis la definition. La figure arrive avec le f-DP.
+    Dire que P est la loi de la sortie quand z est present, Q quand z' le
+    remplace. Le curseur mu montre que grand mu veut dire facile a distinguer.
+</aside>
 </section>
-
 <!-- ═══════════ Proof schema ═══════════ -->
 <section>
   <h2>Our guarantee <span class="hint">proof schema</span></h2>
-  <div class="fig fig-wide" data-figure="proof-schema" style="--fig-ar:1500/660;"></div>
+  <div class="fig fig-wide" data-figure="proof-schema" style="--fig-ar:1500/700;"></div>
   <p class="fragment" data-fig-step="1" style="display:none"></p>
   <p class="fragment" data-fig-step="2" style="display:none"></p>
   <p class="fragment" data-fig-step="3" style="display:none"></p>
   <p class="fragment" data-fig-step="4" style="display:none"></p>
   <p class="fragment" data-fig-step="5" style="display:none"></p>
   <p class="fragment" data-fig-step="6" style="display:none"></p>
+  <p class="fragment" data-fig-step="7" style="display:none"></p>
   <aside class="notes">
-    Six clics. Une carte par flèche, avec la règle utilisée. La cinquième est la
-    nôtre: la variété, l'agrégateur et l'optimiseur entrent dans Psi, jamais dans
-    le budget. La sixième redonne la famille (epsilon, delta).
+    Sept clics, une carte chacun.
+    1: le clipping par echantillon fixe la sensibilite 2C/B, a lot fixe.
+    2: le bruit gaussien regle le budget sur la publication ambiante.
+    3: la projection tangente le transporte par post-traitement, uniformement en x.
+    4: le tirage du lot amplifie.
+    5: composition adaptative, les autres clients sont Id-DP et disparaissent,
+       donc k n'apparait pas.
+    6: la reduction sans geometrie, notre point.
+    7: pire client, puis lecture en (epsilon, delta).
   </aside>
 </section>
-
 <!-- ═══════════ The budget ═══════════ -->
 <section>
   <h2>Reading the budget</h2>

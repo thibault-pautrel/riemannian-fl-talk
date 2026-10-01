@@ -1,5 +1,7 @@
 <!-- ═══════════ Section 1 · divider ═══════════ -->
 <section class="fullbleed on-navy" data-background-color="#243B54">
+  <div class="fig-bg ghost mid wide" data-figure="eeg-cov"></div>
+  <div class="scrim"></div>
   <div class="layer fullbleed">
     <div class="kicker">Section 1</div>
     <h1 style="margin-top:28px;">The problem</h1>
@@ -12,7 +14,6 @@
     et quel modèle on veut entraîner.
   </aside>
 </section>
-
 <!-- ═══════════ S04 · EEG and motor imagery ═══════════ -->
 <section>
   <h2>EEG data</h2>
@@ -87,4 +88,36 @@
     Drag a point toward the boundary and let them watch the determinant fall
     toward zero. That is the picture to keep for the whole talk.
   </aside>
+</section>
+<!-- ═══════════ S21 · How to classify a covariance ═══════════ -->
+<section>
+<h2>How to classify a covariance matrix?</h2>
+<div class="cols" style="align-items:center; gap:52px;">
+  <div>
+    <div class="method lg fragment" data-fig-step="1">
+      <div class="nm">Naive idea</div>
+      <div class="fm">Classify $\mathrm{vec}(\Sigma)\in\R^{C^2}$</div>
+      <div class="cm"><span class="tag issue">Issue.</span>
+        High dimension. The symmetry is ignored and the SPD constraint
+        is not exploited.</div>
+    </div>
+    <div class="method lg fragment" data-fig-step="2">
+      <div class="nm">Refined idea</div>
+      <div class="fm">Classify $\mathrm{Vech}(\Sigma)\in\R^{C(C+1)/2}$</div>
+      <div class="cm"><span class="tag issue">Issue.</span>
+        Half the dimension. The <strong>positive definite</strong>
+        constraint is still ignored.</div>
+    </div>
+    <div class="block lg fragment" data-fig-step="3" style="margin-top:28px;">
+      <div class="block-title">Main idea</div>
+      Exploit the geometry of SPD matrices, with a
+      <strong>Riemannian architecture</strong>.
+    </div>
+  </div>
+  <div class="fig" data-figure="classify-flat" style="--fig-ar:760/550;"></div>
+</div>
+<aside class="notes">
+  With C = 22 channels, vec gives 484 coordinates and Vech gives 253.
+  Recall the Euclidean segment on the cone. Then announce SPDNet.
+</aside>
 </section>

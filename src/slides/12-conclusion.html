@@ -63,47 +63,22 @@
 </section>
 
 
-
 <!-- ═══════════ S · Perspectives ═══════════ -->
 <section>
   <h2>Perspectives</h2>
-
-  <div class="consequence lg" style="margin-top:0;">
-    <div class="tag">Next question</div>
-    <div class="bd">
-      Cross-subject private federated learning: train on some subjects,
-      evaluate on a client never seen during training.
-    </div>
-  </div>
-
-  <ol class="steps lg" style="margin-top:26px;">
-    <li class="fragment">
-      <span class="tt">Why it matters</span>
-      <div class="dd">
-        A new subject arrives with no labelled trials. Calibration is what a
-        BCI user actually wants to avoid.
-      </div>
-    </li>
-    <li class="fragment">
-      <span class="tt">Domain adaptation on the manifold</span>
-      <div class="dd">
-        Each subject has its own covariance distribution. Aligning them, by
-        recentring on a reference point of $\mathcal{S}^{++}_C$ for instance,
-        is itself a geometric operation.
-      </div>
-    </li>
-    <li class="fragment">
-      <span class="tt">Beyond the current framework</span>
-      <div class="dd">
-        Adaptive optimisers in the analysis, tighter accounting on what the
-        server observes, and metrics with no ambient projection.
-      </div>
-    </li>
-  </ol>
-
+  <div class="fig fig-wide" data-figure="perspectives" style="--fig-ar:1560/680;"></div>
+  <p class="fragment" data-fig-step="1" style="display:none"></p>
+  <p class="fragment" data-fig-step="2" style="display:none"></p>
   <aside class="notes">
-    Terminer sur le cross-subject. C'est la suite naturelle du travail et
-    le point sur lequel on veut des questions.
+    Deux cartes, un clic chacune.
+    1. Cross-subject: un nouveau sujet arrive sans etiquettes. L'alignement passe
+       par un recentrage sur un point de reference commun, qui est une operation
+       geometrique. Ce point est une statistique des donnees, donc il doit entrer
+       dans la comptabilite du budget.
+    2. Decentralise: plus de serveur. Les clients n'echangent qu'avec leurs
+       voisins, et il faut encore atteindre un consensus sur la variete. Qui
+       projette, contre qui se protege-t-on, et la comptabilite se detache-t-elle
+       toujours de la geometrie.
   </aside>
 </section>
 <!-- ═══════════ References ═══════════ -->

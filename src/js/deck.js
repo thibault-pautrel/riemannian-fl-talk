@@ -37,6 +37,8 @@ import proofSchema from './figures/proof-schema.js';
 import protocols from './figures/protocols.js';
 import architectures from './figures/architectures.js';
 import perspectives from './figures/perspectives.js';
+import threeManifolds from './figures/three-manifolds.js';
+
 
 import '@fontsource-variable/inter';
 import 'reveal.js/dist/reveal.css';
@@ -109,6 +111,7 @@ register('proof-schema', proofSchema);
 register('protocols', protocols);
 register('architectures', architectures);
 register('perspectives', perspectives);
+register('three-manifolds', threeManifolds);
 // a figure step is the largest data-fig-step among the visible fragments
 function stepOf(slide) {
   let step = 0;
@@ -156,4 +159,5 @@ deck.initialize().then(() => {
 
   mountAll();
   sync(deck.getCurrentSlide());
+  
 });

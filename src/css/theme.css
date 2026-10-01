@@ -472,3 +472,30 @@
   font-family:var(--sans); font-size:14px; font-weight:400;
   color:var(--slate); letter-spacing:0; text-transform:none;
 }
+/* a light figure used as a ghost background on a navy slide */
+.fig-bg.ghost{
+  filter:brightness(0) invert(1);
+  opacity:.16;
+  display:flex; align-items:flex-start; justify-content:flex-end;
+  padding:80px 70px 0 0;
+}
+.fig-bg.ghost .fig-svg{ position:static; width:52%; height:auto; }
+.fig-bg.ghost .fig-labels, .fig-bg.ghost .fig-tools{ display:none; }
+/* ghost figure centred vertically, instead of pinned to the top */
+.fig-bg.ghost.mid{ align-items:center; padding:50 70px 0 0; }
+.fig-bg.ghost.wide .fig-svg{ width:62%; max-height:58%; }
+/* figures that build HTML cards must not show them in ghost mode */
+.fig-bg.ghost .arch-card{ display:none; }
+.fig-bg.ghost.top{ align-items:flex-start; padding:80px 60px 0 0; }
+.fig-bg.ghost.bottom{ align-items:flex-end; padding:0 60px 70px 0; }
+.fig-bg.ghost.half{ opacity:.10; }
+.fig-bg.ghost.half .fig-svg{ width:34%; max-height:40%; }
+/* ---- footer: quiet, in the Popills manner ---- */
+.deck-footer{
+  position:fixed; left:76px; right:76px; bottom:16px; z-index:30;
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-family:var(--mono); font-size:15px; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--slate); opacity:.6;
+  pointer-events:none; transition:opacity .2s ease;
+}
+.deck-footer.hidden{ opacity:0; }

@@ -1,35 +1,64 @@
-<!-- ═══════════ S21 · How to classify a covariance ═══════════ -->
-<section>
-<h2>How to classify a covariance matrix?</h2>
-<div class="cols" style="align-items:center; gap:52px;">
-  <div>
-    <div class="method lg fragment" data-fig-step="1">
-      <div class="nm">Naive idea</div>
-      <div class="fm">Classify $\mathrm{vec}(\Sigma)\in\R^{C^2}$</div>
-      <div class="cm"><span class="tag issue">Issue.</span>
-        High dimension. The symmetry is ignored and the SPD constraint
-        is not exploited.</div>
-    </div>
-    <div class="method lg fragment" data-fig-step="2">
-      <div class="nm">Refined idea</div>
-      <div class="fm">Classify $\mathrm{Vech}(\Sigma)\in\R^{C(C+1)/2}$</div>
-      <div class="cm"><span class="tag issue">Issue.</span>
-        Half the dimension. The <strong>positive definite</strong>
-        constraint is still ignored.</div>
-    </div>
-    <div class="block lg fragment" data-fig-step="3" style="margin-top:28px;">
-      <div class="block-title">Main idea</div>
-      Exploit the geometry of SPD matrices, with a
-      <strong>Riemannian architecture</strong>.
+<!-- ═══════════ Section 3 · divider ═══════════ -->
+<section class="fullbleed on-navy" data-background-color="#243B54">
+  <div class="fig-bg ghost mid wide" data-figure="spdnet-arch"></div>
+  <div class="scrim"></div>
+  <div class="layer fullbleed">
+    <div class="kicker">Section 3</div>
+    <h1 style="margin-top:28px;">SPDNet</h1>
+    <div class="meta">
+      <div>A Riemannian architecture for covariance features</div>
     </div>
   </div>
-  <div class="fig" data-figure="classify-flat" style="--fig-ar:760/550;"></div>
-</div>
-<aside class="notes">
-  With C = 22 channels, vec gives 484 coordinates and Vech gives 253.
-  Recall the Euclidean segment on the cone. Then announce SPDNet.
-</aside>
+  <aside class="notes">
+    Retour au probleme, avec les outils en main.
+  </aside>
 </section>
+<!-- ═══════════ Where we stand ═══════════ -->
+<section>
+  <h2>Where we stand</h2>
+
+  <div class="cols w64" style="gap:40px; align-items:center;">
+    <div>
+      <ol class="steps lg">
+        <li>
+          <span class="tt">The features are covariances</span>
+          <div class="dd">
+            One trial gives $\Sigma\in\mathcal{S}^{++}_C$.
+          </div>
+        </li>
+        <li class="fragment">
+          <span class="tt">Flattening ignores the constraint</span>
+          <div class="dd">
+            $\mathrm{vec}(\Sigma)$ or $\mathrm{Vech}(\Sigma)$ drop the positive
+            definiteness.
+          </div>
+        </li>
+        <li class="fragment">
+          <span class="tt">We now have the tools</span>
+          <div class="dd">
+            Tangent spaces, metrics, geodesics, retractions.
+          </div>
+        </li>
+      </ol>
+
+      <div class="consequence lg fragment">
+        <div class="tag">Idea</div>
+        <div class="bd">
+          Build the classifier as a <strong>Riemannian architecture</strong>,
+          acting on $\Sigma$ directly.
+        </div>
+      </div>
+    </div>
+    <div class="fig" data-figure="spd-cone"></div>
+  </div>
+
+  <aside class="notes">
+    Rappel court. Les covariances sont les features, elles vivent sur le cone.
+    Les aplatir perd la contrainte. On a maintenant la geometrie, donc on peut
+    construire une architecture qui respecte le cone.
+  </aside>
+</section>
+
 <!-- ═══════════ S22 · SPDNet architecture ═══════════ -->
 <section>
   <h2>SPDNet <span class="hint">Huang and Van Gool, 2017</span></h2>
@@ -102,7 +131,7 @@
   </div>
 
   <aside class="notes">
-    Dire que c'est le theta de la section 2 et qu'il vit en partie sur M.
+    Dire que c'est le theta de la section suivante et qu'il vit en partie sur M.
     Le fait qu'une partie des paramètres soit euclidienne comptera pour la suite.
   </aside>
 </section>

@@ -102,12 +102,9 @@
 <div class="cols w46" style="gap:36px; align-items:center;">
   <div>
     <p class="fragment" data-fig-step="1">
-      Here $\mathcal{A}$: one client submission $\Delta^{(i)}$
-    </p>
-    <p class="fragment" data-fig-step="2">
       $E$: any set of outcomes the server may test.
     </p>
-    <p class="note fragment">
+    <p class="fragment" data-fig-step="2">
       Target: the whole transcript $\mathcal{V}_T$.
     </p>
 
@@ -207,7 +204,6 @@
             =v\,\min\bigl(1,\,C/\lVert v\rVert_\theta\bigr)$
         </div>
         <div class="cm">
-          The norm changes with $\theta$, so the ball does too, and so does
           $$\bigl\lVert\widehat{\operatorname{grad}}^{C} f(\theta,\mathcal{B})
             -\widehat{\operatorname{grad}}^{C} f(\theta,\mathcal{B}')\bigr\rVert_\theta
             \le\frac{2C}{B}.$$
@@ -217,11 +213,9 @@
       <div class="method fragment" data-fig-step="3">
         <div class="nm">Tangent Gaussian noise</div>
         <div class="cm">
-          Pick an orthonormal basis
-          $\bigl(E_1(\theta),\dots,E_d(\theta)\bigr)$ of $T_\theta\mathcal{M}$ for
-          $\langle\cdot,\cdot\rangle_\theta$, and draw
-          $\xi=\sum_{k} w_k\,E_k(\theta)$ with
-          $w_k\overset{\text{iid}}{\sim}\mathcal{N}\bigl(0,\sigma^2\bigr)$.
+          $\langle\cdot,\cdot\rangle_\theta$- orthonormal basis of $T_\theta\mathcal{M}$:
+          $\bigl(E_1(\theta),\dots,E_d(\theta)\bigr)$ and draw
+          $$\xi=\sum_{k} w_k\,E_k(\theta), \quad w_k\overset{\text{iid}}{\sim}\mathcal{N}\bigl(0,\sigma^2\bigr)$$
         </div>
       </div>
 

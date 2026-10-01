@@ -167,11 +167,13 @@ export function centralBars(el) {
     });
   }
 
+  const ghost = el.classList.contains('ghost');
   render(1);
+  if (ghost) { step = 1; render(1); }
 
   return {
     setStep(n) {
-      if (n === step) return;
+      if (ghost || n === step) return;
       const back = n < step;
       step = n;
       ticker.run(back ? 0 : 900, render, { instant: back });

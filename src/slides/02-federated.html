@@ -1,16 +1,34 @@
+<!-- ═══════════ Section 4 · divider ═══════════ -->
+<section class="fullbleed on-navy" data-background-color="#243B54">
+  <div class="fig-bg ghost" data-figure="fed-round-static"></div>
+  <div class="scrim"></div>
+  <div class="layer fullbleed">
+    <div class="kicker">Section 4</div>
+    <h1 style="margin-top:28px;">Private Riemannian<br>federated learning</h1>
+    <div class="meta">
+      <div>Federated learning, privacy, and the proposed algorithm</div>
+    </div>
+  </div>
+  <aside class="notes">
+    Retour au problème. On a les outils, on peut maintenant dire ce qui change
+    quand theta vit sur une variété.
+  </aside>
+</section>
 <!-- ═══════════ S08 · Data is scattered ═══════════ -->
 <section>
-  <h2>Issue 1: The data is scattered</h2>
+  <h2>The data is scattered</h2>
   <p>EEG encodes mental state. It is personal data, so raw trials never leave
      the site that recorded them.</p>
   <div class="fig fig-wide" data-figure="sites" style="margin-top:10px;"></div>
   <p class="fragment" data-fig-step="1" style="display:none"></p>
-  <div class="consequence lg fragment">
+  <p class="fragment" data-fig-step="2" style="display:none"></p>
+  <div class="consequence lg fragment" data-fig-step="2">
     <div class="tag">Question</div>
     <div class="bd">Can we train one model on all data without moving any of it?</div>
   </div>
   <aside class="notes">
-    Let the crosses appear, then ask the question and pause.
+    Premier clic: les trois sites. Deuxieme: les croix rouges entre eux.
+    Troisieme: la question, et marquer une pause.
   </aside>
 </section>
 <!-- ═══════════ S09 · Federated learning, one round ═══════════ -->

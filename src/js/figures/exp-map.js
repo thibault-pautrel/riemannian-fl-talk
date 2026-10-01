@@ -47,17 +47,21 @@ export default function expMap(el) {
 
   const labP     = sc.label('$p$');
   const labPlane = sc.label('$T_p\\mathcal{M}$', 'accent');
-  const labV     = sc.label('$v$', 'accent');
-  const labExp   = sc.label('$\\exp_p(v)$');
+  const labV     = sc.label('$v=\\log_p(q)$', 'accent');
+  const labExp   = sc.label('$q=\\exp_p(v)$');
   const labRetr  = sc.label('$R_p(v)$', 'amber');
 
   let step = 0, lastT = 1;
 
   function render(t = lastT) {
     lastT = t;
-    const g1 = step > 1 ? 1 : step === 1 ? t : 0;
-    const g2 = step > 2 ? 1 : step === 2 ? t : 0;
-    const g3 = step === 3 ? t : 0;
+    /* This figure shares a slide with the geodesic one, which owns steps 1 and 2.
+       Everything about exp plays on step 3, the retraction on step 4. */
+    const sE = step > 3 ? 1 : step === 3 ? t : 0;
+    const seg = (a, b) => Math.max(0, Math.min(1, (sE - a) / (b - a)));
+    const g1 = seg(0, 0.42);                            // plane and the vector v
+    const g2 = seg(0.38, 1);                            // the geodesic, walked
+    const g3 = step > 4 ? 1 : step === 4 ? t : 0;       // the retraction
 
     const origin = sc.at(p[0], p[1]);
     hP.moveTo(origin);
@@ -75,8 +79,8 @@ export default function expMap(el) {
     vec.setAttribute('x2', tip.x);    vec.setAttribute('y2', tip.y);
     vec.setAttribute('opacity', g1 > .02 ? 1 : 0);
     hV.moveTo(tip); hV.show(g1 > .9);
-    labV.moveTo(sc.planePoint(p, v[0] * .55 * g1, v[1] * .55 * g1), 4, -26);
-    labV.show(g1 > .5);
+    labV.moveTo(tip, 10, -28);
+    labV.show(g1 > .9);
 
 
     // ---- geodesic, and exp_p(tv) walking along it
@@ -148,7 +152,7 @@ export default function expMap(el) {
 
   sc.tool('reset', () => { p = p0.slice(); v = v0.slice(); sc.resetView(); });
 
-  const durations = [0, 700, 1500, 900];
+  const durations = [0, 0, 0, 2600, 1000];
   render(1);
 
   return {

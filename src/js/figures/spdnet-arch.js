@@ -236,8 +236,10 @@ export default function spdnetArch(el) {
   });
   txt(g, 1706, MID + 10, 'ŷ', { size: 30, fill: '#243B54' });
 
+  const ghost = el.classList.contains('ghost');
   const hint = txt(g, CW / 2, CH - 34, 'press → to zoom on each layer',
                    { size: 20, fill: '#8A9AA8', mono: true });
+  if (ghost) hint.setAttribute('opacity', 0);
 
   // ---- detail cards, plain HTML so KaTeX renders
   const cards = CARDS.map((c, i) => {

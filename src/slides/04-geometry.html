@@ -16,201 +16,95 @@
   </aside>
 </section>
 
-<!-- ═══════════ S13 · Manifold and charts ═══════════ -->
+<!-- ═══════════ Manifold, tangent space, metric, gradient ═══════════ -->
 <section>
-  <h2>Manifold</h2>
-  <div class="cols w46">
+  <h2>Manifold, tangent space, metric</h2>
+
+  <div class="cols" style="gap:32px; align-items:start;">
     <div>
-      <p>A smooth $d$-manifold is a set covered by <strong>charts</strong>:
-         homeomorphisms $\varphi : U \to \mathbb{R}^{d}$ onto open sets.</p>
-
-      <p class="fragment" data-fig-step="1">
-        Two domains $U$ and $V$, overlapping.
+      <p class="fragment note" data-fig-step="1" style="margin-bottom:8px;">
+        Covered by <strong>charts</strong> $\varphi:U\to\mathbb{R}^d$, with smooth
+        transitions $\psi\circ\varphi^{-1}$. Curved globally, flat locally.
       </p>
-      <p class="fragment" data-fig-step="2">
-        $\varphi$  and $\psi$ flatten their respective domains into coordinates.
-      </p>
-      <p class="fragment" data-fig-step="3">
-
-      </p>
-      <p class="fragment" data-fig-step="4">
-        Compatibility: the transition map
-        $\psi\circ\varphi^{-1}$ is smooth.
-      </p>
+      <div class="fig" data-figure="manifold-charts"></div>
     </div>
-    <div class="fig" data-figure="manifold-charts"></div>
-  </div>
-  <aside class="notes">
-    Say it plainly: curved globally, flat locally. Drag the point to show that
-    it has two sets of coordinates and neither is the point itself.
-  </aside>
-</section>
-<!-- ═══════════ S14 · Tangent space ═══════════ -->
-<section>
-  <h2>Tangent space</h2>
-  <div class="cols w46">
-    <div>
-      <p>Take every smooth curve on $\mathcal{M}$ passing through $p$,
-         and collect their velocities at $p$.</p>
 
-      <div class="block">
-        $T_p\mathcal{M}=\{\dot\gamma(0)\ :\ \gamma(0)=p\}$, a vector space
-        of dimension $d$.
-      </div>
-
-      <p class="fragment" data-fig-step="1">A first curve through $p$.</p>
-      <p class="fragment" data-fig-step="2">A second one, in another direction.</p>
-      <p class="fragment" data-fig-step="3">
-        All these velocities fill one plane, attached to $p$.
+    <div class="fragment" data-fig-step="2">
+      <p class="note" style="margin-bottom:8px;">
+        $T_p\mathcal{M}=\{\dot\gamma(0):\gamma(0)=p\}$, the velocities at $p$ of all
+        curves through $p$. A vector space of dimension $d$, attached to $p$.
       </p>
-      <p class="fragment" data-fig-step="4">
-        Useful tool to linearise.
-      </p>
+      <div class="fig" data-figure="tangent-space"></div>
     </div>
-    <div class="fig" data-figure="tangent-space"></div>
   </div>
+
+  <div class="cols" style="gap:36px; margin-top:12px;">
+    <div class="block fragment" data-fig-step="3" style="margin:0;">
+      <div class="block-title">Metric</div>
+      An inner product $\langle\cdot,\cdot\rangle_p$ on each $T_p\mathcal{M}$.
+      Riemannian submanifold: the ambient one.
+    </div>
+    <div class="block fragment" data-fig-step="4" style="margin:0;">
+      <div class="block-title">Riemannian gradient</div>
+      $\operatorname{grad} f(p)=\Pi_{T_p\mathcal{M}}\bigl(\nabla\bar f(p)\bigr)$
+    </div>
+  </div>
+
   <aside class="notes">
-    Insist that the plane is not a subset of M. It is attached to p, and it changes with p.
-    Drag the point to show that.
+    Quatre clics. 1: les cartes, toute l'animation en une fois. 2: les courbes,
+    leurs vitesses, puis le plan rouge. 3: l'image se nettoie, il ne reste que le
+    plan et deux vecteurs u et v, c'est la metrique. 4: un gradient ambiant et sa
+    projection sur le plan. Deplacer p pour montrer que tout change avec le point.
   </aside>
 </section>
 
-<!-- ═══════════ S15 · Riemannian metric ═══════════ -->
+<!-- ═══════════ Geodesics, exponential, logarithm ═══════════ -->
 <section>
-  <h2>Riemannian metric</h2>
-  <div class="cols w46">
+  <h2>Geodesics, exponential, logarithm</h2>
+
+  <div class="cols" style="gap:32px; align-items:start;">
     <div>
-      <p class="fragment" data-fig-step="1">Riemannian metric: smooth $p \mapsto \langle\cdot,\cdot\rangle_p$ on each
-         tangent space $T_p\M$. </p>
-         <p  class="fragment" data-fig-step="1">Gives meaning to lengths and angles on $\mathcal{M}$.</p>
-
-      <p  class="fragment" data-fig-step="1">
-        Riemannian submanifold: $\langle \cdot, \cdot\rangle_p = \langle \cdot, \cdot\rangle_{\mathrm{eucl}}$.
+      <p class="fragment note" data-fig-step="1" style="margin-bottom:8px;">
+        Joining two points of $\mathcal{M}$: the straight segment of
+        $\mathbb{R}^n$ leaves the manifold at once.
       </p>
-      <p class="fragment" data-fig-step="2">
-        Take a function $\bar f$ defined around $\mathcal{M}$, and its ambient
-        gradient at $p$.
-      </p>
-      <p class="fragment" data-fig-step="2">
-        $\Pi_{T_p\mathcal{M}}$: orthogonal projection onto the tangent space at $p$.
-      </p>
-
-      <div class="block fragment" data-fig-step="3">
-        $\operatorname{grad} f(p)=\Pi_{T_p\mathcal{M}}\bigl(\nabla\bar f(p)\bigr)$
-      </div>
-    </div>
-    <div class="fig" data-figure="metric"></div>
-  </div>
-  <aside class="notes">
-    The projection picture is the one to remember. Every Riemannian gradient
-    in this talk is that projection, on Stiefel or on SPD.
-  </aside>
-</section>
-<!-- ═══════════ S16 · Geodesics ═══════════ -->
-<section>
-  <h2>Geodesics</h2>
-  <div class="cols w46">
-    <div>
-      <p>How do we join two points of $\mathcal{M}$ while staying on
-         $\mathcal{M}$, and as short as possible?</p>
-
-      <p class="fragment" data-fig-step="1">
-        The straight segment of $\mathbb{R}^n$ leaves the manifold at once.
-      </p>
-      <p class="fragment" data-fig-step="2">
-        A <strong>geodesic</strong> is a curve with no tangential acceleration:
-      </p>
-
-      <div class="block fragment" data-fig-step="2">
-        $\nabla_{\dot\gamma}\dot\gamma = 0$, locally length-minimising.
-      </div>
-
-      <p class="fragment" data-fig-step="3">
-
-      </p>
-    </div>
-    <div class="fig" data-figure="geodesic"></div>
-  </div>
-  <aside class="notes">
-    Drag q around to show the two numbers moving. The chord is always shorter
-    and always off the surface.
-  </aside>
-</section>
-<!-- ═══════════ S17 · Exponential map ═══════════ -->
-<section>
-  <h2>Exponential map</h2>
-  <div class="cols w46">
-    <div>
-      <p>At $p$, $\exp_p$ : tangent vector $\mapsto$ point of $\mathcal{M}$.</p>
-
-      <div class="block">
-        $\exp_p(v)=\gamma(1)$, where $\gamma$ is the geodesic with
-        $\gamma(0)=p$ and $\dot\gamma(0)=v$.
-      </div>
-
-      <p class="fragment" data-fig-step="1">
-
-      </p>
-      <p class="fragment" data-fig-step="2">
-
-      </p>
-      <p class="fragment" data-fig-step="3">
-        A <strong>retraction</strong> is a cheap substitute for $\exp_p$: a smooth
-        $R_p:T_p\mathcal{M}\to\mathcal{M}$ with $R_p(0_p)=p$ and
-        $\mathrm{D}R_p(0_p)[v]=v$. 
-      </p>
-            <p class="fragment" data-fig-step="3">
-        $R_p(v)$ matches $\exp_p$ to first order:
-                \[\;\lVert R_p(tv)-\exp_p(tv)\rVert = O(t^{2}).\]
-      </p>
-      <div class="block fragment" data-fig-step="3">
-        <div class="block-title">Projection-based retraction</div>
-        $R_p(v)=\Pi(p+v)$, with $\Pi(y)=\arg\min_{q\in\mathcal{M}}\lVert y-q\rVert^2$
-        the nearest point of $\mathcal{M}$.
-        <div class="note" style="margin-top:6px;">
-          Well defined near $\mathcal{M}$ when it is compact.
-          <span class="hint" style="float:none;">Absil and Malick, 2012</span>
-        </div>
-      </div>
+      <div class="fig" data-figure="geodesic"></div>
     </div>
 
-    <div class="fig" data-figure="exp-map"></div>
-  </div>
-  <aside class="notes">
-    Say that exp is the manifold version of "move along a direction".
-    On the last step, insist that the two curves leave p together and separate later.
-  </aside>
-</section>
-<!-- ═══════════ S18 · Logarithmic map ═══════════ -->
-<section>
-  <h2>Logarithmic map</h2>
-  <div class="cols w46">
-    <div>
-      <p>Given $q$, which tangent vector reaches it?</p>
-
-      <div class="block">
-        $\log_p = \exp_p^{-1}$ where it is defined, and
+    <div class="fragment" data-fig-step="3">
+      <p class="note" style="margin-bottom:8px;">
+        $\exp_p(v)=\gamma(1)$ for the geodesic with $\dot\gamma(0)=v$, and
+        $\log_p=\exp_p^{-1}$ where defined, with
         $d(p,q)=\lVert\log_p(q)\rVert_p$.
-      </div>
-
-      <p class="fragment" data-fig-step="1">
-
       </p>
-      <p class="fragment" data-fig-step="2">
-  
-      </p>
-      <p class="fragment" data-fig-step="3">
-$\log_p(q) \in T_p\mathcal{M}$.
-      </p>
+      <div class="fig" data-figure="exp-map"></div>
     </div>
-    <div class="fig" data-figure="log-map"></div>
   </div>
+
+  <div class="cols" style="gap:36px; margin-top:12px;">
+    <div class="block fragment" data-fig-step="2" style="margin:0;">
+      <div class="block-title">Geodesic</div>
+      No tangential acceleration, $\nabla_{\dot\gamma}\dot\gamma=0$,
+      locally length-minimising.
+    </div>
+    <div class="block fragment" data-fig-step="4" style="margin:0;">
+      <div class="block-title">Retraction</div>
+      $R_p(v)=\Pi(p+v)$, matching $\exp_p$ to first order:
+      $\lVert R_p(tv)-\exp_p(tv)\rVert=O(t^{2})$.
+      <span class="hint" style="float:none;">Absil and Malick, 2012</span>
+    </div>
+  </div>
+
   <aside class="notes">
-    Say that log has a closed form on the sphere and on SPD, none on Stiefel.
-    That absence is exactly why the aggregation section exists.
+    Quatre clics. 1: la corde, qui quitte la surface. 2: la geodesique et sa
+    definition. 3: la colonne de droite, exp joue toute sa sequence, et log se
+    dit a l'oral comme la question inverse. 4: la retraction.
+    Dire que log a une forme close sur la sphere et sur SPD, aucune sur Stiefel.
+    Cette absence est la raison de la section agregation.
   </aside>
 </section>
-<!-- ═══════════ S19 · Three manifolds ═══════════ -->
+
+<!-- ═══════════ Examples ═══════════ -->
 <section>
   <h2>Examples</h2>
 
@@ -256,9 +150,13 @@ $\log_p(q) \in T_p\mathcal{M}$.
     <div>$\Sigma + U$ when it stays positive</div>
   </div>
 
+  <div class="fig fig-wide" data-figure="three-manifolds"
+       style="--fig-ar:1200/200; margin-top:10px;"></div>
 
   <aside class="notes">
     Do not read the table. Point at the Stiefel column, then at the red cell.
     That missing logarithm is the reason the rest of the talk exists.
+    Les trois vignettes du bas rappellent de quoi on parle: sphere, repere
+    orthonorme, cone.
   </aside>
 </section>

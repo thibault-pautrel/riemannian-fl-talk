@@ -3,7 +3,7 @@ import { makeTicker } from '../anim.js';
 import { svgEl, polyline } from '../svg.js';
 
 export default function manifoldCharts(el) {
-  const sc = makeSaddleScene(el, { scale: 120, cx: 330, cy: 330 });
+  const sc = makeSaddleScene(el, { scale: 104, cx: 320, cy: 336 });
   const ticker = makeTicker();
   const RAD = Math.PI / 180;
 
@@ -113,10 +113,13 @@ export default function manifoldCharts(el) {
 
   function render(t = lastT) {
     lastT = t;
-    const g1 = step > 1 ? 1 : step === 1 ? t : 0;   // the two domains
-    const g2 = step > 2 ? 1 : step === 2 ? t : 0;   // U flattens
-    const g3 = step > 3 ? 1 : step === 3 ? t : 0;   // V flattens
-    const g4 = step === 4 ? t : 0;                  // transition map
+    // the whole chart story plays on step 1, in one sequenced animation
+    const s = step >= 1 ? (step === 1 ? t : 1) : 0;
+    const seg = (a, b) => Math.max(0, Math.min(1, (s - a) / (b - a)));
+    const g1 = seg(0, 0.26);      // the two domains
+    const g2 = seg(0.20, 0.56);   // U flattens
+    const g3 = seg(0.46, 0.82);   // V flattens
+    const g4 = seg(0.78, 1);      // transition map
 
     labM.moveTo(sc.at(-1.9, 1.9), -6, -6); labM.show(true);
 
@@ -176,7 +179,7 @@ export default function manifoldCharts(el) {
   sc.enableOrbit();
   sc.tool('reset', () => { x = [-0.10, 0.10]; sc.resetView(); });
 
-  const durations = [0, 800, 1200, 1200, 800];
+  const durations = [0, 3000];
   render(1);
 
   return {

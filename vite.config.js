@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
+import { viteSingleFile } from 'vite-plugin-singlefile';
 
 function includePartials() {
   const expand = (html, base) =>
@@ -23,15 +24,18 @@ function includePartials() {
   };
 }
 
-export default defineConfig({
-  base: './',
-  plugins: [includePartials()],
-  build: {
-    rollupOptions: {
-      input: {
-        main: resolve(process.cwd(), 'index.html'),
-        bilan: resolve(process.cwd(), 'bilan.html')
-      }
+export default defineConfig(({ mode }) => {
+  const single = mode === 'single';
+
+  return {
+    plugins: [includePartials(), ...(single ? [viteSingleFile()] : [])],
+    build: {
+      outDir: single ? 'dist-single' : 'dist',
+      assetsInlineLimit: single ? Number.MAX_SAFE_INTEGER : 4096,
+      cssCodeSplit: !single,
+      rollupOptions: single
+        ? { input: 'index.html', output: { inlineDynamicImports: true } }
+        : { input: { main: 'index.html', bilan: 'bilan.html' } }
     }
-  }
+  };
 });

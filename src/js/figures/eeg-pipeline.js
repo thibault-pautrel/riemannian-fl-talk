@@ -370,11 +370,13 @@ export function eegCov(el) {
   sc.tool('reset', () => { pair = [2, 3]; render(); });
 
   const durations = [0, 900, 2600, 1000, 1200];
+  const ghost = el.classList.contains('ghost');
   render(1);
+  if (ghost) { step = 3; render(1); }
 
   return {
     setStep(n) {
-      if (n === step) return;
+      if (ghost || n === step) return;
       const back = n < step;
       step = n;
       ticker.run(back ? 0 : durations[n] ?? 600, render, { instant: back });
